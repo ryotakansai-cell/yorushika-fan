@@ -1,26 +1,28 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+ * サイトの配色と文字。
+ * ヨルシカの作品世界（文学的・静か）に合わせて、紙のような明るい地に
+ * 墨色の文字、差し色は落ち着いた青にしている。
+ * ここで定義した色は bg-paper / text-ink / text-accent のように使える。
+ */
+@theme {
+  --color-paper: #f7f5f0;
+  --color-card: #fffdf8;
+  --color-ink: #262626;
+  --color-muted: #6f6a60;
+  --color-line: #e3ded3;
+  --color-accent: #3d6485;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans:
+    "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP",
+    "Yu Gothic UI", "Meiryo", sans-serif;
+  --font-serif:
+    var(--font-serif-jp), "Hiragino Mincho ProN", "Yu Mincho", serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
 }
