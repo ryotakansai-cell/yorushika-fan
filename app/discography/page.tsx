@@ -9,6 +9,7 @@ import {
 } from "@/lib/discography";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/discography" },
   title: "作品一覧（ディスコグラフィー）",
   description:
     "ヨルシカのアルバム・シングル・ライブ映像・書籍を発売日順にまとめた一覧。各作品は公式サイトの詳細ページへ移動できます。",

@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { VideoCard } from "@/components/VideoCard";
 import { KIND_LABEL, formatDate, yorushikaWorks } from "@/lib/discography";
 import { OFFICIAL_LINKS } from "@/lib/links";
 import { byKind, videos } from "@/lib/videos";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 // このページはビルド時に一度だけ作られる（静的生成）。
 // データはJSONファイルなので、アクセスのたびに作り直す必要がない。

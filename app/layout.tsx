@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/SiteHeader";
-import { DISCLAIMER, OFFICIAL_SITE, SITE_NAME } from "@/lib/site";
+import { DISCLAIMER, OFFICIAL_SITE, SITE_NAME, SITE_URL } from "@/lib/site";
 
 // 見出し用の明朝体。next/font はフォントを自分のサーバーから配信するので、
 // Googleへの通信が発生せず、表示のガタつき（レイアウトのずれ）も防げる
@@ -14,6 +15,10 @@ const serif = Noto_Serif_JP({
 });
 
 export const metadata: Metadata = {
+  // これを決めておくと、各ページで "/mv" のような相対パスを書いても
+  // canonical（正式URL）などが絶対URLに展開される
+  metadataBase: new URL(SITE_URL),
+
   // 各ページは title だけ返せば「〇〇 | サイト名」になる
   title: {
     default: `${SITE_NAME} | 作品・MV・公式リンク`,
@@ -21,6 +26,15 @@ export const metadata: Metadata = {
   },
   description:
     "ヨルシカの作品一覧・MV・ライブ映像・公式リンクをまとめた非公式ファンサイト。",
+  // canonical（正式URL）はここには書かない。レイアウトの設定は全ページに
+  // 引き継がれるので、ここで "/" にすると全ページが「正式にはトップページ」と
+  // 宣言してしまい、検索結果から個別ページが消える。各ページで自分のURLを書く
+  // XなどでURLを貼ったときのカードに使われる情報
+  openGraph: {
+    siteName: SITE_NAME,
+    locale: "ja_JP",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -48,6 +62,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </p>
           </div>
         </footer>
+
+        {/* どのページが見られているかを測る（Vercelの管理画面で有効化が必要） */}
+        <Analytics />
       </body>
     </html>
   );
