@@ -12,6 +12,7 @@
     "fetch:videos": "node --env-file=.env.local scripts/fetch-videos.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8"

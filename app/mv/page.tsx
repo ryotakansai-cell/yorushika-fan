@@ -3,6 +3,7 @@ import { VideoCard } from "@/components/VideoCard";
 import { VIDEO_KIND_LABEL, byKind, type VideoKind } from "@/lib/videos";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/mv" },
   title: "MV・ライブ映像一覧",
   description:
     "ヨルシカ公式YouTubeチャンネルのMV・ライブ映像・アルバムトレーラーの一覧。再生回数のランキングもあります。",

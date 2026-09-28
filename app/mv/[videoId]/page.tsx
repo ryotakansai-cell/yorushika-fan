@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${video.name}（${label}）`,
     description: `ヨルシカ「${video.name}」の${label}。公開日 ${formatPublished(video.publishedAt)}、${formatViews(video.viewCount)}回再生。`,
+    alternates: { canonical: `/mv/${video.videoId}` },
   };
 }
 

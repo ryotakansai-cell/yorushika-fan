@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { OFFICIAL_LINKS } from "@/lib/links";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/links" },
   title: "公式リンク集",
   description:
     "ヨルシカの公式サイト・YouTube・X・Instagram・TikTok・グッズなど、公式サイトに掲載されているリンクをまとめています。",
