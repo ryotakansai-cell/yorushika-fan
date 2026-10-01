@@ -208,3 +208,14 @@ export function groupByDay(groups: ArticleGroup[]) {
   }
   return days;
 }
+
+/** トップページ用の短い日付。今日・昨日は言葉で、それ以外は「9/28」 */
+export function shortDayLabel(iso: string, now = new Date()) {
+  const label = dayLabel(iso, now);
+  if (label === "今日" || label === "昨日") return label;
+  return new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    month: "numeric",
+    day: "numeric",
+  }).format(new Date(iso));
+}
