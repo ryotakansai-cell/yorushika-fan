@@ -10,7 +10,9 @@
     "format": "prettier --write .",
     "fetch:discography": "node scripts/fetch-discography.mjs",
     "fetch:videos": "node --env-file=.env.local scripts/fetch-videos.mjs",
-    "db:migrate": "node --env-file=.env.local scripts/migrate.mjs"
+    "db:migrate": "node --env-file=.env.local scripts/migrate.mjs",
+    "fetch:live": "node scripts/fetch-live-venues.mjs",
+    "geocode:venues": "node scripts/geocode-venues.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
