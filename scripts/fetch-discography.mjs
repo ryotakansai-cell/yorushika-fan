@@ -8,7 +8,8 @@
 // ジャケット画像は著作物なので取得も表示もしない（公式ページへのリンクで代える）。
 //
 // 使い方: npm run fetch:discography
-import fs from "node:fs";
+// GitHub Actions（.github/workflows/refresh-data.yml）でも毎日自動で実行される。
+import { safeWriteJson } from "./lib/safe-write.mjs";
 
 const BASE = "https://yorushika.com";
 const OUT = "data/discography.json";
@@ -101,9 +102,6 @@ for (let page = 1; page <= 20; page++) {
   await sleep(800);
 }
 
-// 新しい順に並べて保存する
+// 新しい順に並べて保存する。前回より大きく減っていたら保存せずに止まる
 items.sort((a, b) => b.releaseDate.localeCompare(a.releaseDate) || b.id - a.id);
-
-fs.mkdirSync("data", { recursive: true });
-fs.writeFileSync(OUT, JSON.stringify(items, null, 2) + "\n");
-console.log(`\n${items.length}件を ${OUT} に保存しました`);
+safeWriteJson(OUT, items);

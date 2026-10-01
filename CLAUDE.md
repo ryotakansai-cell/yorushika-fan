@@ -53,9 +53,11 @@ data/
 scripts/
 ├── fetch-discography.mjs     npm run fetch:discography（APIキー不要）
 ├── fetch-videos.mjs          npm run fetch:videos（.env.local の YOUTUBE_API_KEY を使う）
-└── migrate.mjs               npm run db:migrate（DBの表を作る。何度実行しても安全）
+├── migrate.mjs               npm run db:migrate（DBの表を作る。何度実行しても安全）
+└── lib/safe-write.mjs        取得データの保存。前回より8割未満に減ったら保存せず止まる
 .github/workflows/
-└── collect.yml               毎時47分に /api/cron/collect を呼ぶ
+├── collect.yml               毎時47分に /api/cron/collect を呼ぶ（ニュースの収集）
+└── refresh-data.yml          毎日 日本時間6:15 に作品・MVのJSONを取り直し、変わっていればコミット
 ```
 
 ## 設計上の決定と、その理由
@@ -67,7 +69,15 @@ scripts/
 MV再生回数の推移など、変わる情報を扱う段階で初めてDBとcronを入れる。
 
 **データは手で書かず、公式から取得するスクリプトで作る。** 曲名や発売日を
-記憶や手入力で書くと間違いが混ざる。新作が出たらスクリプトを再実行する。
+記憶や手入力で書くと間違いが混ざる。
+
+**作品・MVのJSONは GitHub Actions が毎日自動で取り直す（`refresh-data.yml`）。**
+変わっていればボットがコミットし、Vercel が自動でサイトを作り直す。人が手で
+スクリプトを実行しなくても、新曲や再生回数が反映される。静的なサイトのまま
+（実行時にDBもAPIも使わず速いまま）、データだけ定期的に新しくする作り。
+APIキーは Vercel ではなく GitHub Secrets に置く（スクリプトが動くのはGitHub上なので）。
+無人で動くので、取得件数が前回の8割を下回ったら保存せずエラーで止める
+（取得元の作りが変わって空のデータで上書きし、サイトから一覧が消える事故を防ぐ）。
 
 **動画の種類の判定は、取得スクリプトではなく `lib/videos.ts` でやる。**
 判定ルールを直すたびにAPIを叩き直さずに済むため。公式のタイトル表記には
@@ -116,6 +126,8 @@ CRON_SECRET          /api/cron/collect の合言葉。Vercel の環境変数と 
 
 `TURSO_*` と `CRON_SECRET` は Vercel の環境変数にも必要（ニュース一覧と収集APIが実行時に使う）。
 変更したら Vercel は Redeploy する。`YOUTUBE_API_KEY` は Vercel には不要。
+
+GitHub Secrets に置くもの：`CRON_SECRET`（ニュースの収集）、`YOUTUBE_API_KEY`（毎日のMV更新）。
 
 `.env.local` に書く。`.env*` は `.gitignore` 済みなのでコミットされない。
 `.env.local` の中身は読まない・表示しない（`node --env-file=.env.local` で渡す）。
