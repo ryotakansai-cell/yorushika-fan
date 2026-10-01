@@ -9,11 +9,13 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "fetch:discography": "node scripts/fetch-discography.mjs",
-    "fetch:videos": "node --env-file=.env.local scripts/fetch-videos.mjs"
+    "fetch:videos": "node --env-file=.env.local scripts/fetch-videos.mjs",
+    "db:migrate": "node --env-file=.env.local scripts/migrate.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
     "@vercel/analytics": "^2.0.1",
+    "fast-xml-parser": "^5.11.2",
     "next": "16.3.6",
     "react": "19.2.8",
     "react-dom": "19.2.8"
