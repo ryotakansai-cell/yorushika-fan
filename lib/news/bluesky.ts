@@ -57,6 +57,8 @@ export type BlueskyReport = {
   errors: { title: string; error: string }[];
   /** 確認用（preview）のときだけ: 登録された認証情報でログインできたか */
   login?: "ok" | "認証情報が未登録" | string;
+  /** ログインに失敗したときの、値を出さない形のチェック */
+  credentialCheck?: Record<string, boolean>;
 };
 
 /** 投稿してよい記事か。だめなら理由を返す */
@@ -168,8 +170,9 @@ async function createPost(session: Session, a: Candidate) {
 export async function postNewArticles(
   preview: boolean,
 ): Promise<BlueskyReport> {
-  const handle = process.env.BLUESKY_HANDLE;
-  const password = process.env.BLUESKY_APP_PASSWORD;
+  // コピーのときに付きやすい「先頭の @」と「前後の空白・改行」は取り除く
+  const handle = process.env.BLUESKY_HANDLE?.trim().replace(/^@/, "");
+  const password = process.env.BLUESKY_APP_PASSWORD?.trim();
   const enabled = Boolean(handle && password) && !preview;
   const report: BlueskyReport = {
     enabled,
@@ -245,6 +248,18 @@ export async function postNewArticles(
         report.login = "ok";
       } catch (e) {
         report.login = String(e).slice(0, 200);
+        // 失敗したときは、値そのものは出さずに「形」だけ確かめて返す
+        const raw = process.env.BLUESKY_APP_PASSWORD ?? "";
+        report.credentialCheck = {
+          handleHadAt:
+            process.env.BLUESKY_HANDLE?.trim().startsWith("@") ?? false,
+          handleEndsWithBskySocial: handle.endsWith(".bsky.social"),
+          passwordHadSpaces: raw !== raw.trim(),
+          // アプリパスワードは「xxxx-xxxx-xxxx-xxxx」の形（英小文字と数字）
+          passwordLooksLikeAppPassword: /^[a-z0-9]{4}(-[a-z0-9]{4}){3}$/.test(
+            password,
+          ),
+        };
       }
     } else {
       report.login = "認証情報が未登録";
