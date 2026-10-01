@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { FeaturedVideo } from "@/components/FeaturedVideo";
 import { NewsRow } from "@/components/NewsRow";
 import { KIND_LABEL, formatDate, yorushikaWorks } from "@/lib/discography";
 import { getSpots } from "@/lib/map";
@@ -10,16 +10,16 @@ import {
   shortDayLabel,
   type ArticleGroup,
 } from "@/lib/news/view";
-import { formatPublished, thumbnail, videos } from "@/lib/videos";
+import { videos } from "@/lib/videos";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-// トップの主役はニュース（このサイトにしか無い部分）。
+// 一番上に最新の公式映像を大きく置き、その下にニュース（このサイトにしか無い部分）。
 // ニュースは1時間ごとに増えるので、ページも1時間ごとに作り直す。
-// MVの埋め込みプレーヤーはやめてサムネイル1枚にした。YouTube のプレーヤーは
-// 読み込みが重く、トップを開くたびにそれを待たせる理由が無いため。
+// 映像は押されるまで画像1枚で済ませる（LiteYouTube）。プレーヤーを最初から埋め込むと
+// YouTube の重い読み込みを全員が待つことになるため。
 export const revalidate = 3600;
 
 const NEWS_COUNT = 8;
@@ -55,9 +55,22 @@ export default async function Home() {
         ヨルシカのニュース・ファンの声・作品・MV・ゆかりの場所を、ファンが個人でまとめています。
       </p>
 
-      {/* PCでは「ニュース（広め）＋ 右に映像とマップ」の2列。スマホでは上から順に並ぶ */}
-      <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-10">
-        {/* 1. 最新ニュース */}
+      {/* 1. 最新の公式映像。見栄えのため一番上に大きく置く */}
+      {latest && (
+        <section className="mt-8">
+          <SectionHeading
+            title="最新の公式映像"
+            href="/mv"
+            linkLabel="MV一覧"
+          />
+          <div className="mt-4">
+            <FeaturedVideo video={latest} />
+          </div>
+        </section>
+      )}
+
+      {/* 2. 最新ニュース（広め）と、右にマップ・新着リリース。スマホでは上から順に並ぶ */}
+      <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-10">
         <section className="lg:col-span-2">
           <SectionHeading
             title="最新ニュース"
@@ -84,34 +97,6 @@ export default async function Home() {
         </section>
 
         <div className="space-y-12">
-          {/* 2. 最新の公式映像（サムネイル1枚。押すとサイト内の動画ページで再生） */}
-          {latest && (
-            <section>
-              <SectionHeading
-                title="最新の公式映像"
-                href="/mv"
-                linkLabel="MV一覧"
-              />
-              <Link href={`/mv/${latest.videoId}`} className="group mt-4 block">
-                <div className="relative aspect-video overflow-hidden rounded-lg border border-line bg-ink">
-                  <Image
-                    src={thumbnail(latest.videoId)}
-                    alt={latest.name}
-                    fill
-                    sizes="(min-width: 1024px) 320px, 100vw"
-                    className="object-cover transition group-hover:opacity-90"
-                  />
-                </div>
-                <p className="mt-2 font-serif text-ink transition group-hover:text-accent">
-                  {latest.name}
-                </p>
-                <p className="text-xs tabular-nums text-muted">
-                  {formatPublished(latest.publishedAt)} 公開
-                </p>
-              </Link>
-            </section>
-          )}
-
           {/* 3. 聖地巡礼マップへの入口 */}
           <section>
             <SectionHeading title="聖地巡礼マップ" />
@@ -128,39 +113,39 @@ export default async function Home() {
               </span>
             </Link>
           </section>
+
+          {/* 4. 新着リリース。横幅が狭い欄なので、日付と種別の下に題名を置く */}
+          <section>
+            <SectionHeading
+              title="新着リリース"
+              href="/discography"
+              linkLabel="作品一覧"
+            />
+            <ul className="mt-2 divide-y divide-line">
+              {newReleases.map((w) => (
+                <li key={w.id}>
+                  <a
+                    href={w.officialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block py-3"
+                  >
+                    <span className="flex items-center gap-2 text-xs tabular-nums text-muted">
+                      {formatDate(w.releaseDate)}
+                      <span className="rounded border border-line px-1.5 py-px text-[11px]">
+                        {KIND_LABEL[w.kind]}
+                      </span>
+                    </span>
+                    <span className="mt-1 block font-serif text-ink transition group-hover:text-accent">
+                      {w.title}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
       </div>
-
-      {/* 4. 新着リリース */}
-      <section className="mt-12">
-        <SectionHeading
-          title="新着リリース"
-          href="/discography"
-          linkLabel="作品一覧へ"
-        />
-        <ul className="mt-4 divide-y divide-line border-y border-line">
-          {newReleases.map((w) => (
-            <li key={w.id}>
-              <a
-                href={w.officialUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex flex-wrap items-baseline gap-x-4 gap-y-1 py-3"
-              >
-                <span className="w-24 shrink-0 text-sm tabular-nums text-muted">
-                  {formatDate(w.releaseDate)}
-                </span>
-                <span className="shrink-0 rounded border border-line px-1.5 py-0.5 text-[11px] text-muted">
-                  {KIND_LABEL[w.kind]}
-                </span>
-                <span className="font-serif text-ink transition group-hover:text-accent">
-                  {w.title}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
     </main>
   );
 }
