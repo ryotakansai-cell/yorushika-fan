@@ -26,9 +26,9 @@
 
 ```
 app/
-├── page.tsx                  トップ（最新の公式映像・新着リリース・人気MV・公式リンク）
+├── page.tsx                  トップ（最新の公式映像を大きく → 最新ニュース8件、右にマップ入口・新着リリース。1時間ごとに作り直す）
 ├── discography/page.tsx      作品一覧（種類ごと。タイトルは公式の作品ページへ）
-├── mv/page.tsx               MV・ライブ映像一覧（再生回数ランキング付き）
+├── mv/page.tsx               MV・ライブ映像（最新の映像 → 新着 → 再生回数ランキング → 種類別。変わる情報を上に）
 ├── mv/[videoId]/page.tsx     動画ページ（公式の埋め込みで再生）。全動画ぶんビルド時に生成
 ├── links/page.tsx            公式リンク集
 ├── news/page.tsx             ニュースとファンの声（DBから読む。タブは ?tab=）
@@ -37,6 +37,9 @@ app/
 components/
 ├── SiteHeader.tsx            全ページ共通のヘッダー
 ├── VideoCard.tsx             動画カード（スマホは横並び、PCは縦積み）
+├── NewsRow.tsx               ニュース1行（/news とトップで共用）
+├── LiteYouTube.tsx           押すまでは画像、押すと本物のプレーヤー（YouTubeの重い読み込みを避ける）
+├── FeaturedVideo.tsx         「最新の公式映像」の欄（トップとMVで共用）
 └── PilgrimageMap.tsx         地図（Leaflet）と一覧。地図はブラウザでだけ読み込む
 lib/
 ├── site.ts                   サイト名・注意書き
