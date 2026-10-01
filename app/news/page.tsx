@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { NewsRow } from "@/components/NewsRow";
 import {
-  CATEGORY_LABEL,
   TABS,
   getArticles,
   groupByDay,
   groupSameStories,
   timeLabel,
-  type ArticleGroup,
   type Tab,
 } from "@/lib/news/view";
 
@@ -24,63 +23,6 @@ type Props = {
 
 function toTab(v: string | undefined): Tab {
   return TABS.some((t) => t.value === v) ? (v as Tab) : "all";
-}
-
-// 区分ごとのバッジの色。公式だけ差し色にして目立たせる
-const BADGE: Record<string, string> = {
-  official: "border-accent text-accent",
-  news: "border-line text-muted",
-  fan: "border-line text-muted",
-  overseas: "border-line text-muted",
-  topic: "border-line text-muted",
-};
-
-/** 1行ぶん。見出しを押すと元の記事へ（本文はこのサイトには載せない） */
-function Row({ group, showTime }: { group: ArticleGroup; showTime: boolean }) {
-  const a = group.main;
-  const otherPublishers = group.others
-    .map((o) => o.publisher)
-    .filter((p): p is string => Boolean(p));
-
-  return (
-    <li className="flex gap-3 py-3 sm:gap-4">
-      {showTime && (
-        <span className="w-11 shrink-0 pt-0.5 text-xs tabular-nums text-muted">
-          {timeLabel(a.publishedAt)}
-        </span>
-      )}
-      <div className="min-w-0 flex-1">
-        <a
-          href={a.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group"
-        >
-          <span
-            className={`mr-2 inline-block rounded border px-1.5 py-px align-[1px] text-[11px] ${BADGE[a.category]}`}
-          >
-            {CATEGORY_LABEL[a.category]}
-          </span>
-          <span className="text-[15px] leading-relaxed text-ink transition group-hover:text-accent">
-            {a.title}
-          </span>
-        </a>
-        <p className="mt-1 text-xs text-muted">
-          {a.publisher}
-          {/* 同じニュースを報じた他の媒体。名前はマウスを乗せると見られる */}
-          {otherPublishers.length > 0 && (
-            <span title={otherPublishers.join("、")}>
-              {" "}
-              ほか{otherPublishers.length}媒体
-            </span>
-          )}
-          {a.bookmarkCount !== null && a.bookmarkCount > 0 && (
-            <span> ・ {a.bookmarkCount}ブックマーク</span>
-          )}
-        </p>
-      </div>
-    </li>
-  );
 }
 
 export default async function NewsPage({ searchParams }: Props) {
@@ -129,7 +71,7 @@ export default async function NewsPage({ searchParams }: Props) {
         // 「話題」は日付で区切らず、ブックマーク数の順にそのまま並べる
         <ul className="mt-4 divide-y divide-line">
           {groups.map((g) => (
-            <Row key={g.main.id} group={g} showTime={false} />
+            <NewsRow key={g.main.id} group={g} />
           ))}
         </ul>
       ) : (
@@ -140,7 +82,11 @@ export default async function NewsPage({ searchParams }: Props) {
             </h2>
             <ul className="divide-y divide-line">
               {day.items.map((g) => (
-                <Row key={g.main.id} group={g} showTime />
+                <NewsRow
+                  key={g.main.id}
+                  group={g}
+                  stamp={timeLabel(g.main.publishedAt)}
+                />
               ))}
             </ul>
           </section>
