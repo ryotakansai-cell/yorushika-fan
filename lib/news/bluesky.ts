@@ -55,6 +55,8 @@ export type BlueskyReport = {
   posted: { title: string; uri?: string }[];
   skipped: { title: string; reason: string }[];
   errors: { title: string; error: string }[];
+  /** 確認用（preview）のときだけ: 登録された認証情報でログインできたか */
+  login?: "ok" | "認証情報が未登録" | string;
 };
 
 /** 投稿してよい記事か。だめなら理由を返す */
@@ -235,6 +237,18 @@ export async function postNewArticles(
   if (!enabled) {
     // 確認用: 投稿予定を返すだけで、DBには何も書かない
     report.posted = toPost.map((a) => ({ title: buildText(a).text }));
+    // 認証情報があればログインだけ試す。パスワードの写し間違いを、
+    // 最初の本番投稿で初めて知るのではなく、ここで見つけるため（投稿はしない）
+    if (handle && password) {
+      try {
+        await login(handle, password);
+        report.login = "ok";
+      } catch (e) {
+        report.login = String(e).slice(0, 200);
+      }
+    } else {
+      report.login = "認証情報が未登録";
+    }
     return report;
   }
 
