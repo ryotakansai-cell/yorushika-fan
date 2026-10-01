@@ -1,5 +1,6 @@
 import eventsJson from "@/data/events.json";
 import performancesJson from "@/data/live-performances.json";
+import scenesJson from "@/data/scenes.json";
 import venuesJson from "@/data/venues.json";
 import { formatDate } from "@/lib/discography";
 
@@ -8,6 +9,7 @@ import { formatDate } from "@/lib/discography";
 //   live-performances.json … 公演（公式サイトから自動で取り直せる）
 //   venues.json            … 会場の座標・閉館情報（人が確かめた値。自動では上書きしない）
 //   events.json            … 展示・コラボ（件数が少ないので手で書いている）
+//   scenes.json            … MVの舞台（出典と根拠の強さを付けて手で書いている）
 // ページ側はこの違いを知らなくて済むように、ここで Spot という1つの形にそろえる。
 
 type Performance = {
@@ -44,7 +46,35 @@ type EventItem = {
   periodSource?: string;
 };
 
-export type SpotCategory = "live" | "event";
+type SceneItem = {
+  id: string;
+  name: string;
+  prefecture: string;
+  lat: number;
+  lon: number;
+  approximate?: boolean;
+  evidence: Evidence;
+  /** その場所が出てくる作品。at はMVの何秒目の場面か（分かっているときだけ） */
+  scenes: { work: string; videoId: string; at?: number }[];
+  sources: { label: string; url: string }[];
+  note?: string;
+};
+
+export type SpotCategory = "live" | "event" | "scene";
+
+/**
+ * MVの舞台の根拠の強さ。公式が場所を明言した例は見つかっていない（2026-10-01 時点）。
+ *   report   … メディアが記事にしている
+ *   verified … MVの場面とストリートビューを見比べて一致を確かめた
+ *   estimate … ファンや地域メディアが「モデルでは」としている
+ */
+export type Evidence = "report" | "verified" | "estimate";
+
+export const EVIDENCE_LABEL: Record<Evidence, string> = {
+  report: "報道",
+  verified: "照合済み",
+  estimate: "推定",
+};
 
 /** 期間のあるもの（展示）の状態。ライブ会場は建物そのものが目的地なので常に null */
 export type EventStatus = "upcoming" | "ongoing" | "ended";
@@ -77,6 +107,13 @@ export type Spot = {
   latest: string;
   entries: SpotEntry[];
   googleMapsUrl: string;
+  /** MVの舞台だけ: 根拠の強さ、出典、現地を見比べるためのストリートビュー */
+  evidence?: Evidence;
+  /** 「報道」「推定」など。地図の部品はブラウザで動くので、表示名はここで文字にして渡す
+   * （部品から EVIDENCE_LABEL を読み込むと、このファイルが読む JSON 一式までブラウザに送られる） */
+  evidenceLabel?: string;
+  sources?: { label: string; url: string }[];
+  streetViewUrl?: string;
 };
 
 // 一覧を北から南へ並べるための順番（JISの都道府県コード順）
@@ -236,13 +273,51 @@ function eventSpots(today: string): Spot[] {
   });
 }
 
+/** 「2:03」のような表示 */
+function formatSeconds(sec: number) {
+  return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
+}
+
+function sceneSpots(): Spot[] {
+  return (scenesJson as SceneItem[]).map((sc) => ({
+    id: `scene:${sc.id}`,
+    name: sc.name,
+    category: "scene",
+    kindLabel: "MVの舞台",
+    lat: sc.lat,
+    lon: sc.lon,
+    prefecture: sc.prefecture,
+    approximate: sc.approximate ?? false,
+    closed: false,
+    status: null,
+    note: sc.note,
+    latest: "",
+    // 場面の秒数が分かっているものは、その場面から再生されるリンクにする。
+    // 画像を切り出して載せるのではなく公式の動画へ飛ばすのは、権利の問題を避けるため
+    entries: sc.scenes.map((x) => ({
+      title: `${x.work}（MV）`,
+      dateLabel:
+        x.at !== undefined
+          ? `${formatSeconds(x.at)} の場面`
+          : "場面の時刻は未確認",
+      source: `https://www.youtube.com/watch?v=${x.videoId}${x.at !== undefined ? `&t=${x.at}s` : ""}`,
+    })),
+    googleMapsUrl: googleMapsUrl(`${sc.lat},${sc.lon}`),
+    evidence: sc.evidence,
+    evidenceLabel: EVIDENCE_LABEL[sc.evidence],
+    sources: sc.sources,
+    // MVの場面と見比べられるよう、その地点のストリートビューを開く（APIキー不要の公式のURL形式）
+    streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
+  }));
+}
+
 /** 地図に載せる全地点。都道府県（北→南）、同じ県の中は新しい順 */
 export function getSpots(): Spot[] {
   const prefIndex = (p: string) => {
     const i = PREFECTURES.indexOf(p);
     return i === -1 ? PREFECTURES.length : i;
   };
-  return [...liveSpots(), ...eventSpots(todayInTokyo())].sort(
+  return [...sceneSpots(), ...liveSpots(), ...eventSpots(todayInTokyo())].sort(
     (a, b) =>
       prefIndex(a.prefecture) - prefIndex(b.prefecture) ||
       b.latest.localeCompare(a.latest),

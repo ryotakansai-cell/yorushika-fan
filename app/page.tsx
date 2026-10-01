@@ -56,8 +56,7 @@ export default async function Home() {
   const newReleases = yorushikaWorks.slice(0, 5);
 
   const spots = getSpots();
-  const liveCount = spots.filter((s) => s.category === "live").length;
-  const eventCount = spots.length - liveCount;
+  const count = (c: string) => spots.filter((s) => s.category === c).length;
 
   // ---- 各欄 ----
 
@@ -112,8 +111,9 @@ export default async function Home() {
           ゆかりの場所を地図で見る
         </span>
         <span className="mt-1 block text-xs leading-relaxed text-muted">
-          ライブ会場 {liveCount} か所・展示やコラボの開催場所 {eventCount}{" "}
-          か所。すべて公式の告知を出典にしています。
+          MVの舞台 {count("scene")} か所・ライブ会場 {count("live")}{" "}
+          か所・展示やコラボ {count("event")}{" "}
+          か所。MVの場面とストリートビューを見比べられます。
         </span>
       </Link>
     </section>

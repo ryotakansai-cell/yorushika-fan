@@ -17,6 +17,7 @@ type Filter = "all" | SpotCategory;
 
 const FILTERS: { value: Filter; label: string }[] = [
   { value: "all", label: "すべて" },
+  { value: "scene", label: "MVの舞台" },
   { value: "live", label: "ライブ会場" },
   { value: "event", label: "展示・コラボ" },
 ];
@@ -25,6 +26,7 @@ const FILTERS: { value: Filter; label: string }[] = [
 const COLOR = {
   live: "#3d6485", // accent（落ち着いた青）
   event: "#a0663a", // 展示は区別がつくよう暖色
+  scene: "#5d7d55", // MVの舞台。風景の場所なので落ち着いた緑
   inactive: "#a39d92", // 閉館・終了したもの
 };
 
@@ -104,6 +106,7 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
         sub.textContent = [
           s.kindLabel,
           s.closed ? "閉館" : s.status ? STATUS_LABEL[s.status] : null,
+          s.evidenceLabel,
           s.entries[0]?.title,
         ]
           .filter(Boolean)
@@ -183,6 +186,7 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
 
       {/* 凡例 */}
       <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+        <Legend color={COLOR.scene} label="MVの舞台" />
         <Legend color={COLOR.live} label="ライブ会場" />
         <Legend color={COLOR.event} label="展示・コラボ（開催中・予定）" />
         <Legend color={COLOR.inactive} label="終了した展示・閉館した会場" />
@@ -247,6 +251,18 @@ function SpotRow({
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
         <span className="font-serif text-ink">{s.name}</span>
         <span className="text-xs text-muted">{s.kindLabel}</span>
+        {/* MVの舞台の根拠。「推定」は確かさが低いので控えめな見た目にする */}
+        {s.evidenceLabel && (
+          <span
+            className={`rounded border px-1.5 py-px text-xs ${
+              s.evidence === "estimate"
+                ? "border-line text-muted"
+                : "border-accent text-accent"
+            }`}
+          >
+            {s.evidenceLabel}
+          </span>
+        )}
         {badge && (
           <span
             className={`rounded px-1.5 py-0.5 text-xs ${
@@ -276,6 +292,26 @@ function SpotRow({
         ))}
       </ul>
 
+      {/* 出典。MVの舞台は公式が場所を明言していないので、誰が言っているかを必ず見せる */}
+      {s.sources && s.sources.length > 0 && (
+        <p className="mt-2 text-xs text-muted">
+          出典：
+          {s.sources.map((src, i) => (
+            <span key={src.url}>
+              {i > 0 && "、"}
+              <a
+                href={src.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink transition hover:text-accent"
+              >
+                {src.label}
+              </a>
+            </span>
+          ))}
+        </p>
+      )}
+
       {(s.note || s.approximate) && (
         <p className="mt-2 text-xs text-muted">
           {s.note}
@@ -285,7 +321,7 @@ function SpotRow({
         </p>
       )}
 
-      <div className="mt-2 flex gap-4 text-sm">
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
         <button
           type="button"
           onClick={onShow}
@@ -301,6 +337,17 @@ function SpotRow({
         >
           Google マップで開く
         </a>
+        {/* MVの場面と現地の風景を見比べられるように */}
+        {s.streetViewUrl && (
+          <a
+            href={s.streetViewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted transition hover:text-accent"
+          >
+            ストリートビューで見る
+          </a>
+        )}
       </div>
     </li>
   );

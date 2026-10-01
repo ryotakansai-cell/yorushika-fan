@@ -1,0 +1,112 @@
+[
+  {
+    "id": "tokoname-tojiki-kaikan",
+    "name": "常滑市陶磁器会館 西の交差点付近",
+    "prefecture": "愛知県",
+    "lat": 34.89061,
+    "lon": 136.83947,
+    "approximate": true,
+    "evidence": "report",
+    "scenes": [{ "work": "夜行", "videoId": "MH5noJJfqDY", "at": 123 }],
+    "sources": [
+      {
+        "label": "ちたまるNavi（知多半島の地域メディア）",
+        "url": "https://www.chitamaru.jp/art/6245/"
+      }
+    ],
+    "note": "記事では交差点の付近とされているので、ピンは陶磁器会館に置いている"
+  },
+  {
+    "id": "tokoname-noborigama",
+    "name": "登窯広場",
+    "prefecture": "愛知県",
+    "lat": 34.88653,
+    "lon": 136.83978,
+    "evidence": "report",
+    "scenes": [
+      { "work": "夜行", "videoId": "MH5noJJfqDY", "at": 125 },
+      { "work": "花に亡霊", "videoId": "9lVPAWLWtWc", "at": 191 }
+    ],
+    "sources": [
+      {
+        "label": "ちたまるNavi（知多半島の地域メディア）",
+        "url": "https://www.chitamaru.jp/art/6245/"
+      }
+    ]
+  },
+  {
+    "id": "amaharashi-station",
+    "name": "雨晴駅・雨晴海岸",
+    "prefecture": "富山県",
+    "lat": 36.8165,
+    "lon": 137.03739,
+    "evidence": "report",
+    "scenes": [{ "work": "ただ君に晴れ", "videoId": "-VKIqrvVOpo" }],
+    "sources": [
+      {
+        "label": "GATE12（MVに登場した駅の紹介記事）",
+        "url": "https://thegate12.com/jp/article/442"
+      }
+    ]
+  },
+  {
+    "id": "shimonada-station",
+    "name": "下灘駅",
+    "prefecture": "愛媛県",
+    "lat": 33.65542,
+    "lon": 132.58941,
+    "evidence": "report",
+    "scenes": [{ "work": "だから僕は音楽を辞めた", "videoId": "KTZ-y85Erus" }],
+    "sources": [
+      {
+        "label": "GATE12（MVに登場した駅の紹介記事）",
+        "url": "https://thegate12.com/jp/article/442"
+      }
+    ]
+  },
+  {
+    "id": "negawa-ryokudo",
+    "name": "根川緑道",
+    "prefecture": "東京都",
+    "lat": 35.6866,
+    "lon": 139.41214,
+    "evidence": "estimate",
+    "scenes": [{ "work": "春泥棒", "videoId": "Sw1Flgub9s8" }],
+    "sources": [
+      {
+        "label": "いいね立川（立川の地域メディア。モデルと推定）",
+        "url": "https://iine-tachikawa.net/topics/131249/"
+      }
+    ]
+  },
+  {
+    "id": "sarushima",
+    "name": "猿島",
+    "prefecture": "神奈川県",
+    "lat": 35.28607,
+    "lon": 139.69406,
+    "evidence": "estimate",
+    "scenes": [{ "work": "パレード", "videoId": "ry3Tupx4BL4" }],
+    "sources": [
+      {
+        "label": "ファンによる聖地まとめ",
+        "url": "https://ayataka1020.com/231/"
+      }
+    ]
+  },
+  {
+    "id": "shimoda-shirahama",
+    "name": "白浜海岸（伊豆下田）",
+    "prefecture": "静岡県",
+    "lat": 34.68715,
+    "lon": 138.97264,
+    "evidence": "estimate",
+    "scenes": [{ "work": "都落ち", "videoId": "pHdJmDFYqTU" }],
+    "sources": [
+      {
+        "label": "ファンによる聖地まとめ",
+        "url": "https://ayataka1020.com/231/"
+      }
+    ]
+  }
+]
