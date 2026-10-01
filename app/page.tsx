@@ -58,22 +58,21 @@ export default async function Home() {
       {/* 1. 最新の公式映像。見栄えのため一番上に大きく置く */}
       {latest && (
         <section className="mt-8">
-          <SectionHeading
-            title="最新の公式映像"
-            href="/mv"
-            linkLabel="MV一覧"
-          />
+          {/* MV一覧へはヘッダーの「MV」から行けるので、ここにはリンクを置かない */}
+          <SectionHeading title="最新の公式映像" />
           <div className="mt-4">
             <FeaturedVideo video={latest} />
           </div>
         </section>
       )}
 
-      {/* 2. 最新ニュース（広め）と、右にマップ・新着リリース。スマホでは上から順に並ぶ */}
+      {/* 2. ニュースとファンの声（広め）と、右にマップ・新着リリース。スマホでは上から順に並ぶ。
+          見出しを「最新ニュース」にすると、公式映像のすぐ下にあるため公式の発表に見えてしまう。
+          中身は各メディアやnoteから集めたものなので、/news と同じ名前にしている */}
       <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-10">
         <section className="lg:col-span-2">
           <SectionHeading
-            title="最新ニュース"
+            title="ニュースとファンの声"
             href="/news"
             linkLabel="もっと見る"
           />
