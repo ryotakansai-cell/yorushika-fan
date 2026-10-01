@@ -11,6 +11,8 @@ import { videos } from "@/lib/videos";
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: SITE_URL, changeFrequency: "weekly", priority: 1 },
+    // 1時間ごとに記事が増えるページ
+    { url: `${SITE_URL}/news`, changeFrequency: "hourly", priority: 0.9 },
     {
       url: `${SITE_URL}/discography`,
       changeFrequency: "weekly",

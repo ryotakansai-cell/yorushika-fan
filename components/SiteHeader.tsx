@@ -12,6 +12,11 @@ import { SITE_NAME } from "@/lib/site";
 const NAV = [
   { href: "/", label: "ホーム", match: (p: string) => p === "/" },
   {
+    href: "/news",
+    label: "ニュース",
+    match: (p: string) => p.startsWith("/news"),
+  },
+  {
     href: "/discography",
     label: "作品",
     match: (p: string) => p.startsWith("/discography"),
