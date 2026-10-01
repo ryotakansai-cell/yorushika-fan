@@ -16,9 +16,12 @@ import { useState } from "react";
 export function LiteYouTube({
   videoId,
   title,
+  sizes = "(min-width: 768px) 768px, 100vw",
 }: {
   videoId: string;
   title: string;
+  /** 表示される幅。細い欄に置くときは小さく指定し、無駄に大きな画像を読ませない */
+  sizes?: string;
 }) {
   const [playing, setPlaying] = useState(false);
   const [hiRes, setHiRes] = useState(true);
@@ -51,7 +54,7 @@ export function LiteYouTube({
         // Next.js 16 で priority は非推奨になり、この2つを使うよう案内されている
         loading="eager"
         fetchPriority="high"
-        sizes="(min-width: 768px) 768px, 100vw"
+        sizes={sizes}
         className="object-cover"
         onError={() => setHiRes(false)}
       />

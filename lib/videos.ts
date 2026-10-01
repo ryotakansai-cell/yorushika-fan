@@ -125,3 +125,12 @@ export function formatDuration(seconds: number) {
 export function formatPublished(iso: string) {
   return iso.slice(0, 10).replaceAll("-", ".");
 }
+
+/**
+ * 公開から days 日以内か。トップで「新しい映像が出た直後か」を決めるのに使う。
+ * 今の時刻に依存するが、トップはサーバーで1時間ごとに1回だけ作られる（ISR）ので、
+ * 作り直すたびに判定が更新される。ブラウザ側の描画では使わない
+ */
+export function isPublishedWithin(iso: string, days: number, now = new Date()) {
+  return now.getTime() - new Date(iso).getTime() <= days * 24 * 60 * 60 * 1000;
+}
