@@ -7,7 +7,9 @@
 //       300本あっても十数ユニットで済む
 //
 // 使い方: npm run fetch:videos
-import fs from "node:fs";
+// GitHub Actions（.github/workflows/refresh-data.yml）でも毎日自動で実行される。
+// そのときのキーは GitHub の Secrets（YOUTUBE_API_KEY）から渡される。
+import { safeWriteJson } from "./lib/safe-write.mjs";
 
 // 公式サイトのフッターにある公式YouTubeチャンネル
 const CHANNEL_ID = "UCRIgIJQWuBJ0Cv_VlU3USNA";
@@ -71,6 +73,5 @@ const videos = uploads
   .filter((v) => v.viewCount !== undefined)
   .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 
-fs.mkdirSync("data", { recursive: true });
-fs.writeFileSync(OUT, JSON.stringify(videos, null, 2) + "\n");
-console.log(`${videos.length}本を ${OUT} に保存しました`);
+// 前回より大きく減っていたら保存せずに止まる
+safeWriteJson(OUT, videos);

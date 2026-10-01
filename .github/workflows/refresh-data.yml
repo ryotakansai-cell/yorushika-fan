@@ -1,0 +1,47 @@
+name: 作品・MVデータの自動更新
+
+# 作品一覧（公式サイト）とMV一覧（公式YouTube）を毎日取り直し、
+# 変わっていればコミットする。コミットされると Vercel が自動でサイトを
+# 作り直すので、人が手でスクリプトを実行しなくても新曲や再生回数が反映される。
+
+on:
+  schedule:
+    # 毎日 21:15（UTC）＝ 日本時間 6:15。人が見る前の朝に更新しておく
+    - cron: "15 21 * * *"
+  # GitHubの画面から手動でも実行できるようにする（新曲が出た直後など）
+  workflow_dispatch:
+
+# データの変更をコミットして push するために、書き込みの許可が要る
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # どちらのスクリプトも Node.js の標準機能だけで動くので npm install は不要
+      - name: 公式サイトから作品一覧を取得
+        run: node scripts/fetch-discography.mjs
+
+      - name: 公式YouTubeから動画一覧を取得
+        run: node scripts/fetch-videos.mjs
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+
+      - name: 変わっていればコミットして push
+        run: |
+          if git diff --quiet -- data/; then
+            echo "データに変更はありませんでした"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "作品・MVデータを自動更新"
+          git push
