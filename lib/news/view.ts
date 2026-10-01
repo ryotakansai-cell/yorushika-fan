@@ -37,9 +37,14 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   topic: "話題",
 };
 
-/** タブごとに、どの区分の記事を出すか */
+/**
+ * タブごとに、どの区分の記事を出すか。
+ * 「すべて」から海外（Reddit）を外しているのは、英語の投稿の割合が多く
+ * （9日間で25件）、日本語のニュースや感想が埋もれて読みにくかったため。
+ * 海外の投稿は「海外」タブで読める
+ */
 const TAB_CATEGORIES: Record<Tab, Category[]> = {
-  all: ["official", "news", "fan", "overseas", "topic"],
+  all: ["official", "news", "fan", "topic"],
   news: ["official", "news"],
   fan: ["fan"],
   overseas: ["overseas"],
