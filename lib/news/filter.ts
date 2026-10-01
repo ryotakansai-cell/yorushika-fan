@@ -19,7 +19,7 @@ import { mentionsWorkInBrackets } from "./dictionary";
 import type { CollectedItem } from "./sources";
 
 // \bsuis\b にしているのは、英語の文章中の別の単語に誤って当たらないようにするため
-const RELATED = /ヨルシカ|yorushika|n-buna|ナブナ|\bsuis\b/i;
+export const RELATED = /ヨルシカ|yorushika|n-buna|ナブナ|\bsuis\b/i;
 
 // 載せないでほしいと言われた記事や、誹謗中傷の記事を外すための除外リスト。
 // URLの完全一致と、ドメイン単位の両方で指定できる
@@ -36,6 +36,12 @@ export function isBlocked(url: string) {
   }
 }
 
+// Googleニュースは、誰でも投稿できる場所（YouTube など）の一般の投稿も拾うことがある。
+// 2026-10-01 にファンのヲタ芸動画が「ニュース」として入ったので、媒体名で外す。
+// 公式YouTubeの動画は別の情報源（youtube）から公式として集めているので、ここで外しても困らない
+const UGC_PUBLISHERS =
+  /^(YouTube|TikTok|X|Twitter|Instagram|ニコニコ動画|niconico)$/i;
+
 export function isRelevant(item: CollectedItem) {
   if (!item.url || !item.title) return false;
   if (isBlocked(item.url)) return false;
@@ -43,6 +49,9 @@ export function isRelevant(item: CollectedItem) {
 
   switch (item.source) {
     case "google_news":
+      return (
+        RELATED.test(item.title) && !UGC_PUBLISHERS.test(item.publisher ?? "")
+      );
     case "hatena":
       return RELATED.test(item.title);
     case "note":

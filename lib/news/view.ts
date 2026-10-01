@@ -90,7 +90,7 @@ export async function getArticles(tab: Tab, limit = 300): Promise<Article[]> {
 // --------------------------------------------------------------
 
 /** 記号と空白を落として、言い回しの違いだけを比べられるようにする */
-function normalize(title: string) {
+export function normalize(title: string) {
   return title
     .replace(/[\s「」『』【】（）()［］[\]、。・！？!?:：＆&\-–—〜~"'“”]/g, "")
     .toLowerCase();
@@ -106,7 +106,7 @@ function bigrams(s: string) {
  * 2つの見出しの似ている度合い（0〜1）。共通する「2文字の組」の割合で測る（ダイス係数）。
  * 日本語は単語の区切りに空白が無いので、単語ではなく2文字ずつで比べている
  */
-function similarity(a: string, b: string) {
+export function similarity(a: string, b: string) {
   const A = bigrams(a);
   const B = bigrams(b);
   if (A.length === 0 || B.length === 0) return a === b ? 1 : 0;
@@ -125,8 +125,8 @@ function similarity(a: string, b: string) {
 
 // 実データで測った結果、3日以内なら似ている度合い0.4以上はすべて同じニュースの
 // 言い換えだった（「キタニタツヤのサポート終了」を各媒体が別の見出しで報じたものなど）
-const SAME_STORY = 0.4;
-const SAME_STORY_DAYS = 3;
+export const SAME_STORY = 0.4;
+export const SAME_STORY_DAYS = 3;
 const DAY = 24 * 60 * 60 * 1000;
 
 /**

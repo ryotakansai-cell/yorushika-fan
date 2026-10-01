@@ -133,7 +133,11 @@ YOUTUBE_API_KEY      scripts/fetch-videos.mjs でのみ使う（サイトの実�
 TURSO_DATABASE_URL   ニュース・トレンド用のDB（ヨルシカ専用。ゲームトレンドとは別）
 TURSO_AUTH_TOKEN     同上。Read & Write、期限なし
 CRON_SECRET          /api/cron/collect の合言葉。Vercel の環境変数と GitHub Secrets にも同じ値
+BLUESKY_HANDLE       ボットのハンドル（yorushika-fan.bsky.social）。Vercel のみ
+BLUESKY_APP_PASSWORD ボット専用のアプリパスワード（本パスワードではない）。Vercel のみ
 ```
+
+`BLUESKY_*` が無いあいだは投稿しない（収集はそのまま動く）。
 
 `TURSO_*` と `CRON_SECRET` は Vercel の環境変数にも必要（ニュース一覧と収集APIが実行時に使う）。
 変更したら Vercel は Redeploy する。`YOUTUBE_API_KEY` は Vercel には不要。
@@ -230,6 +234,24 @@ Turso に保存する（ゲームトレンドの `app/api/cron/` と同じ作り
 `/news`：新しい順、日付ごとの区切り。タブは「すべて / ニュース / ファンの投稿 / 海外 / 話題」。
 `/trends`：今週いちばん語られている曲、急上昇ワード、投稿数の推移、Wikipedia閲覧数。
 トップページに「最新ニュース5件」。`/news` の内容をRSSでも配信する。
+
+## Bluesky ボット（2026-10-01 実装）
+
+@yorushika-fan.bsky.social。毎時の収集（/api/cron/collect）の最後に、新しい記事を投稿する。
+決まりと理由は `lib/news/bluesky.ts` の冒頭に書いてある。要点:
+- 公式・ニュースと、見出しでヨルシカの話と分かる note だけ。海外（英語）と話題（はてブ）は投稿しない
+- 1時間に最大3件、公開から48時間以内、似た見出しは1回だけ
+- リンクは元の記事へ直接（読む人がこのサイトを経由しなくて済むように）。サムネイル画像は付けない
+- 状態は articles.bsky_status に残す。削除依頼が来たら bsky_uri の投稿を消し、記事に removed_at を付ける
+- 仕組みを入れる前の記事（156件）は bsky_status='backfill' にして投稿しない
+- `?bskyPreview=1` で、投稿せずに「投稿するならこれ」を確認できる
+
+note の書き手に断りなく紹介することについては、題名とリンクだけで本文は載せないので法的な問題は無く、
+#ヨルシカ を付けて公開している人はファンに見つけてほしい人、という判断（2026-10-01 合意）。
+削除の依頼にはすぐ応じる。
+
+Googleニュースは誰でも投稿できる場所（YouTube など）の動画も拾う。ファンのヲタ芸動画が
+「ニュース」として入ったので、媒体名で外している（`lib/news/filter.ts` の UGC_PUBLISHERS）。
 
 ## 聖地巡礼マップの設計（2026-10-01 公式の場所まで実装）
 
