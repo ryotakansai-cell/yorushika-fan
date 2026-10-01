@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDbClient } from "@/lib/db";
+import { postNewArticles, type BlueskyReport } from "@/lib/news/bluesky";
 import { isRelevant, normalizeUrl } from "@/lib/news/filter";
 import { SOURCES, type CollectedItem, type Source } from "@/lib/news/sources";
 
@@ -13,6 +14,9 @@ export const maxDuration = 60;
  *
  * ?dryRun=1 を付けると、保存せずに「何件取れて、何件残るか」だけを返す。
  * フィルタのルールを変えたときに、実データで確かめるため。
+ *
+ * 保存のあと、新しい記事を Bluesky に投稿する（lib/news/bluesky.ts）。
+ * ?bskyPreview=1 を付けると、保存はするが投稿はせず「投稿するならこれ」を返す。
  */
 export async function GET(request: NextRequest) {
   // 合言葉（CRON_SECRET）を知っている呼び出し元だけ受け付ける
@@ -21,6 +25,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "権限がありません" }, { status: 401 });
   }
   const dryRun = request.nextUrl.searchParams.get("dryRun") === "1";
+  const bskyPreview = request.nextUrl.searchParams.get("bskyPreview") === "1";
 
   // ① 全情報源を同時に取りに行く。
   //    allSettled にしているのは、1つが落ちても残りは保存したいため
@@ -103,11 +108,21 @@ export async function GET(request: NextRequest) {
     (await db.execute("SELECT COUNT(*) AS n FROM articles")).rows[0].n,
   );
 
+  // ④ Bluesky に投稿する。失敗しても収集そのものは成功として返す
+  //    （投稿の不具合で記事の保存まで止まると、サイトの更新が止まってしまうため）
+  let bluesky: BlueskyReport | { error: string };
+  try {
+    bluesky = await postNewArticles(bskyPreview);
+  } catch (e) {
+    bluesky = { error: String(e) };
+  }
+
   return NextResponse.json({
     collectedAt: now,
     saved: keep.length,
     newArticles: after - before,
     totalArticles: after,
     report,
+    bluesky,
   });
 }
