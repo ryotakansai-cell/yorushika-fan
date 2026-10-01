@@ -1,34 +1,204 @@
 [
-  { "name": "ゼビオアリーナ仙台", "lat": 38.2303, "lon": 140.88725, "prefecture": "宮城県" },
-  { "name": "仙台サンプラザホール", "lat": 38.25772, "lon": 140.89407, "prefecture": "宮城県" },
-  { "name": "札幌文化芸術劇場 hitaru", "lat": 43.06326, "lon": 141.35574, "prefecture": "北海道" },
-  { "name": "札幌カナモトホール", "lat": 43.06217, "lon": 141.35556, "prefecture": "北海道", "note": "正式名称は札幌市民ホール（カナモトホールは命名権による愛称）" },
-  { "name": "日本武道館", "lat": 35.69336, "lon": 139.74987, "prefecture": "東京都" },
-  { "name": "東京国際フォーラム ホールA", "lat": 35.67679, "lon": 139.76354, "prefecture": "東京都" },
-  { "name": "東京ガーデンシアター", "lat": 35.63775, "lon": 139.79204, "prefecture": "東京都" },
-  { "name": "TOKYO ARIAKE ARENA", "lat": 35.64334, "lon": 139.79446, "prefecture": "東京都", "note": "有明アリーナ" },
-  { "name": "TSUTAYA O-EAST", "lat": 35.65865, "lon": 139.69552, "prefecture": "東京都", "currentName": "Spotify O-EAST", "note": "2021年12月に Spotify O-EAST へ改名" },
-  { "name": "Shinjuku BLAZE", "lat": 35.69541, "lon": 139.70106, "prefecture": "東京都", "closed": "2024-07-31", "note": "2024年7月31日に閉館" },
-  { "name": "新木場スタジオコースト", "lat": 35.64223, "lon": 139.82529, "prefecture": "東京都", "closed": "2022-01-30", "note": "2022年1月30日に閉館し、建物は解体済み" },
-  { "name": "横浜アリーナ", "lat": 35.51227, "lon": 139.62019, "prefecture": "神奈川県" },
-  { "name": "K-Arena Yokohama", "lat": 35.46486, "lon": 139.63069, "prefecture": "神奈川県" },
-  { "name": "ぴあアリーナMM", "lat": 35.45582, "lon": 139.62837, "prefecture": "神奈川県" },
-  { "name": "幕張メッセ国際展示場1～8ホール・イベントホール", "lat": 35.6473, "lon": 140.03465, "prefecture": "千葉県", "note": "幕張メッセ" },
-  { "name": "LaLa arena TOKYO-BAY", "lat": 35.68381, "lon": 139.98973, "prefecture": "千葉県" },
-  { "name": "日本ガイシホール", "lat": 35.09582, "lon": 136.92332, "prefecture": "愛知県" },
-  { "name": "IG ARENA", "lat": 35.19045, "lon": 136.90267, "prefecture": "愛知県" },
-  { "name": "AICHI SKY EXPO [愛知県国際展示場]", "lat": 34.85632, "lon": 136.8212, "prefecture": "愛知県" },
-  { "name": "名古屋国際会議場 センチュリーホール", "lat": 35.13178, "lon": 136.89675, "prefecture": "愛知県" },
-  { "name": "ボトムライン", "lat": 35.16845, "lon": 136.93954, "prefecture": "愛知県", "approximate": true, "note": "名古屋市千種区今池4-7-11（地図データに登録が無いため、今池四丁目のおおよその位置）" },
-  { "name": "大阪城ホール", "lat": 34.68964, "lon": 135.5301, "prefecture": "大阪府" },
-  { "name": "フェスティバルホール", "lat": 34.69334, "lon": 135.49655, "prefecture": "大阪府" },
-  { "name": "グランキューブ大阪 (大阪府立国際会議場) メインホール", "lat": 34.68939, "lon": 135.48627, "prefecture": "大阪府" },
-  { "name": "インテックス大阪", "lat": 34.63726, "lon": 135.42001, "prefecture": "大阪府" },
-  { "name": "BIG CAT", "lat": 34.67253, "lon": 135.49873, "prefecture": "大阪府" },
-  { "name": "GLION ARENA KOBE", "lat": 34.68166, "lon": 135.19607, "prefecture": "兵庫県" },
-  { "name": "神戸国際会館 こくさいホール", "lat": 34.69226, "lon": 135.19593, "prefecture": "兵庫県" },
-  { "name": "マリンメッセ福岡A館", "lat": 33.60728, "lon": 130.4021, "prefecture": "福岡県" },
-  { "name": "福岡サンパレス", "lat": 33.60396, "lon": 130.40208, "prefecture": "福岡県" },
-  { "name": "福岡市民会館", "lat": 33.59646, "lon": 130.39865, "prefecture": "福岡県" },
-  { "name": "沖縄コンベンションセンター劇場棟", "lat": 26.27961, "lon": 127.73301, "prefecture": "沖縄県" }
+  {
+    "name": "ゼビオアリーナ仙台",
+    "lat": 38.2303,
+    "lon": 140.88725,
+    "prefecture": "宮城県"
+  },
+  {
+    "name": "仙台サンプラザホール",
+    "lat": 38.25772,
+    "lon": 140.89407,
+    "prefecture": "宮城県"
+  },
+  {
+    "name": "札幌文化芸術劇場 hitaru",
+    "lat": 43.06326,
+    "lon": 141.35574,
+    "prefecture": "北海道"
+  },
+  {
+    "name": "札幌カナモトホール",
+    "lat": 43.06217,
+    "lon": 141.35556,
+    "prefecture": "北海道",
+    "note": "正式名称は札幌市民ホール（カナモトホールは命名権による愛称）"
+  },
+  {
+    "name": "日本武道館",
+    "lat": 35.69336,
+    "lon": 139.74987,
+    "prefecture": "東京都"
+  },
+  {
+    "name": "東京国際フォーラム ホールA",
+    "lat": 35.67679,
+    "lon": 139.76354,
+    "prefecture": "東京都"
+  },
+  {
+    "name": "東京ガーデンシアター",
+    "lat": 35.63775,
+    "lon": 139.79204,
+    "prefecture": "東京都"
+  },
+  {
+    "name": "TOKYO ARIAKE ARENA",
+    "lat": 35.64334,
+    "lon": 139.79446,
+    "prefecture": "東京都",
+    "note": "日本語表記は「有明アリーナ」"
+  },
+  {
+    "name": "TSUTAYA O-EAST",
+    "lat": 35.65865,
+    "lon": 139.69552,
+    "prefecture": "東京都",
+    "currentName": "Spotify O-EAST",
+    "note": "2021年12月に Spotify O-EAST へ改名"
+  },
+  {
+    "name": "Shinjuku BLAZE",
+    "lat": 35.69541,
+    "lon": 139.70106,
+    "prefecture": "東京都",
+    "closed": "2024-07-31",
+    "note": "2024年7月31日に閉館"
+  },
+  {
+    "name": "新木場スタジオコースト",
+    "lat": 35.64223,
+    "lon": 139.82529,
+    "prefecture": "東京都",
+    "closed": "2022-01-30",
+    "note": "2022年1月30日に閉館し、建物は解体済み"
+  },
+  {
+    "name": "横浜アリーナ",
+    "lat": 35.51227,
+    "lon": 139.62019,
+    "prefecture": "神奈川県"
+  },
+  {
+    "name": "K-Arena Yokohama",
+    "lat": 35.46486,
+    "lon": 139.63069,
+    "prefecture": "神奈川県"
+  },
+  {
+    "name": "ぴあアリーナMM",
+    "lat": 35.45582,
+    "lon": 139.62837,
+    "prefecture": "神奈川県"
+  },
+  {
+    "name": "幕張メッセ国際展示場1～8ホール・イベントホール",
+    "lat": 35.6473,
+    "lon": 140.03465,
+    "prefecture": "千葉県"
+  },
+  {
+    "name": "LaLa arena TOKYO-BAY",
+    "lat": 35.68381,
+    "lon": 139.98973,
+    "prefecture": "千葉県"
+  },
+  {
+    "name": "日本ガイシホール",
+    "lat": 35.09582,
+    "lon": 136.92332,
+    "prefecture": "愛知県"
+  },
+  {
+    "name": "IG ARENA",
+    "lat": 35.19045,
+    "lon": 136.90267,
+    "prefecture": "愛知県"
+  },
+  {
+    "name": "AICHI SKY EXPO [愛知県国際展示場]",
+    "lat": 34.85632,
+    "lon": 136.8212,
+    "prefecture": "愛知県"
+  },
+  {
+    "name": "名古屋国際会議場 センチュリーホール",
+    "lat": 35.13178,
+    "lon": 136.89675,
+    "prefecture": "愛知県"
+  },
+  {
+    "name": "ボトムライン",
+    "lat": 35.16845,
+    "lon": 136.93954,
+    "prefecture": "愛知県",
+    "approximate": true,
+    "note": "名古屋市千種区今池4-7-11（地図データに登録が無いため、今池四丁目のおおよその位置）"
+  },
+  {
+    "name": "大阪城ホール",
+    "lat": 34.68964,
+    "lon": 135.5301,
+    "prefecture": "大阪府"
+  },
+  {
+    "name": "フェスティバルホール",
+    "lat": 34.69334,
+    "lon": 135.49655,
+    "prefecture": "大阪府"
+  },
+  {
+    "name": "グランキューブ大阪 (大阪府立国際会議場) メインホール",
+    "lat": 34.68939,
+    "lon": 135.48627,
+    "prefecture": "大阪府"
+  },
+  {
+    "name": "インテックス大阪",
+    "lat": 34.63726,
+    "lon": 135.42001,
+    "prefecture": "大阪府"
+  },
+  {
+    "name": "BIG CAT",
+    "lat": 34.67253,
+    "lon": 135.49873,
+    "prefecture": "大阪府"
+  },
+  {
+    "name": "GLION ARENA KOBE",
+    "lat": 34.68166,
+    "lon": 135.19607,
+    "prefecture": "兵庫県"
+  },
+  {
+    "name": "神戸国際会館 こくさいホール",
+    "lat": 34.69226,
+    "lon": 135.19593,
+    "prefecture": "兵庫県"
+  },
+  {
+    "name": "マリンメッセ福岡A館",
+    "lat": 33.60728,
+    "lon": 130.4021,
+    "prefecture": "福岡県"
+  },
+  {
+    "name": "福岡サンパレス",
+    "lat": 33.60396,
+    "lon": 130.40208,
+    "prefecture": "福岡県"
+  },
+  {
+    "name": "福岡市民会館",
+    "lat": 33.59646,
+    "lon": 130.39865,
+    "prefecture": "福岡県"
+  },
+  {
+    "name": "沖縄コンベンションセンター劇場棟",
+    "lat": 26.27961,
+    "lon": 127.73301,
+    "prefecture": "沖縄県"
+  }
 ]
