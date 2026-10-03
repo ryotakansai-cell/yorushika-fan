@@ -80,11 +80,31 @@ type SceneItem = {
   sources: { label: string; url: string }[];
   note?: string;
   /**
+   * 巡礼メモ。実際に行く人が知りたいこと（2026-10-03 ファンの巡礼記を調べて項目を決めた）。
+   * 巡礼記の文章は写さず、要点を自分の言葉でまとめ、出典を付ける。場所ごとに少しずつ足していく
+   */
+  memo?: PilgrimMemo;
+  /**
    * カードと見比べ画面に出す現地の写真（Wikimedia Commons の自由ライセンスの写真）。
    * 撮影者名とライセンスを表示する条件で使える。オーナーが候補から選んだものだけ入れる
    * （scripts/commons-candidates.mjs → design/photo-review.html）
    */
   photo?: PhotoCredit;
+};
+
+/** 巡礼メモの項目。書ける項目だけ書けばよい */
+export type PilgrimMemo = {
+  /** 行き方（最寄り駅・本数・駐車場など） */
+  access?: string;
+  /** おすすめの時間・季節 */
+  when?: string;
+  /** MVと同じ構図で見るコツ・立ち位置 */
+  tips?: string;
+  /** MVのころから変わったこと・今の様子 */
+  now?: string;
+  /** マナー・注意 */
+  manners?: string;
+  sources: { label: string; url: string }[];
 };
 
 /** 自由ライセンスの写真。表示するときは撮影者名・ライセンス・元のページへのリンクを必ず添える */
@@ -440,7 +460,38 @@ export type SceneDetail = {
     embed?: string;
     ref?: { label: string; url: string };
   }[];
+  memo?: PilgrimMemo;
+  /** 近くの聖地（NEARBY_KM 以内。近い順） */
+  nearby: { id: string; name: string; distanceLabel: string; works: string }[];
 };
+
+/** 「近くの聖地」に出す範囲。歩いて回れるくらい（雨晴の駅・踏切・女岩はこの範囲に入る） */
+const NEARBY_KM = 2;
+
+/**
+ * 2地点の直線距離（km）。地球を球とみなして緯度・経度から求める一般的な式（ハバーサイン公式）。
+ * 数km の範囲なら、実際の距離とのずれは無視できる
+ */
+function distanceKm(
+  a: { lat: number; lon: number },
+  b: { lat: number; lon: number },
+) {
+  const R = 6371; // 地球の半径（km）
+  const rad = (d: number) => (d * Math.PI) / 180;
+  const dLat = rad(b.lat - a.lat);
+  const dLon = rad(b.lon - a.lon);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+/** 「約350m」「約1.2km」。直線距離なので「約」を付ける */
+function formatDistance(km: number) {
+  return km < 1
+    ? `約${Math.max(50, Math.round((km * 1000) / 50) * 50)}m`
+    : `約${km.toFixed(1)}km`;
+}
 
 /** 静的に作るページの一覧（generateStaticParams 用） */
 export function sceneIds() {
@@ -476,6 +527,18 @@ export function getSceneDetail(id: string): SceneDetail | undefined {
       embed: checkEmbed(x.embed, `${sc.id} ${x.work}`),
       ref: x.verified?.ref,
     })),
+    memo: sc.memo,
+    nearby: (scenesJson as SceneItem[])
+      .filter((o) => o.id !== sc.id)
+      .map((o) => ({ o, km: distanceKm(sc, o) }))
+      .filter(({ km }) => km <= NEARBY_KM)
+      .sort((a, b) => a.km - b.km)
+      .map(({ o, km }) => ({
+        id: o.id,
+        name: o.name,
+        distanceLabel: formatDistance(km),
+        works: [...new Set(o.scenes.map((x) => x.work))].join("・"),
+      })),
   };
 }
 
