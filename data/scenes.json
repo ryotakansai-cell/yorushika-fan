@@ -1,92 +1,5 @@
 [
   {
-    "id": "tokoname-tojiki-kaikan",
-    "name": "常滑市陶磁器会館 西の交差点",
-    "prefecture": "愛知県",
-    "lat": 34.88957,
-    "lon": 136.83682,
-    "evidence": "report",
-    "scenes": [
-      {
-        "work": "夜行",
-        "videoId": "MH5noJJfqDY",
-        "at": 123,
-        "verified": {
-          "date": "2026-10-03",
-          "how": "MVの2:03の場面とストリートビューで、交差点と道路の形が一致"
-        },
-        "embed": "https://www.google.com/maps/embed?pb=!4v1791020440200!6m8!1m7!1skhxjONeAlDZclrVxCqRBJA!2m2!1d34.88957335095227!2d136.8368228494141!3f229.48917764780725!4f1.6390752193746323!5f0.7820865974627469"
-      }
-    ],
-    "sources": [
-      {
-        "label": "ちたまるNavi（知多半島の地域メディア）",
-        "url": "https://www.chitamaru.jp/art/6245/"
-      }
-    ]
-  },
-  {
-    "id": "tokoname-noborigama",
-    "name": "登窯広場",
-    "prefecture": "愛知県",
-    "lat": 34.88653,
-    "lon": 136.83978,
-    "evidence": "report",
-    "scenes": [
-      {
-        "work": "夜行",
-        "videoId": "MH5noJJfqDY",
-        "at": 125,
-        "verified": {
-          "date": "2026-10-03",
-          "how": "MVの2:05の場面と現地の写真（Googleマップ）で、「登窯広場」の看板・パイプの枠・案内地図の看板が一致"
-        }
-      },
-      {
-        "work": "花に亡霊",
-        "videoId": "9lVPAWLWtWc",
-        "at": 191,
-        "verified": {
-          "date": "2026-10-03",
-          "how": "MVの3:11の場面と現地の写真（Googleマップ）で、青い陶製の柱のオブジェが一致"
-        }
-      }
-    ],
-    "sources": [
-      {
-        "label": "ちたまるNavi（知多半島の地域メディア）",
-        "url": "https://www.chitamaru.jp/art/6245/"
-      }
-    ]
-  },
-  {
-    "id": "amaharashi-station",
-    "name": "雨晴駅",
-    "prefecture": "富山県",
-    "lat": 36.8165,
-    "lon": 137.03739,
-    "evidence": "report",
-    "scenes": [
-      {
-        "work": "ただ君に晴れ",
-        "videoId": "-VKIqrvVOpo",
-        "at": 37,
-        "note": "MVの駐輪場は建て替えられていて、今は面影が無い（2025年10月のGoogleマップのクチコミ）"
-      }
-    ],
-    "sources": [
-      {
-        "label": "GATE12（MVに登場した駅の紹介記事）",
-        "url": "https://thegate12.com/jp/article/442"
-      },
-      {
-        "label": "SH Diary（場面と現地の写真を並べて比較しているファンの記録）",
-        "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
-      }
-    ],
-    "note": "0:37 は駅前の自転車駐車場"
-  },
-  {
     "id": "amaharashi-crossing",
     "name": "雨晴駅近くの踏切",
     "prefecture": "富山県",
@@ -147,6 +60,33 @@
         "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
       }
     ]
+  },
+  {
+    "id": "amaharashi-station",
+    "name": "雨晴駅",
+    "prefecture": "富山県",
+    "lat": 36.8165,
+    "lon": 137.03739,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "ただ君に晴れ",
+        "videoId": "-VKIqrvVOpo",
+        "at": 37,
+        "note": "MVの駐輪場は建て替えられていて、今は面影が無い（2025年10月のGoogleマップのクチコミ）"
+      }
+    ],
+    "sources": [
+      {
+        "label": "GATE12（MVに登場した駅の紹介記事）",
+        "url": "https://thegate12.com/jp/article/442"
+      },
+      {
+        "label": "SH Diary（場面と現地の写真を並べて比較しているファンの記録）",
+        "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
+      }
+    ],
+    "note": "0:37 は駅前の自転車駐車場"
   },
   {
     "id": "shimonada-station",
@@ -230,6 +170,66 @@
     "note": "n-bunaさんが、曲のモデルは「昭和記念公園にある欅の樹」で、それを桜に見立てて書いたと話している。公園内のどの欅かは語られていないので、ピンは公園に置いている"
   },
   {
+    "id": "tokoname-noborigama",
+    "name": "登窯広場",
+    "prefecture": "愛知県",
+    "lat": 34.88653,
+    "lon": 136.83978,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "夜行",
+        "videoId": "MH5noJJfqDY",
+        "at": 125,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの2:05の場面と現地の写真（Googleマップ）で、「登窯広場」の看板・パイプの枠・案内地図の看板が一致"
+        }
+      },
+      {
+        "work": "花に亡霊",
+        "videoId": "9lVPAWLWtWc",
+        "at": 191,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの3:11の場面と現地の写真（Googleマップ）で、青い陶製の柱のオブジェが一致"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "label": "ちたまるNavi（知多半島の地域メディア）",
+        "url": "https://www.chitamaru.jp/art/6245/"
+      }
+    ]
+  },
+  {
+    "id": "tokoname-tojiki-kaikan",
+    "name": "常滑市陶磁器会館 西の交差点",
+    "prefecture": "愛知県",
+    "lat": 34.88957,
+    "lon": 136.83682,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "夜行",
+        "videoId": "MH5noJJfqDY",
+        "at": 123,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの2:03の場面とストリートビューで、交差点と道路の形が一致"
+        },
+        "embed": "https://www.google.com/maps/embed?pb=!4v1791020440200!6m8!1m7!1skhxjONeAlDZclrVxCqRBJA!2m2!1d34.88957335095227!2d136.8368228494141!3f229.48917764780725!4f1.6390752193746323!5f0.7820865974627469"
+      }
+    ],
+    "sources": [
+      {
+        "label": "ちたまるNavi（知多半島の地域メディア）",
+        "url": "https://www.chitamaru.jp/art/6245/"
+      }
+    ]
+  },
+  {
     "id": "sarushima",
     "name": "猿島",
     "prefecture": "神奈川県",
@@ -280,31 +280,6 @@
     "approximate": true
   },
   {
-    "id": "kinugawakan-honten",
-    "name": "きぬ川館本店（廃墟）",
-    "prefecture": "栃木県",
-    "lat": 36.83664,
-    "lon": 139.72186,
-    "evidence": "report",
-    "scenes": [
-      {
-        "work": "パレード",
-        "videoId": "ry3Tupx4BL4",
-        "verified": {
-          "date": "2026-10-03",
-          "how": "MVの室内の場面をGoogleレンズで調べると同じ部屋の写真が見つかり、廃墟写真のブログにもパレードのMVと同じソファーとある"
-        }
-      }
-    ],
-    "sources": [
-      {
-        "label": "廃墟写真ブログ Ruin's Cat（パレードのMVと同じソファーとの記載）",
-        "url": "https://ruins-cat.com/blog-entry-350.html"
-      }
-    ],
-    "note": "1999年に閉業した廃墟ホテル。崩落の危険があり、敷地に無断で入ると不法侵入になります。外から見るだけにしてください"
-  },
-  {
     "id": "shimoda-shirahama",
     "name": "白浜海岸（伊豆下田）",
     "prefecture": "静岡県",
@@ -328,5 +303,30 @@
         "url": "https://ayataka1020.com/231/"
       }
     ]
+  },
+  {
+    "id": "kinugawakan-honten",
+    "name": "きぬ川館本店（廃墟）",
+    "prefecture": "栃木県",
+    "lat": 36.83664,
+    "lon": 139.72186,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "パレード",
+        "videoId": "ry3Tupx4BL4",
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの室内の場面をGoogleレンズで調べると同じ部屋の写真が見つかり、廃墟写真のブログにもパレードのMVと同じソファーとある"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "label": "廃墟写真ブログ Ruin's Cat（パレードのMVと同じソファーとの記載）",
+        "url": "https://ruins-cat.com/blog-entry-350.html"
+      }
+    ],
+    "note": "1999年に閉業した廃墟ホテル。崩落の危険があり、敷地に無断で入ると不法侵入になります。外から見るだけにしてください"
   }
 ]

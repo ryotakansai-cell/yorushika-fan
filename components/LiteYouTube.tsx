@@ -17,11 +17,14 @@ export function LiteYouTube({
   videoId,
   title,
   sizes = "(min-width: 768px) 768px, 100vw",
+  start,
 }: {
   videoId: string;
   title: string;
   /** 表示される幅。細い欄に置くときは小さく指定し、無駄に大きな画像を読ませない */
   sizes?: string;
+  /** 再生を始める秒数。聖地の見比べ画面で「その場面から」再生するため */
+  start?: number;
 }) {
   const [playing, setPlaying] = useState(false);
   const [hiRes, setHiRes] = useState(true);
@@ -31,7 +34,7 @@ export function LiteYouTube({
       <iframe
         className="aspect-video w-full"
         // autoplay=1: 押したのは「再生したい」からなので、もう一度押させない
-        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`}
+        src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1${start ? `&start=${start}` : ""}`}
         title={title}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen

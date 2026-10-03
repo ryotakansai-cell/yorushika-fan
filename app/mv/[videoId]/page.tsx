@@ -136,8 +136,9 @@ export default async function VideoPage({ params }: Props) {
                 key={`${sc.spotId}-${sc.at ?? ""}`}
                 className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-3"
               >
+                {/* MVの場面と現地を並べた見比べ画面へ（地図の外から開くので単独ページになる） */}
                 <Link
-                  href={`/map#${sc.spotId}`}
+                  href={sc.detailHref}
                   className="font-serif text-ink transition hover:text-accent"
                 >
                   {sc.name}
