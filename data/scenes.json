@@ -7,7 +7,13 @@
     "lon": 136.83947,
     "approximate": true,
     "evidence": "report",
-    "scenes": [{ "work": "夜行", "videoId": "MH5noJJfqDY", "at": 123 }],
+    "scenes": [
+      {
+        "work": "夜行",
+        "videoId": "MH5noJJfqDY",
+        "at": 123
+      }
+    ],
     "sources": [
       {
         "label": "ちたまるNavi（知多半島の地域メディア）",
@@ -24,8 +30,20 @@
     "lon": 136.83978,
     "evidence": "report",
     "scenes": [
-      { "work": "夜行", "videoId": "MH5noJJfqDY", "at": 125 },
-      { "work": "花に亡霊", "videoId": "9lVPAWLWtWc", "at": 191 }
+      {
+        "work": "夜行",
+        "videoId": "MH5noJJfqDY",
+        "at": 125,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの2:05の場面と現地の写真（Googleマップ）で、「登窯広場」の看板・パイプの枠・案内地図の看板が一致"
+        }
+      },
+      {
+        "work": "花に亡霊",
+        "videoId": "9lVPAWLWtWc",
+        "at": 191
+      }
     ],
     "sources": [
       {
@@ -41,7 +59,12 @@
     "lat": 36.8165,
     "lon": 137.03739,
     "evidence": "report",
-    "scenes": [{ "work": "ただ君に晴れ", "videoId": "-VKIqrvVOpo" }],
+    "scenes": [
+      {
+        "work": "ただ君に晴れ",
+        "videoId": "-VKIqrvVOpo"
+      }
+    ],
     "sources": [
       {
         "label": "GATE12（MVに登場した駅の紹介記事）",
@@ -56,7 +79,12 @@
     "lat": 33.65542,
     "lon": 132.58941,
     "evidence": "report",
-    "scenes": [{ "work": "だから僕は音楽を辞めた", "videoId": "KTZ-y85Erus" }],
+    "scenes": [
+      {
+        "work": "だから僕は音楽を辞めた",
+        "videoId": "KTZ-y85Erus"
+      }
+    ],
     "sources": [
       {
         "label": "GATE12（MVに登場した駅の紹介記事）",
@@ -71,7 +99,12 @@
     "lat": 35.6866,
     "lon": 139.41214,
     "evidence": "estimate",
-    "scenes": [{ "work": "春泥棒", "videoId": "Sw1Flgub9s8" }],
+    "scenes": [
+      {
+        "work": "春泥棒",
+        "videoId": "Sw1Flgub9s8"
+      }
+    ],
     "sources": [
       {
         "label": "いいね立川（立川の地域メディア。モデルと推定）",
@@ -86,7 +119,12 @@
     "lat": 35.28607,
     "lon": 139.69406,
     "evidence": "estimate",
-    "scenes": [{ "work": "パレード", "videoId": "ry3Tupx4BL4" }],
+    "scenes": [
+      {
+        "work": "パレード",
+        "videoId": "ry3Tupx4BL4"
+      }
+    ],
     "sources": [
       {
         "label": "ファンによる聖地まとめ",
@@ -101,7 +139,12 @@
     "lat": 34.68715,
     "lon": 138.97264,
     "evidence": "estimate",
-    "scenes": [{ "work": "都落ち", "videoId": "pHdJmDFYqTU" }],
+    "scenes": [
+      {
+        "work": "都落ち",
+        "videoId": "pHdJmDFYqTU"
+      }
+    ],
     "sources": [
       {
         "label": "ファンによる聖地まとめ",
