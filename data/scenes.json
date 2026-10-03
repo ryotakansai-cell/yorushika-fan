@@ -1,17 +1,21 @@
 [
   {
     "id": "tokoname-tojiki-kaikan",
-    "name": "常滑市陶磁器会館 西の交差点付近",
+    "name": "常滑市陶磁器会館 西の交差点",
     "prefecture": "愛知県",
-    "lat": 34.89061,
-    "lon": 136.83947,
-    "approximate": true,
+    "lat": 34.88957,
+    "lon": 136.83682,
     "evidence": "report",
     "scenes": [
       {
         "work": "夜行",
         "videoId": "MH5noJJfqDY",
-        "at": 123
+        "at": 123,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの2:03の場面とストリートビューで、交差点と道路の形が一致"
+        },
+        "embed": "https://www.google.com/maps/embed?pb=!4v1791020440200!6m8!1m7!1skhxjONeAlDZclrVxCqRBJA!2m2!1d34.88957335095227!2d136.8368228494141!3f229.48917764780725!4f1.6390752193746323!5f0.7820865974627469"
       }
     ],
     "sources": [
@@ -19,8 +23,7 @@
         "label": "ちたまるNavi（知多半島の地域メディア）",
         "url": "https://www.chitamaru.jp/art/6245/"
       }
-    ],
-    "note": "記事では交差点の付近とされているので、ピンは陶磁器会館に置いている"
+    ]
   },
   {
     "id": "tokoname-noborigama",
@@ -99,7 +102,7 @@
           "date": "2026-10-03",
           "how": "MVの0:48の場面と現地の写真で、踏切と海へ続く道の並びが一致",
           "ref": {
-            "label": "照合に使った現地の写真（Googleマップ）",
+            "label": "現地の写真（Googleマップ）",
             "url": "https://maps.app.goo.gl/LjUDUF4ua8dxSxQ47"
           }
         }
@@ -132,7 +135,7 @@
           "date": "2026-10-03",
           "how": "MVの2:40の場面と、女岩の朝日の写真で、岩の形と松の形が一致",
           "ref": {
-            "label": "照合に使った写真（photolibrary）",
+            "label": "写真（photolibrary）",
             "url": "https://www.photolibrary.jp/img354/210_3263533.html"
           }
         }
@@ -248,7 +251,7 @@
           "date": "2026-10-03",
           "how": "MVの3:37の場面と、猿島の防空指揮所（監視所）跡の写真で、円筒形の建物と手すり・はしごが一致",
           "ref": {
-            "label": "照合に使った写真（Instagram）",
+            "label": "写真（Instagram）",
             "url": "https://www.instagram.com/p/C-zhLelPXY9/"
           }
         }
@@ -275,6 +278,31 @@
     ],
     "note": "島内の場所ごとの位置は未登録。ピンは島に置いている",
     "approximate": true
+  },
+  {
+    "id": "kinugawakan-honten",
+    "name": "きぬ川館本店（廃墟）",
+    "prefecture": "栃木県",
+    "lat": 36.83664,
+    "lon": 139.72186,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "パレード",
+        "videoId": "ry3Tupx4BL4",
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの室内の場面をGoogleレンズで調べると同じ部屋の写真が見つかり、廃墟写真のブログにもパレードのMVと同じソファーとある"
+        }
+      }
+    ],
+    "sources": [
+      {
+        "label": "廃墟写真ブログ Ruin's Cat（パレードのMVと同じソファーとの記載）",
+        "url": "https://ruins-cat.com/blog-entry-350.html"
+      }
+    ],
+    "note": "1999年に閉業した廃墟ホテル。崩落の危険があり、敷地に無断で入ると不法侵入になります。外から見るだけにしてください"
   },
   {
     "id": "shimoda-shirahama",

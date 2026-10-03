@@ -70,6 +70,12 @@ type SceneItem = {
     };
     /** 場面ごとの注記（MVの駐輪場は建て替えで現存しない、など） */
     note?: string;
+    /**
+     * Googleマップの埋め込みURL（写真・ストリートビュー）。Googleマップの「共有 → 地図を埋め込む」で得られる。
+     * 一般の人がGoogleマップに上げた写真は投稿者に著作権があり、こちらで保存して載せることはできない。
+     * 埋め込みはGoogle自身の表示機能で見せるので、画像をコピーせずに現地の様子を見せられる
+     */
+    embed?: string;
   }[];
   sources: { label: string; url: string }[];
   note?: string;
@@ -94,6 +100,25 @@ export const EVIDENCE_LABEL: Record<Evidence, string> = {
   estimate: "推定",
 };
 
+/**
+ * 画面にラベルとして出す根拠。2026-10-03 オーナーの判断で「推定」だけ出すことにした
+ * （照合済み・報道までラベルにすると、ほとんどの場所に付いて読みにくい）。
+ * 「制作者の発言」は公式が場所に触れた唯一の根拠でマップの売りになるので、残している
+ */
+function shownLabel(e: Evidence) {
+  return e === "estimate" || e === "official" ? EVIDENCE_LABEL[e] : undefined;
+}
+
+/** 埋め込みはGoogleマップのものだけ受け付ける（別のサイトのページがそのまま表示されるのを防ぐ） */
+function checkEmbed(url: string | undefined, where: string) {
+  if (url && !url.startsWith("https://www.google.com/maps/embed?")) {
+    throw new Error(
+      `scenes.json の embed がGoogleマップの埋め込みではありません: ${where}`,
+    );
+  }
+  return url;
+}
+
 /** 期間のあるもの（展示）の状態。ライブ会場は建物そのものが目的地なので常に null */
 export type EventStatus = "upcoming" | "ongoing" | "ended";
 
@@ -105,6 +130,8 @@ export type SpotEntry = {
   verifiedRef?: { label: string; url: string };
   /** この場面だけの注記 */
   note?: string;
+  /** Googleマップの埋め込み（現地の写真・ストリートビュー） */
+  embed?: string;
   /** 表示用の日付（例: 2024.11.19・11.20 / 2023.05.09〜05.28） */
   dateLabel: string;
   source: string;
@@ -331,6 +358,7 @@ function sceneSpots(): Spot[] {
         verifiedHow: x.verified?.how,
         verifiedRef: x.verified?.ref,
         note: x.note,
+        embed: checkEmbed(x.embed, `${sc.id} ${x.work}`),
         dateLabel:
           x.at !== undefined
             ? `${formatSeconds(x.at)} の場面`
@@ -339,7 +367,7 @@ function sceneSpots(): Spot[] {
       })),
       googleMapsUrl: googleMapsUrl(`${sc.lat},${sc.lon}`),
       evidence,
-      evidenceLabel: EVIDENCE_LABEL[evidence],
+      evidenceLabel: shownLabel(evidence),
       sources: sc.sources,
       // MVの場面と見比べられるよう、その地点のストリートビューを開く（APIキー不要の公式のURL形式）
       streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
@@ -370,7 +398,8 @@ export type VideoScene = {
   atLabel?: string;
   at?: number;
   evidence: Evidence;
-  evidenceLabel: string;
+  /** 画面に出すラベル（「推定」「制作者の発言」のときだけ） */
+  evidenceLabel?: string;
 };
 
 export function getScenesForVideo(videoId: string): VideoScene[] {
@@ -388,7 +417,7 @@ export function getScenesForVideo(videoId: string): VideoScene[] {
           at: x.at,
           atLabel: x.at !== undefined ? formatSeconds(x.at) : undefined,
           evidence,
-          evidenceLabel: EVIDENCE_LABEL[evidence],
+          evidenceLabel: shownLabel(evidence),
         };
       }),
   );

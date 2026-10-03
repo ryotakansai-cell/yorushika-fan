@@ -303,26 +303,25 @@ function SpotRow({
             >
               {e.title}
             </a>
-            {/* 人が場面と現地を見比べて一致を確かめた場面。何を見たかはマウスを乗せると出る */}
-            {e.verifiedHow && (
-              <span className="text-xs text-accent" title={e.verifiedHow}>
-                照合済み
-              </span>
-            )}
             {/* 照合に使った写真。画像はこのサイトに置かず（権利のため）元の場所へ案内する。
-                見た人が自分で見比べられるので、「照合済み」の根拠を確かめられる */}
+                「照合済み」の文字は出さない（2026-10-03 オーナーの判断。ラベルは「推定」だけにする）が、
+                何を見て一致としたかはマウスを乗せると出る */}
             {e.verifiedRef && (
               <a
                 href={e.verifiedRef.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs text-muted transition hover:text-accent"
+                title={e.verifiedHow}
               >
                 {e.verifiedRef.label}
               </a>
             )}
             {e.note && (
               <span className="basis-full text-xs text-muted">{e.note}</span>
+            )}
+            {e.embed && (
+              <MapEmbed src={e.embed} title={`${s.name}の現地の様子`} />
             )}
           </li>
         ))}
@@ -386,5 +385,36 @@ function SpotRow({
         )}
       </div>
     </li>
+  );
+}
+
+/**
+ * Googleマップの埋め込み（現地の写真・ストリートビュー）。押したときだけ読み込む。
+ * 一覧に埋め込みが何個も並ぶので、最初から全部読み込むとページがとても重くなるため。
+ * 写真は一般の人がGoogleマップに上げたもので、こちらで保存せずGoogleの表示機能で見せている
+ */
+function MapEmbed({ src, title }: { src: string; title: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <span className="basis-full">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="text-xs text-muted transition hover:text-accent"
+      >
+        {open ? "現地の写真を閉じる" : "現地の写真を見る"}
+      </button>
+      {open && (
+        <iframe
+          src={src}
+          title={title}
+          className="mt-2 aspect-video w-full max-w-xl rounded-md border border-line"
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        />
+      )}
+    </span>
   );
 }
