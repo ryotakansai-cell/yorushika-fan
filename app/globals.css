@@ -26,3 +26,33 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
+
+/*
+ * 聖地巡礼マップの写真のピン（components/PilgrimageMap.tsx の pinElement）。
+ * 写真を丸く切り抜き、白い縁と影で地図から浮かせる。選択中は少し大きくして縁を差し色にする。
+ * 大きさは transform で変える（Leaflet は印の位置を外側の要素の transform で決めているので、
+ * 外側ではなく、この内側の要素を拡大する）
+ */
+.photo-pin {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 3px solid var(--color-card);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.35);
+  background: var(--color-line);
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+  cursor: pointer;
+}
+.photo-pin img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.photo-pin.is-selected {
+  transform: scale(1.3);
+  border-color: var(--color-accent);
+}
