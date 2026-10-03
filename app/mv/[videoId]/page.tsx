@@ -128,7 +128,7 @@ export default async function VideoPage({ params }: Props) {
           </div>
           <p className="mt-1 text-xs text-muted">
             {/* 「春泥棒」のように制作者が場所に触れている曲もあるので、一律に「公式ではない」とは書かない */}
-            根拠の強さ（制作者の発言・照合済み・報道・推定）を分けて載せています。出典はマップで確かめられます。
+            まだ確かめられていない場所には「推定」と付けています。出典と現地の写真はマップで見られます。
           </p>
           <ul className="mt-3 divide-y divide-line border-y border-line">
             {scenes.map((sc) => (
