@@ -1,7 +1,7 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import type { CircleMarker, Map as LeafletMap } from "leaflet";
+import type { Map as LeafletMap, Marker, TileLayer } from "leaflet";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -56,13 +56,49 @@ function markerColor(s: Spot) {
   return COLOR[s.category];
 }
 
+/**
+ * 地図の背景。2026-10-03 オーナーと比べて決めた（design/map-styles.png）:
+ * - 国土地理院の淡色地図は、拡大すると等高線だらけの地形図になって映えなかった
+ * - OpenStreetMap はGoogleマップに近いカラフルな地図で、引いた日本全体もきれい。世界中を描けるので
+ *   将来ジャケットの舞台（スウェーデン）も載せられる。利用条件は出典の表示と、まとめて取得しないこと
+ * - 国土地理院の航空写真は、拡大するとリアルで「この景色だ」と確かめやすいが、引くと雲や欠けが目立つ。
+ *   なので普段は OpenStreetMap、切り替えで航空写真にする
+ * - CARTO は登録（APIキー）が必要になっていたので使わない
+ */
+type Base = "map" | "photo";
+const BASES: { value: Base; label: string }[] = [
+  { value: "map", label: "地図" },
+  { value: "photo", label: "航空写真" },
+];
+
+/**
+ * ピンの見た目。写真（またはMVのサムネイル）を丸く切り抜いた印にする。
+ * 文字列の HTML ではなく DOM で組む（URL や名前に記号が入っても崩れない）
+ */
+function pinElement(s: Spot) {
+  const el = document.createElement("div");
+  el.className = "photo-pin";
+  if (s.image) {
+    const img = document.createElement("img");
+    // 地図の印は小さいので、YouTube のサムネイルは軽い中サイズ（320px）にする
+    img.src = s.image.src.replace("/hqdefault.jpg", "/mqdefault.jpg");
+    img.alt = "";
+    el.append(img);
+  } else {
+    el.style.backgroundColor = markerColor(s);
+  }
+  return el;
+}
+
 export function PilgrimageMap({ spots }: { spots: Spot[] }) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
-  const markersRef = useRef(new Map<string, CircleMarker>());
+  const markersRef = useRef(new Map<string, Marker>());
+  const layersRef = useRef<Record<Base, TileLayer> | null>(null);
   const cardRefs = useRef(new Map<string, HTMLLIElement>());
   const [ready, setReady] = useState(false);
+  const [base, setBase] = useState<Base>("map");
   const [filter, setFilter] = useState<Filter>("all");
   // 実際に載っている種別（絞り込みと凡例は、これが2つ以上のときだけ出す）
   const categories = useMemo(
@@ -112,23 +148,38 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
         padding: [24, 24],
       });
 
-      // 国土地理院の「淡色地図」。日本語の地名が出て、サイトの落ち着いた配色に合う。
-      // 利用条件は出典の明記のみ
-      L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png", {
-        attribution:
-          '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">地理院タイル</a>',
-        maxZoom: 18,
-      }).addTo(map);
+      // 背景は2種類作っておき、切り替えのときに入れ替える（BASES の説明を参照）。
+      // どちらも出典の表示が利用の条件
+      const layers: Record<Base, TileLayer> = {
+        map: L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>',
+          maxZoom: 19,
+        }),
+        photo: L.tileLayer(
+          "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
+          {
+            attribution:
+              '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener noreferrer">地理院タイル</a>（航空写真）',
+            maxZoom: 18,
+          },
+        ),
+      };
+      layers.map.addTo(map);
+      layersRef.current = layers;
 
       for (const s of spots) {
-        // 画像の印はバンドラーと相性が悪い（既定の画像パスが壊れる）ので、
-        // 画像を使わない円の印にしている
-        const marker = L.circleMarker([s.lat, s.lon], {
-          radius: 7,
-          color: "#fffdf8",
-          weight: 2,
-          fillColor: markerColor(s),
-          fillOpacity: 0.9,
+        // 印は丸い写真。Leaflet 既定の画像の印は、まとめて配信する仕組み（バンドラー）と相性が悪く
+        // 画像のパスが壊れるので、自分で作った要素（divIcon）を印にしている
+        const marker = L.marker([s.lat, s.lon], {
+          icon: L.divIcon({
+            html: pinElement(s),
+            className: "", // Leaflet 既定の白い四角の枠を付けない
+            iconSize: [44, 44],
+            iconAnchor: [22, 22],
+            popupAnchor: [0, -22],
+          }),
+          title: s.name,
         });
         marker.bindPopup(popupContent(s, (href) => router.push(href)));
         // ピンを押したら、そのカードを選択中にして一覧をそこまで動かす
@@ -164,14 +215,30 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
     }
   }, [ready, visible]);
 
-  // ③ 選択中のピンを少し大きくする（どれを選んでいるか地図でも分かるように）
+  // ③ 選択中のピンを少し大きくし、枠を差し色にする（どれを選んでいるか地図でも分かるように）。
+  // 大きさは CSS（globals.css の .photo-pin.is-selected）で変え、重なったときに手前へ出す
   useEffect(() => {
     if (!ready) return;
     for (const [id, marker] of markersRef.current) {
-      marker.setRadius(id === selected ? 11 : 7);
-      if (id === selected) marker.bringToFront();
+      const on = id === selected;
+      marker
+        .getElement()
+        ?.querySelector(".photo-pin")
+        ?.classList.toggle("is-selected", on);
+      marker.setZIndexOffset(on ? 1000 : 0);
     }
   }, [ready, selected]);
+
+  // ⑤ 背景の切り替え（地図 ⇔ 航空写真）
+  useEffect(() => {
+    const map = mapRef.current;
+    const layers = layersRef.current;
+    if (!ready || !map || !layers) return;
+    for (const [key, layer] of Object.entries(layers) as [Base, TileLayer][]) {
+      if (key === base) layer.addTo(map);
+      else layer.remove();
+    }
+  }, [ready, base]);
 
   // ④ URL の # で場所が指定されていたら（MVページなどから来たとき）その場所を開く。
   // ② より後に書いているのは、effect は書いた順に動くため。印が地図に置かれる前に
@@ -241,12 +308,38 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
       <div className="lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-6">
         {/* 地図。スクロールしても見えるように固定する（スマホは上、PCは左） */}
         <div className="sticky top-0 z-10 -mx-5 bg-paper px-5 pb-2 pt-2 lg:top-4 lg:mx-0 lg:self-start lg:px-0 lg:pt-0">
-          {/* z-0 にしないと Leaflet の部品がヘッダーより手前に出る */}
-          <div
-            ref={containerRef}
-            className="relative z-0 h-[38vh] w-full overflow-hidden rounded-lg border border-line bg-card lg:h-[calc(100vh-7rem)]"
-            aria-label="聖地巡礼マップ"
-          />
+          <div className="relative">
+            {/* z-0 にしないと Leaflet の部品がヘッダーより手前に出る */}
+            <div
+              ref={containerRef}
+              className="relative z-0 h-[38vh] w-full overflow-hidden rounded-lg border border-line bg-card lg:h-[calc(100vh-7rem)]"
+              aria-label="聖地巡礼マップ"
+            />
+            {/* 背景の切り替え。Leaflet 付属の切り替えはサイトの見た目と合わず、画像のパスも
+                バンドラーと相性が悪いので、自分で作っている。地図の右上に重ねる */}
+            <div
+              className="absolute right-2 top-2 z-[1] flex overflow-hidden rounded-full border border-line bg-card/95 text-xs shadow-sm"
+              role="radiogroup"
+              aria-label="地図の表示"
+            >
+              {BASES.map((b) => (
+                <button
+                  key={b.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={base === b.value}
+                  onClick={() => setBase(b.value)}
+                  className={`px-3 py-1.5 transition ${
+                    base === b.value
+                      ? "bg-accent text-card"
+                      : "text-muted hover:text-accent"
+                  }`}
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
+          </div>
           {/* 凡例も、種別が2つ以上あるときだけ（1種類なら色の説明は要らない） */}
           {categories.length > 1 && (
             <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
