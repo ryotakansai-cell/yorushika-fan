@@ -64,6 +64,11 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
   const cardRefs = useRef(new Map<string, HTMLLIElement>());
   const [ready, setReady] = useState(false);
   const [filter, setFilter] = useState<Filter>("all");
+  // 実際に載っている種別（絞り込みと凡例は、これが2つ以上のときだけ出す）
+  const categories = useMemo(
+    () => [...new Set(spots.map((s) => s.category))],
+    [spots],
+  );
   const [selected, setSelected] = useState<string | null>(null);
 
   // 「すべて」では、写真のある主役の「MVの舞台」を先頭にする。
@@ -204,31 +209,36 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
 
   return (
     <div>
-      {/* 種別の絞り込み */}
-      <div
-        className="flex flex-wrap gap-2"
-        role="tablist"
-        aria-label="種別で絞り込む"
-      >
-        {FILTERS.map((f) => (
-          <button
-            key={f.value}
-            type="button"
-            role="tab"
-            aria-selected={filter === f.value}
-            onClick={() => setFilter(f.value)}
-            className={`rounded-full border px-3 py-1 text-sm transition ${
-              filter === f.value
-                ? "border-accent bg-accent text-card"
-                : "border-line bg-card text-muted hover:text-accent"
-            }`}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
+      {/* 種別の絞り込み。種別が2つ以上あるときだけ出す（今はMVの舞台だけなので出ない。
+          ジャケットの舞台などを足したら、自動でまた出てくる） */}
+      {categories.length > 1 && (
+        <div
+          className="mb-4 flex flex-wrap gap-2"
+          role="tablist"
+          aria-label="種別で絞り込む"
+        >
+          {FILTERS.filter(
+            (f) => f.value === "all" || categories.includes(f.value),
+          ).map((f) => (
+            <button
+              key={f.value}
+              type="button"
+              role="tab"
+              aria-selected={filter === f.value}
+              onClick={() => setFilter(f.value)}
+              className={`rounded-full border px-3 py-1 text-sm transition ${
+                filter === f.value
+                  ? "border-accent bg-accent text-card"
+                  : "border-line bg-card text-muted hover:text-accent"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      )}
 
-      <div className="mt-4 lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-6">
+      <div className="lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-6">
         {/* 地図。スクロールしても見えるように固定する（スマホは上、PCは左） */}
         <div className="sticky top-0 z-10 -mx-5 bg-paper px-5 pb-2 pt-2 lg:top-4 lg:mx-0 lg:self-start lg:px-0 lg:pt-0">
           {/* z-0 にしないと Leaflet の部品がヘッダーより手前に出る */}
@@ -237,12 +247,20 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
             className="relative z-0 h-[38vh] w-full overflow-hidden rounded-lg border border-line bg-card lg:h-[calc(100vh-7rem)]"
             aria-label="聖地巡礼マップ"
           />
-          <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-            <Legend color={COLOR.scene} label="MVの舞台" />
-            <Legend color={COLOR.live} label="ライブ会場" />
-            <Legend color={COLOR.event} label="展示・コラボ" />
-            <Legend color={COLOR.inactive} label="終了・閉館" />
-          </ul>
+          {/* 凡例も、種別が2つ以上あるときだけ（1種類なら色の説明は要らない） */}
+          {categories.length > 1 && (
+            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+              {FILTERS.filter(
+                (f): f is { value: SpotCategory; label: string } =>
+                  f.value !== "all" && categories.includes(f.value),
+              ).map((f) => (
+                <Legend key={f.value} color={COLOR[f.value]} label={f.label} />
+              ))}
+              {spots.some((s) => s.closed || s.status === "ended") && (
+                <Legend color={COLOR.inactive} label="終了・閉館" />
+              )}
+            </ul>
+          )}
         </div>
 
         {/* カードの一覧 */}
