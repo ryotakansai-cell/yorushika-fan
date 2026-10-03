@@ -69,16 +69,19 @@ type SceneItem = {
 export type SpotCategory = "live" | "event" | "scene";
 
 /**
- * MVの舞台の根拠の強さ。公式が場所を明言した例は見つかっていない（2026-10-01 時点）。
- *   report   … メディアが記事にしている
+ * MVの舞台の根拠の強さ（強い順）。
+ *   official … 制作者（n-buna・MV監督など）がインタビューなどで場所に触れている
+ *              （2026-10-03 時点で「春泥棒」の根川緑道・昭和記念公園だけ）
  *   verified … MVの場面とストリートビューを見比べて一致を確かめた
+ *   report   … メディアが記事にしている
  *   estimate … ファンや地域メディアが「モデルでは」としている
  */
-export type Evidence = "report" | "verified" | "estimate";
+export type Evidence = "official" | "verified" | "report" | "estimate";
 
 export const EVIDENCE_LABEL: Record<Evidence, string> = {
-  report: "報道",
+  official: "制作者の発言",
   verified: "照合済み",
+  report: "報道",
   estimate: "推定",
 };
 
@@ -290,9 +293,11 @@ function sceneSpots(): Spot[] {
   return (scenesJson as SceneItem[]).map((sc) => {
     // 照合は場面ごとに記録する。同じ場所でも、確かめていない場面まで「照合済み」に見せないため。
     // 場所としての根拠は、照合済みの場面が1つでもあれば「照合済み」にする
-    const evidence: Evidence = sc.scenes.some((x) => x.verified)
-      ? "verified"
-      : sc.evidence;
+    // ただし制作者の発言は照合より強い根拠なので、照合済みで上書きしない
+    const evidence: Evidence =
+      sc.evidence !== "official" && sc.scenes.some((x) => x.verified)
+        ? "verified"
+        : sc.evidence;
     return {
       id: `scene:${sc.id}`,
       name: sc.name,
@@ -359,7 +364,8 @@ export function getScenesForVideo(videoId: string): VideoScene[] {
       .filter((x) => x.videoId === videoId)
       .map((x) => {
         // MVページでは「その場面」が照合済みかで根拠を出す（同じ場所の別の曲の照合は関係ない）
-        const evidence: Evidence = x.verified ? "verified" : sc.evidence;
+        const evidence: Evidence =
+          sc.evidence !== "official" && x.verified ? "verified" : sc.evidence;
         return {
           spotId: `scene:${sc.id}`,
           name: sc.name,

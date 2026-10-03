@@ -291,8 +291,9 @@ function SpotRow({
       {s.address && <p className="mt-1 text-xs text-muted">{s.address}</p>}
 
       <ul className="mt-2 space-y-1 text-sm">
-        {s.entries.map((e) => (
-          <li key={e.title} className="flex flex-wrap gap-x-3">
+        {s.entries.map((e, i) => (
+          // 同じ曲の場面が1か所に2つある（雨晴駅の 0:37 と 0:48）ので、題名だけでは key が重なる
+          <li key={`${e.title}-${i}`} className="flex flex-wrap gap-x-3">
             <span className="tabular-nums text-muted">{e.dateLabel}</span>
             <a
               href={e.source}

@@ -54,7 +54,7 @@
   },
   {
     "id": "amaharashi-station",
-    "name": "雨晴駅・雨晴海岸",
+    "name": "雨晴駅",
     "prefecture": "富山県",
     "lat": 36.8165,
     "lon": 137.03739,
@@ -62,13 +62,45 @@
     "scenes": [
       {
         "work": "ただ君に晴れ",
-        "videoId": "-VKIqrvVOpo"
+        "videoId": "-VKIqrvVOpo",
+        "at": 37
+      },
+      {
+        "work": "ただ君に晴れ",
+        "videoId": "-VKIqrvVOpo",
+        "at": 48
       }
     ],
     "sources": [
       {
         "label": "GATE12（MVに登場した駅の紹介記事）",
         "url": "https://thegate12.com/jp/article/442"
+      },
+      {
+        "label": "SH Diary（場面と現地の写真を並べて比較しているファンの記録）",
+        "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
+      }
+    ],
+    "note": "0:37 は駅の駐輪場、0:48 は駅の近くの踏切"
+  },
+  {
+    "id": "amaharashi-onnaiwa",
+    "name": "女岩（雨晴海岸）",
+    "prefecture": "富山県",
+    "lat": 36.81451,
+    "lon": 137.04521,
+    "evidence": "estimate",
+    "scenes": [
+      {
+        "work": "ただ君に晴れ",
+        "videoId": "-VKIqrvVOpo",
+        "at": 160
+      }
+    ],
+    "sources": [
+      {
+        "label": "SH Diary（場面と現地の写真を並べて比較しているファンの記録）",
+        "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
       }
     ]
   },
@@ -98,7 +130,7 @@
     "prefecture": "東京都",
     "lat": 35.6866,
     "lon": 139.41214,
-    "evidence": "estimate",
+    "evidence": "official",
     "scenes": [
       {
         "work": "春泥棒",
@@ -107,10 +139,37 @@
     ],
     "sources": [
       {
-        "label": "いいね立川（立川の地域メディア。モデルと推定）",
+        "label": "CGWORLD（n-buna・森江康太 対談）",
+        "url": "https://cgworld.jp/feature/202103-yorushika.html"
+      },
+      {
+        "label": "いいね立川（立川の地域メディア）",
         "url": "https://iine-tachikawa.net/topics/131249/"
       }
-    ]
+    ],
+    "note": "監督の森江康太さんが、スタッフでロケハンして桜の樹やベンチ、縁石の雰囲気をつかんでから3Dで背景を作ったと話している"
+  },
+  {
+    "id": "showa-kinen-park",
+    "name": "国営昭和記念公園",
+    "prefecture": "東京都",
+    "lat": 35.71226,
+    "lon": 139.39432,
+    "approximate": true,
+    "evidence": "official",
+    "scenes": [
+      {
+        "work": "春泥棒",
+        "videoId": "Sw1Flgub9s8"
+      }
+    ],
+    "sources": [
+      {
+        "label": "CGWORLD（n-buna・森江康太 対談）",
+        "url": "https://cgworld.jp/feature/202103-yorushika.html"
+      }
+    ],
+    "note": "n-bunaさんが、曲のモデルは「昭和記念公園にある欅の樹」で、それを桜に見立てて書いたと話している。公園内のどの欅かは語られていないので、ピンは公園に置いている"
   },
   {
     "id": "sarushima",
