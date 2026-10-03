@@ -78,10 +78,11 @@ const BASES: { value: Base; label: string }[] = [
 function pinElement(s: Spot) {
   const el = document.createElement("div");
   el.className = "photo-pin";
-  if (s.image) {
+  // ピンはMVの公式画像（場面に一番近いもの）。カードは現地の写真なので、地図ではMV、一覧では現地、と役割を分けている
+  const src = s.pinImage ?? s.image?.src;
+  if (src) {
     const img = document.createElement("img");
-    // 地図の印は小さいので、YouTube のサムネイルは軽い中サイズ（320px）にする
-    img.src = s.image.src.replace("/hqdefault.jpg", "/mqdefault.jpg");
+    img.src = src;
     img.alt = "";
     el.append(img);
   } else {

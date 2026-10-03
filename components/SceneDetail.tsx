@@ -177,13 +177,14 @@ function Present({
       </>
     );
   }
-  if (d.photo) {
+  const photo = sc.photo ?? d.photo;
+  if (photo) {
     return (
       <>
-        <a href={d.photo.page} target="_blank" rel="noopener noreferrer">
+        <a href={photo.page} target="_blank" rel="noopener noreferrer">
           <div className="relative aspect-video overflow-hidden rounded-lg border border-line bg-line">
             <Image
-              src={d.photo.thumb}
+              src={photo.thumb}
               alt={`${d.name}の写真`}
               fill
               sizes="(min-width: 768px) 384px, 100vw"
@@ -193,7 +194,7 @@ function Present({
         </a>
         {/* 自由ライセンスの写真は、撮影者名とライセンスを表示する決まり */}
         <figcaption className="mt-1 text-xs text-muted">
-          撮影：{d.photo.artist}（{d.photo.license}・Wikimedia Commons）
+          撮影：{photo.artist}（{photo.license}・Wikimedia Commons）
         </figcaption>
       </>
     );
