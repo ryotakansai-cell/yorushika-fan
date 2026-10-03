@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { sceneIds } from "@/lib/map";
 import { SITE_URL } from "@/lib/site";
 import { videos } from "@/lib/videos";
 
@@ -31,5 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: v.kind === "mv" ? 0.8 : 0.6,
   }));
 
-  return [...staticPages, ...videoPages];
+  // 聖地の見比べページ。「夜行 聖地」のような検索から直接来てもらうためのページ
+  const scenePages: MetadataRoute.Sitemap = sceneIds().map((id) => ({
+    url: `${SITE_URL}/map/${id}`,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...videoPages, ...scenePages];
 }

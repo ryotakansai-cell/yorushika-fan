@@ -2,16 +2,25 @@
 
 import "leaflet/dist/leaflet.css";
 import type { CircleMarker, Map as LeafletMap } from "leaflet";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Spot, SpotCategory } from "@/lib/map";
 
-// 地図と一覧をひとつにしたコンポーネント。
-// 一覧の「地図で見る」で地図を動かし、地図の印を押すと一覧の該当行を強調する、
-// という行き来があるので、両方の状態をここで持つ。
+// 聖地巡礼マップの本体。地図と写真カードの一覧を並べる。
+//
+// 動きは「選ぶ → 見比べる」の2段階（2026-10-03 オーナーと決めた）:
+//   1. カードを押す → 地図がその場所へ飛び、吹き出しが開く。カードは「選択中」になる
+//   2. 選択中のカード（または吹き出し）の「見比べる」→ 見比べ画面（/map/<id>）が地図の上に重なって開く
+// 押すたびに見比べ画面が開くと、地図を眺めながら次々に場所を見て回る楽しさが無くなるため。
+//
+// 配置: PCは左に地図（スクロールしても固定）・右にカード。スマホは上に地図（固定）・下にカード。
+// どちらも「カードを押すと、見えている地図が動く」ようにしている。
 //
 // 地図ライブラリ（Leaflet）はブラウザの window を前提に作られていてサーバーでは動かない。
 // そこで useEffect（画面に出た後にブラウザだけで動く）の中で import() して読み込む。
-// 一覧は普通の React なのでサーバーで HTML になり、検索エンジンにも内容が渡る。
+// カードの一覧は普通の React なのでサーバーで HTML になり、検索エンジンにも内容が渡る。
 
 type Filter = "all" | SpotCategory;
 
@@ -30,6 +39,12 @@ const COLOR = {
   inactive: "#a39d92", // 閉館・終了したもの
 };
 
+const CATEGORY_ORDER: Record<SpotCategory, number> = {
+  scene: 0,
+  live: 1,
+  event: 2,
+};
+
 const STATUS_LABEL = {
   upcoming: "開催予定",
   ongoing: "開催中",
@@ -42,15 +57,28 @@ function markerColor(s: Spot) {
 }
 
 export function PilgrimageMap({ spots }: { spots: Spot[] }) {
+  const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef(new Map<string, CircleMarker>());
+  const cardRefs = useRef(new Map<string, HTMLLIElement>());
   const [ready, setReady] = useState(false);
   const [filter, setFilter] = useState<Filter>("all");
   const [selected, setSelected] = useState<string | null>(null);
 
+  // 「すべて」では、写真のある主役の「MVの舞台」を先頭にする。
+  // 北から順のままだと、先頭が北海道のライブ会場になって MVの舞台が一覧の奥に埋もれていた。
+  // MVの舞台の中は scenes.json に書いた順（rank）。ライブ会場と展示は受け取った順（北→南）のまま
+  // （rank が無いものは同じ値になり、sort は同じ値どうしの順番を保つ）
   const visible = useMemo(
-    () => spots.filter((s) => filter === "all" || s.category === filter),
+    () =>
+      spots
+        .filter((s) => filter === "all" || s.category === filter)
+        .sort(
+          (a, b) =>
+            CATEGORY_ORDER[a.category] - CATEGORY_ORDER[b.category] ||
+            (a.rank ?? 0) - (b.rank ?? 0),
+        ),
     [spots, filter],
   );
 
@@ -97,25 +125,12 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
           fillColor: markerColor(s),
           fillOpacity: 0.9,
         });
-
-        // 吹き出しの中身は文字列の HTML ではなく DOM で組む（名前に記号が入っても崩れない）
-        const box = document.createElement("div");
-        const title = document.createElement("strong");
-        title.textContent = s.name;
-        const sub = document.createElement("div");
-        sub.textContent = [
-          s.kindLabel,
-          s.closed ? "閉館" : s.status ? STATUS_LABEL[s.status] : null,
-          s.evidenceLabel,
-          s.entries[0]?.title,
-        ]
-          .filter(Boolean)
-          .join(" / ");
-        sub.style.marginTop = "2px";
-        box.append(title, sub);
-        marker.bindPopup(box);
-
-        marker.on("click", () => setSelected(s.id));
+        marker.bindPopup(popupContent(s, (href) => router.push(href)));
+        // ピンを押したら、そのカードを選択中にして一覧をそこまで動かす
+        marker.on("click", () => {
+          setSelected(s.id);
+          scrollToCard(s.id);
+        });
         markers.set(s.id, marker);
       }
 
@@ -129,6 +144,8 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
       mapRef.current = null;
       markers.clear();
     };
+    // router は画面の間ずっと同じものなので、地図を作り直す理由にはしない
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spots]);
 
   // ② 絞り込みが変わったら、地図に出す印を入れ替える
@@ -142,7 +159,16 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
     }
   }, [ready, visible]);
 
-  // ③ URL の # で場所が指定されていたら（MVページの「この曲の舞台」から来たとき）その場所を開く。
+  // ③ 選択中のピンを少し大きくする（どれを選んでいるか地図でも分かるように）
+  useEffect(() => {
+    if (!ready) return;
+    for (const [id, marker] of markersRef.current) {
+      marker.setRadius(id === selected ? 11 : 7);
+      if (id === selected) marker.bringToFront();
+    }
+  }, [ready, selected]);
+
+  // ④ URL の # で場所が指定されていたら（MVページなどから来たとき）その場所を開く。
   // ② より後に書いているのは、effect は書いた順に動くため。印が地図に置かれる前に
   // 吹き出しを開こうとしても何も起きない（最初はこの順番を逆に書いていて開かなかった）。
   // ページを開いた直後なので、移動のアニメーションはせずにいきなりその場所を出す。
@@ -152,27 +178,38 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
     if (!ready) return;
     const id = decodeURIComponent(window.location.hash.slice(1));
     const target = spots.find((s) => s.id === id);
-    if (target) showOnMap(target, false);
+    if (target) {
+      select(target, false);
+      scrollToCard(target.id);
+    }
   }, [ready, spots]);
 
-  function showOnMap(s: Spot, animate = true) {
+  /** カードを押したとき: 地図をその場所へ動かし、吹き出しを開いて選択中にする */
+  function select(s: Spot, animate = true) {
     const map = mapRef.current;
-    if (!map) return;
     setSelected(s.id);
+    if (!map) return;
     if (animate) map.flyTo([s.lat, s.lon], 15, { duration: 0.8 });
     else map.setView([s.lat, s.lon], 15);
     markersRef.current.get(s.id)?.openPopup();
-    // 一覧は地図の下にあるので、押したら地図が見える位置まで戻す
-    containerRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+  }
+
+  function scrollToCard(id: string) {
+    // スマホでは地図が上に固定されているので、カードが地図の裏に隠れないよう
+    // カード側の scroll-margin-top（地図の高さぶん）で止まる位置をずらしている
+    cardRefs.current
+      .get(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
     <div>
       {/* 種別の絞り込み */}
-      <div className="flex gap-2" role="tablist" aria-label="種別で絞り込む">
+      <div
+        className="flex flex-wrap gap-2"
+        role="tablist"
+        aria-label="種別で絞り込む"
+      >
         {FILTERS.map((f) => (
           <button
             key={f.value}
@@ -191,41 +228,85 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
         ))}
       </div>
 
-      {/* 地図。z-0 にしないと Leaflet の部品がヘッダーより手前に出る */}
-      <div
-        ref={containerRef}
-        className="relative z-0 mt-4 h-[55vh] min-h-80 w-full overflow-hidden rounded-lg border border-line bg-card"
-        aria-label="聖地巡礼マップ"
-      />
+      <div className="mt-4 lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-6">
+        {/* 地図。スクロールしても見えるように固定する（スマホは上、PCは左） */}
+        <div className="sticky top-0 z-10 -mx-5 bg-paper px-5 pb-2 pt-2 lg:top-4 lg:mx-0 lg:self-start lg:px-0 lg:pt-0">
+          {/* z-0 にしないと Leaflet の部品がヘッダーより手前に出る */}
+          <div
+            ref={containerRef}
+            className="relative z-0 h-[38vh] w-full overflow-hidden rounded-lg border border-line bg-card lg:h-[calc(100vh-7rem)]"
+            aria-label="聖地巡礼マップ"
+          />
+          <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+            <Legend color={COLOR.scene} label="MVの舞台" />
+            <Legend color={COLOR.live} label="ライブ会場" />
+            <Legend color={COLOR.event} label="展示・コラボ" />
+            <Legend color={COLOR.inactive} label="終了・閉館" />
+          </ul>
+        </div>
 
-      {/* 凡例 */}
-      <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
-        <Legend color={COLOR.scene} label="MVの舞台" />
-        <Legend color={COLOR.live} label="ライブ会場" />
-        <Legend color={COLOR.event} label="展示・コラボ（開催中・予定）" />
-        <Legend color={COLOR.inactive} label="終了した展示・閉館した会場" />
-      </ul>
-
-      {/* 一覧（都道府県ごと） */}
-      <div className="mt-10">
-        {groupByPrefecture(visible).map(([pref, list]) => (
-          <section key={pref} className="mt-8 first:mt-0">
-            <h2 className="font-serif text-lg text-ink">{pref}</h2>
-            <ul className="mt-3 divide-y divide-line border-y border-line">
-              {list.map((s) => (
-                <SpotRow
-                  key={s.id}
-                  spot={s}
-                  selected={selected === s.id}
-                  onShow={() => showOnMap(s)}
-                />
-              ))}
-            </ul>
-          </section>
-        ))}
+        {/* カードの一覧 */}
+        <ul className="mt-4 space-y-3 lg:mt-0">
+          {visible.map((s) => (
+            <li
+              key={s.id}
+              ref={(el) => {
+                if (el) cardRefs.current.set(s.id, el);
+                else cardRefs.current.delete(s.id);
+              }}
+              className="scroll-mt-[46vh] lg:scroll-mt-4"
+            >
+              <SpotCard
+                spot={s}
+                selected={selected === s.id}
+                onSelect={() => select(s)}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
+}
+
+/**
+ * 吹き出しの中身。文字列の HTML ではなく DOM で組む（名前に記号が入っても崩れない）。
+ * 「見比べる」は普通のリンクだとページ全体の読み込みになり、地図の上に重なる画面にならない。
+ * そこで押されたら Next.js の画面切り替え（router.push）で開く
+ */
+function popupContent(s: Spot, navigate: (href: string) => void) {
+  const box = document.createElement("div");
+  const title = document.createElement("strong");
+  title.textContent = s.name;
+  const sub = document.createElement("div");
+  sub.textContent = [
+    s.kindLabel,
+    s.closed ? "閉館" : s.status ? STATUS_LABEL[s.status] : null,
+    s.evidenceLabel,
+  ]
+    .filter(Boolean)
+    .join(" / ");
+  sub.style.margin = "2px 0 6px";
+  box.append(title, sub);
+
+  if (s.detailHref) {
+    const a = document.createElement("a");
+    a.href = s.detailHref;
+    a.textContent = "見比べる";
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigate(s.detailHref!);
+    });
+    box.append(a);
+  } else if (s.entries[0]) {
+    const a = document.createElement("a");
+    a.href = s.entries[0].source;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = "公式の告知を見る";
+    box.append(a);
+  }
+  return box;
 }
 
 function Legend({ color, label }: { color: string; label: string }) {
@@ -240,181 +321,197 @@ function Legend({ color, label }: { color: string; label: string }) {
   );
 }
 
-function groupByPrefecture(spots: Spot[]) {
-  const groups = new Map<string, Spot[]>();
-  for (const s of spots) {
-    groups.set(s.prefecture, [...(groups.get(s.prefecture) ?? []), s]);
+/** カード1枚の短い説明（曲名と場面、ライブ名と日付、展示名と期間） */
+function summary(s: Spot) {
+  if (s.category === "scene") {
+    return s.entries
+      .map(
+        (e) =>
+          `${e.title.replace("（MV）", "")} ${e.dateLabel.replace(" の場面", "")}`,
+      )
+      .join("・");
   }
-  return [...groups.entries()];
+  const [first, ...rest] = s.entries;
+  if (!first) return "";
+  return `${first.title}（${first.dateLabel}）${rest.length > 0 ? ` ほか${rest.length}件` : ""}`;
 }
 
-function SpotRow({
+function SpotCard({
   spot: s,
   selected,
-  onShow,
+  onSelect,
 }: {
   spot: Spot;
   selected: boolean;
-  onShow: () => void;
+  onSelect: () => void;
 }) {
   const badge = s.closed ? "閉館" : s.status ? STATUS_LABEL[s.status] : null;
-  const active = !s.closed && s.status !== "ended";
+  const inactive = s.closed || s.status === "ended";
 
   return (
-    <li className={`py-4 transition-colors ${selected ? "bg-accent/5" : ""}`}>
-      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        <span className="font-serif text-ink">{s.name}</span>
-        <span className="text-xs text-muted">{s.kindLabel}</span>
-        {/* MVの舞台の根拠。「推定」は確かさが低いので控えめな見た目にする */}
-        {s.evidenceLabel && (
-          <span
-            className={`rounded border px-1.5 py-px text-xs ${
-              s.evidence === "estimate"
-                ? "border-line text-muted"
-                : "border-accent text-accent"
-            }`}
-          >
-            {s.evidenceLabel}
+    <div
+      className={`overflow-hidden rounded-lg border bg-card transition ${
+        selected
+          ? "border-accent shadow-sm"
+          : "border-line hover:border-accent/50"
+      }`}
+    >
+      {/* カードの本体はボタン。リンク（見比べる など）はボタンの中に入れられない決まりなので、下の段に分けている */}
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-pressed={selected}
+        className="flex w-full gap-3 p-3 text-left"
+      >
+        <Thumb spot={s} inactive={inactive} />
+        <span className="min-w-0 flex-1">
+          <span className="block font-serif text-ink">{s.name}</span>
+          <span className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
+            <span>{s.kindLabel}</span>
+            <span>{s.prefecture}</span>
+            {s.evidenceLabel && (
+              <span
+                className={`rounded border px-1.5 py-px ${
+                  s.evidence === "estimate"
+                    ? "border-line text-muted"
+                    : "border-accent text-accent"
+                }`}
+              >
+                {s.evidenceLabel}
+              </span>
+            )}
+            {badge && (
+              <span
+                className={`rounded px-1.5 py-px ${
+                  inactive ? "bg-line text-muted" : "bg-accent text-card"
+                }`}
+              >
+                {badge}
+              </span>
+            )}
           </span>
-        )}
-        {badge && (
-          <span
-            className={`rounded px-1.5 py-0.5 text-xs ${
-              active ? "bg-accent text-card" : "bg-line text-muted"
-            }`}
-          >
-            {badge}
+          <span className="mt-1 line-clamp-2 block text-sm text-muted">
+            {summary(s)}
           </span>
-        )}
-      </div>
+        </span>
+      </button>
 
-      {s.address && <p className="mt-1 text-xs text-muted">{s.address}</p>}
-
-      <ul className="mt-2 space-y-1 text-sm">
-        {s.entries.map((e, i) => (
-          // 同じ曲の場面が1か所に2つある（雨晴駅の 0:37 と 0:48）ので、題名だけでは key が重なる
-          <li key={`${e.title}-${i}`} className="flex flex-wrap gap-x-3">
-            <span className="tabular-nums text-muted">{e.dateLabel}</span>
+      {/* 選択中だけ出す段。ボタンだらけにならないよう、選んだカードにだけ出す */}
+      {selected && (
+        <div className="border-t border-line px-3 pb-3 pt-2">
+          {/* ライブ会場は公演の一覧、展示は期間を出す（MVの舞台は見比べ画面で詳しく見る） */}
+          {s.category !== "scene" && s.entries.length > 1 && (
+            <ul className="mb-2 space-y-0.5 text-xs">
+              {s.entries.map((e, i) => (
+                <li key={`${e.title}-${i}`} className="flex flex-wrap gap-x-2">
+                  <span className="tabular-nums text-muted">{e.dateLabel}</span>
+                  <a
+                    href={e.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink transition hover:text-accent"
+                  >
+                    {e.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+          {(s.note || s.approximate) && (
+            <p className="mb-2 text-xs text-muted">
+              {s.note}
+              {s.approximate && !s.note?.includes("おおよそ")
+                ? "（地図上の位置はおおよそ）"
+                : ""}
+            </p>
+          )}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+            {s.detailHref ? (
+              // scroll={false}: 重なる画面を開くときに、裏の地図ページを一番上まで戻さない
+              <Link
+                href={s.detailHref}
+                scroll={false}
+                className="rounded-full bg-accent px-4 py-1.5 text-card transition hover:opacity-90"
+              >
+                見比べる
+              </Link>
+            ) : (
+              s.entries[0] && (
+                <a
+                  href={s.entries[0].source}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-accent px-4 py-1.5 text-accent transition hover:bg-accent hover:text-card"
+                >
+                  公式の告知を見る
+                </a>
+              )
+            )}
             <a
-              href={e.source}
+              href={s.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-ink transition hover:text-accent"
+              className="text-muted transition hover:text-accent"
             >
-              {e.title}
+              Google マップで開く
             </a>
-            {/* 照合に使った写真。画像はこのサイトに置かず（権利のため）元の場所へ案内する。
-                「照合済み」の文字は出さない（2026-10-03 オーナーの判断。ラベルは「推定」だけにする）が、
-                何を見て一致としたかはマウスを乗せると出る */}
-            {e.verifiedRef && (
-              <a
-                href={e.verifiedRef.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted transition hover:text-accent"
-                title={e.verifiedHow}
-              >
-                {e.verifiedRef.label}
-              </a>
-            )}
-            {e.note && (
-              <span className="basis-full text-xs text-muted">{e.note}</span>
-            )}
-            {e.embed && (
-              <MapEmbed src={e.embed} title={`${s.name}の現地の様子`} />
-            )}
-          </li>
-        ))}
-      </ul>
-
-      {/* 出典。MVの舞台は公式が場所を明言していないので、誰が言っているかを必ず見せる */}
-      {s.sources && s.sources.length > 0 && (
-        <p className="mt-2 text-xs text-muted">
-          出典：
-          {s.sources.map((src, i) => (
-            <span key={src.url}>
-              {i > 0 && "、"}
-              <a
-                href={src.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-ink transition hover:text-accent"
-              >
-                {src.label}
-              </a>
-            </span>
-          ))}
-        </p>
+          </div>
+        </div>
       )}
-
-      {(s.note || s.approximate) && (
-        <p className="mt-2 text-xs text-muted">
-          {s.note}
-          {s.approximate && !s.note?.includes("おおよそ")
-            ? "（地図上の位置はおおよそ）"
-            : ""}
-        </p>
-      )}
-
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
-        <button
-          type="button"
-          onClick={onShow}
-          className="text-muted transition hover:text-accent"
-        >
-          地図で見る
-        </button>
-        <a
-          href={s.googleMapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-muted transition hover:text-accent"
-        >
-          Google マップで開く
-        </a>
-        {/* MVの場面と現地の風景を見比べられるように */}
-        {s.streetViewUrl && (
-          <a
-            href={s.streetViewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted transition hover:text-accent"
-          >
-            ストリートビューで見る
-          </a>
-        )}
-      </div>
-    </li>
+    </div>
   );
 }
 
-/**
- * Googleマップの埋め込み（現地の写真・ストリートビュー）。押したときだけ読み込む。
- * 一覧に埋め込みが何個も並ぶので、最初から全部読み込むとページがとても重くなるため。
- * 写真は一般の人がGoogleマップに上げたもので、こちらで保存せずGoogleの表示機能で見せている
- */
-function MapEmbed({ src, title }: { src: string; title: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <span className="basis-full">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="text-xs text-muted transition hover:text-accent"
-      >
-        {open ? "現地の写真を閉じる" : "現地の写真を見る"}
-      </button>
-      {open && (
-        <iframe
-          src={src}
-          title={title}
-          className="mt-2 aspect-video w-full max-w-xl rounded-md border border-line"
-          loading="lazy"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
+/** カードの画像。写真（またはMVのサムネイル）があればそれ、無ければ種別の色の枠 */
+function Thumb({ spot: s, inactive }: { spot: Spot; inactive: boolean }) {
+  const box =
+    "relative aspect-[4/3] w-24 shrink-0 overflow-hidden rounded-md sm:w-28";
+  if (s.image) {
+    return (
+      <span className={`${box} bg-line`}>
+        <Image
+          src={s.image.src}
+          alt={s.image.alt}
+          fill
+          sizes="112px"
+          className="object-cover"
         />
-      )}
+      </span>
+    );
+  }
+  const color = inactive ? COLOR.inactive : COLOR[s.category];
+  return (
+    <span
+      className={`${box} flex items-center justify-center text-xs`}
+      // 色に透明度を足して淡い背景にする（#rrggbb + 22 = 約13%の濃さ）
+      style={{ backgroundColor: `${color}22`, color }}
+      aria-hidden
+    >
+      {/* 種別は横に文字で出ているので、ここは文字を重ねずアイコンだけにする */}
+      <svg
+        viewBox="0 0 24 24"
+        className="size-7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {s.category === "event" ? (
+          // 額縁（展示）
+          <>
+            <rect x="4" y="5" width="16" height="14" rx="1.5" />
+            <path d="M7 16l3.5-4 2.5 3 2-2 2 3" />
+          </>
+        ) : (
+          // 音符（ライブ会場）
+          <>
+            <path d="M9 18V6l10-2v12" />
+            <circle cx="6.5" cy="18" r="2.5" />
+            <circle cx="16.5" cy="16" r="2.5" />
+          </>
+        )}
+      </svg>
     </span>
   );
 }

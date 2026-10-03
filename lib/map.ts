@@ -79,6 +79,28 @@ type SceneItem = {
   }[];
   sources: { label: string; url: string }[];
   note?: string;
+  /**
+   * カードと見比べ画面に出す現地の写真（Wikimedia Commons の自由ライセンスの写真）。
+   * 撮影者名とライセンスを表示する条件で使える。オーナーが候補から選んだものだけ入れる
+   * （scripts/commons-candidates.mjs → design/photo-review.html）
+   */
+  photo?: PhotoCredit;
+};
+
+/** 自由ライセンスの写真。表示するときは撮影者名・ライセンス・元のページへのリンクを必ず添える */
+export type PhotoCredit = {
+  thumb: string;
+  page: string;
+  license: string;
+  artist: string;
+};
+
+/** カードに出す画像。写真が無い場所は、MVの公式サムネイルで代わりにする */
+export type SpotImage = {
+  src: string;
+  alt: string;
+  /** 自由ライセンスの写真のときだけ（MVのサムネイルには付かない） */
+  credit?: PhotoCredit;
 };
 
 export type SpotCategory = "live" | "event" | "scene";
@@ -165,6 +187,16 @@ export type Spot = {
   evidenceLabel?: string;
   sources?: { label: string; url: string }[];
   streetViewUrl?: string;
+  /** カードの画像（今はMVの舞台だけ。ライブ会場・展示は写真が揃ったら足す） */
+  image?: SpotImage;
+  /** 見比べ画面（D）へのリンク。MVの舞台だけ */
+  detailHref?: string;
+  /**
+   * 一覧での並び順。MVの舞台だけ scenes.json に書いた順の番号が入る。
+   * 北から順にすると、先頭が「きぬ川館本店（廃墟）」になってしまったため、
+   * 代表的な場所が先頭に来るよう、データの並びで順番を決められるようにしている
+   */
+  rank?: number;
 };
 
 // 一覧を北から南へ並べるための順番（JISの都道府県コード順）
@@ -330,7 +362,7 @@ function formatSeconds(sec: number) {
 }
 
 function sceneSpots(): Spot[] {
-  return (scenesJson as SceneItem[]).map((sc) => {
+  return (scenesJson as SceneItem[]).map((sc, rank) => {
     // 照合は場面ごとに記録する。同じ場所でも、確かめていない場面まで「照合済み」に見せないため。
     // 場所としての根拠は、照合済みの場面が1つでもあれば「照合済み」にする
     // ただし制作者の発言は照合より強い根拠なので、照合済みで上書きしない
@@ -371,6 +403,9 @@ function sceneSpots(): Spot[] {
       sources: sc.sources,
       // MVの場面と見比べられるよう、その地点のストリートビューを開く（APIキー不要の公式のURL形式）
       streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
+      image: sceneImage(sc),
+      detailHref: `/map/${sc.id}`,
+      rank,
     };
   });
 }
@@ -392,6 +427,8 @@ export function getSpots(): Spot[] {
 export type VideoScene = {
   /** マップでその場所を開くための ID（/map#<spotId>） */
   spotId: string;
+  /** 見比べ画面（D）へのリンク */
+  detailHref: string;
   name: string;
   prefecture: string;
   /** 「2:05」。分かっていないときは undefined */
@@ -412,6 +449,7 @@ export function getScenesForVideo(videoId: string): VideoScene[] {
           sc.evidence !== "official" && x.verified ? "verified" : sc.evidence;
         return {
           spotId: `scene:${sc.id}`,
+          detailHref: `/map/${sc.id}`,
           name: sc.name,
           prefecture: sc.prefecture,
           at: x.at,
@@ -421,4 +459,77 @@ export function getScenesForVideo(videoId: string): VideoScene[] {
         };
       }),
   );
+}
+
+/** カードの画像。選んだ写真があればそれ、無ければ最初の場面のMVの公式サムネイル */
+function sceneImage(sc: SceneItem): SpotImage {
+  if (sc.photo) {
+    return { src: sc.photo.thumb, alt: `${sc.name}の写真`, credit: sc.photo };
+  }
+  const first = sc.scenes[0];
+  return {
+    src: `https://i.ytimg.com/vi/${first.videoId}/hqdefault.jpg`,
+    alt: `${first.work}のMV`,
+  };
+}
+
+// --------------------------------------------------------------
+// 見比べ画面（D）。/map/<id> の単独ページと、地図に重なる画面の両方で使う
+// --------------------------------------------------------------
+
+export type SceneDetail = {
+  id: string;
+  name: string;
+  prefecture: string;
+  evidenceLabel?: string;
+  evidence: Evidence;
+  note?: string;
+  sources: { label: string; url: string }[];
+  photo?: PhotoCredit;
+  googleMapsUrl: string;
+  streetViewUrl: string;
+  scenes: {
+    work: string;
+    videoId: string;
+    at?: number;
+    atLabel?: string;
+    note?: string;
+    embed?: string;
+    ref?: { label: string; url: string };
+  }[];
+};
+
+/** 静的に作るページの一覧（generateStaticParams 用） */
+export function sceneIds() {
+  return (scenesJson as SceneItem[]).map((sc) => sc.id);
+}
+
+export function getSceneDetail(id: string): SceneDetail | undefined {
+  const sc = (scenesJson as SceneItem[]).find((s) => s.id === id);
+  if (!sc) return undefined;
+  const evidence: Evidence =
+    sc.evidence !== "official" && sc.scenes.some((x) => x.verified)
+      ? "verified"
+      : sc.evidence;
+  return {
+    id: sc.id,
+    name: sc.name,
+    prefecture: sc.prefecture,
+    evidence,
+    evidenceLabel: shownLabel(evidence),
+    note: sc.note,
+    sources: sc.sources,
+    photo: sc.photo,
+    googleMapsUrl: googleMapsUrl(`${sc.lat},${sc.lon}`),
+    streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
+    scenes: sc.scenes.map((x) => ({
+      work: x.work,
+      videoId: x.videoId,
+      at: x.at,
+      atLabel: x.at !== undefined ? formatSeconds(x.at) : undefined,
+      note: x.note,
+      embed: checkEmbed(x.embed, `${sc.id} ${x.work}`),
+      ref: x.verified?.ref,
+    })),
+  };
 }
