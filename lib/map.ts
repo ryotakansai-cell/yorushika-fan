@@ -55,7 +55,13 @@ type SceneItem = {
   approximate?: boolean;
   evidence: Evidence;
   /** その場所が出てくる作品。at はMVの何秒目の場面か（分かっているときだけ） */
-  scenes: { work: string; videoId: string; at?: number }[];
+  scenes: {
+    work: string;
+    videoId: string;
+    at?: number;
+    /** 人が場面と現地を見比べて一致を確かめたとき。いつ・何を見て一致としたか */
+    verified?: { date: string; how: string };
+  }[];
   sources: { label: string; url: string }[];
   note?: string;
 };
@@ -81,6 +87,8 @@ export type EventStatus = "upcoming" | "ongoing" | "ended";
 
 export type SpotEntry = {
   title: string;
+  /** MVの舞台だけ: この場面を人が照合して一致を確かめた（何を見て一致としたか） */
+  verifiedHow?: string;
   /** 表示用の日付（例: 2024.11.19・11.20 / 2023.05.09〜05.28） */
   dateLabel: string;
   source: string;
@@ -279,36 +287,44 @@ function formatSeconds(sec: number) {
 }
 
 function sceneSpots(): Spot[] {
-  return (scenesJson as SceneItem[]).map((sc) => ({
-    id: `scene:${sc.id}`,
-    name: sc.name,
-    category: "scene",
-    kindLabel: "MVの舞台",
-    lat: sc.lat,
-    lon: sc.lon,
-    prefecture: sc.prefecture,
-    approximate: sc.approximate ?? false,
-    closed: false,
-    status: null,
-    note: sc.note,
-    latest: "",
-    // 場面の秒数が分かっているものは、その場面から再生されるリンクにする。
-    // 画像を切り出して載せるのではなく公式の動画へ飛ばすのは、権利の問題を避けるため
-    entries: sc.scenes.map((x) => ({
-      title: `${x.work}（MV）`,
-      dateLabel:
-        x.at !== undefined
-          ? `${formatSeconds(x.at)} の場面`
-          : "場面の時刻は未確認",
-      source: `https://www.youtube.com/watch?v=${x.videoId}${x.at !== undefined ? `&t=${x.at}s` : ""}`,
-    })),
-    googleMapsUrl: googleMapsUrl(`${sc.lat},${sc.lon}`),
-    evidence: sc.evidence,
-    evidenceLabel: EVIDENCE_LABEL[sc.evidence],
-    sources: sc.sources,
-    // MVの場面と見比べられるよう、その地点のストリートビューを開く（APIキー不要の公式のURL形式）
-    streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
-  }));
+  return (scenesJson as SceneItem[]).map((sc) => {
+    // 照合は場面ごとに記録する。同じ場所でも、確かめていない場面まで「照合済み」に見せないため。
+    // 場所としての根拠は、照合済みの場面が1つでもあれば「照合済み」にする
+    const evidence: Evidence = sc.scenes.some((x) => x.verified)
+      ? "verified"
+      : sc.evidence;
+    return {
+      id: `scene:${sc.id}`,
+      name: sc.name,
+      category: "scene",
+      kindLabel: "MVの舞台",
+      lat: sc.lat,
+      lon: sc.lon,
+      prefecture: sc.prefecture,
+      approximate: sc.approximate ?? false,
+      closed: false,
+      status: null,
+      note: sc.note,
+      latest: "",
+      // 場面の秒数が分かっているものは、その場面から再生されるリンクにする。
+      // 画像を切り出して載せるのではなく公式の動画へ飛ばすのは、権利の問題を避けるため
+      entries: sc.scenes.map((x) => ({
+        title: `${x.work}（MV）`,
+        verifiedHow: x.verified?.how,
+        dateLabel:
+          x.at !== undefined
+            ? `${formatSeconds(x.at)} の場面`
+            : "場面の時刻は未確認",
+        source: `https://www.youtube.com/watch?v=${x.videoId}${x.at !== undefined ? `&t=${x.at}s` : ""}`,
+      })),
+      googleMapsUrl: googleMapsUrl(`${sc.lat},${sc.lon}`),
+      evidence,
+      evidenceLabel: EVIDENCE_LABEL[evidence],
+      sources: sc.sources,
+      // MVの場面と見比べられるよう、その地点のストリートビューを開く（APIキー不要の公式のURL形式）
+      streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
+    };
+  });
 }
 
 /** 地図に載せる全地点。都道府県（北→南）、同じ県の中は新しい順 */
@@ -321,5 +337,38 @@ export function getSpots(): Spot[] {
     (a, b) =>
       prefIndex(a.prefecture) - prefIndex(b.prefecture) ||
       b.latest.localeCompare(a.latest),
+  );
+}
+
+/** MVページの「この曲の舞台」用。その動画に出てくる場所と場面 */
+export type VideoScene = {
+  /** マップでその場所を開くための ID（/map#<spotId>） */
+  spotId: string;
+  name: string;
+  prefecture: string;
+  /** 「2:05」。分かっていないときは undefined */
+  atLabel?: string;
+  at?: number;
+  evidence: Evidence;
+  evidenceLabel: string;
+};
+
+export function getScenesForVideo(videoId: string): VideoScene[] {
+  return (scenesJson as SceneItem[]).flatMap((sc) =>
+    sc.scenes
+      .filter((x) => x.videoId === videoId)
+      .map((x) => {
+        // MVページでは「その場面」が照合済みかで根拠を出す（同じ場所の別の曲の照合は関係ない）
+        const evidence: Evidence = x.verified ? "verified" : sc.evidence;
+        return {
+          spotId: `scene:${sc.id}`,
+          name: sc.name,
+          prefecture: sc.prefecture,
+          at: x.at,
+          atLabel: x.at !== undefined ? formatSeconds(x.at) : undefined,
+          evidence,
+          evidenceLabel: EVIDENCE_LABEL[evidence],
+        };
+      }),
   );
 }

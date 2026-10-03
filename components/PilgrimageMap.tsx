@@ -142,11 +142,25 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
     }
   }, [ready, visible]);
 
-  function showOnMap(s: Spot) {
+  // ③ URL の # で場所が指定されていたら（MVページの「この曲の舞台」から来たとき）その場所を開く。
+  // ② より後に書いているのは、effect は書いた順に動くため。印が地図に置かれる前に
+  // 吹き出しを開こうとしても何も起きない（最初はこの順番を逆に書いていて開かなかった）。
+  // ページを開いた直後なので、移動のアニメーションはせずにいきなりその場所を出す。
+  // ?spot= ではなく # にしているのは、このページを「1日1回作るだけ」の静的なページのままにするため
+  // （? の値を読むと、アクセスのたびにサーバーでページを作る必要が出る）
+  useEffect(() => {
+    if (!ready) return;
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    const target = spots.find((s) => s.id === id);
+    if (target) showOnMap(target, false);
+  }, [ready, spots]);
+
+  function showOnMap(s: Spot, animate = true) {
     const map = mapRef.current;
     if (!map) return;
     setSelected(s.id);
-    map.flyTo([s.lat, s.lon], 15, { duration: 0.8 });
+    if (animate) map.flyTo([s.lat, s.lon], 15, { duration: 0.8 });
+    else map.setView([s.lat, s.lon], 15);
     markersRef.current.get(s.id)?.openPopup();
     // 一覧は地図の下にあるので、押したら地図が見える位置まで戻す
     containerRef.current?.scrollIntoView({
@@ -288,6 +302,12 @@ function SpotRow({
             >
               {e.title}
             </a>
+            {/* 人が場面と現地を見比べて一致を確かめた場面。何を見たかはマウスを乗せると出る */}
+            {e.verifiedHow && (
+              <span className="text-xs text-accent" title={e.verifiedHow}>
+                照合済み
+              </span>
+            )}
           </li>
         ))}
       </ul>
