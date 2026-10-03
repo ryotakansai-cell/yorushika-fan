@@ -20,7 +20,11 @@ const RADIUS = 300; // m。広げると無関係な写真が増える
 const scenes = JSON.parse(fs.readFileSync("data/scenes.json", "utf8"));
 
 /** HTMLタグを外す（撮影者名が <a> 付きで返ってくることがあるため） */
-const stripTags = (s) => (s ?? "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+const stripTags = (s) =>
+  (s ?? "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
 async function candidates(lat, lon) {
   const url =
@@ -37,28 +41,35 @@ async function candidates(lat, lon) {
       iiprop: "url|extmetadata|mime",
       iiurlwidth: "480", // 一覧のカード用の縮小版
     });
-  const json = await (await fetch(url, { headers: { "User-Agent": UA } })).json();
+  const json = await (
+    await fetch(url, { headers: { "User-Agent": UA } })
+  ).json();
   const pages = Object.values(json.query?.pages ?? {});
-  return pages
-    .map((p) => {
-      const ii = p.imageinfo?.[0];
-      const meta = ii?.extmetadata ?? {};
-      const c = p.coordinates?.[0];
-      const dist = c ? Math.hypot((c.lat - lat) * 111000, (c.lon - lon) * 91000) : 9999;
-      return {
-        title: p.title,
-        mime: ii?.mime,
-        thumb: ii?.thumburl,
-        page: ii?.descriptionurl,
-        license: stripTags(meta.LicenseShortName?.value),
-        artist: stripTags(meta.Artist?.value).slice(0, 80),
-        dist: Math.round(dist),
-      };
-    })
-    // 写真だけ（図・地図・音声などを外す）。ライセンスが分からないものは使えないので外す
-    .filter((x) => /jpeg|png|webp/.test(x.mime ?? "") && x.thumb && x.license)
-    .sort((a, b) => a.dist - b.dist)
-    .slice(0, PER_SPOT);
+  return (
+    pages
+      .map((p) => {
+        const ii = p.imageinfo?.[0];
+        const meta = ii?.extmetadata ?? {};
+        const c = p.coordinates?.[0];
+        const dist = c
+          ? Math.hypot((c.lat - lat) * 111000, (c.lon - lon) * 91000)
+          : 9999;
+        return {
+          title: p.title,
+          mime: ii?.mime,
+          // 計測用のクエリ（?utm_source=...）が付いて返ってくるので外す
+          thumb: ii?.thumburl?.split("?")[0],
+          page: ii?.descriptionurl,
+          license: stripTags(meta.LicenseShortName?.value),
+          artist: stripTags(meta.Artist?.value).slice(0, 80),
+          dist: Math.round(dist),
+        };
+      })
+      // 写真だけ（図・地図・音声などを外す）。ライセンスが分からないものは使えないので外す
+      .filter((x) => /jpeg|png|webp/.test(x.mime ?? "") && x.thumb && x.license)
+      .sort((a, b) => a.dist - b.dist)
+      .slice(0, PER_SPOT)
+  );
 }
 
 const out = [];
@@ -69,10 +80,17 @@ for (const s of scenes) {
   await sleep(400);
 }
 fs.mkdirSync("design", { recursive: true });
-fs.writeFileSync("design/photo-candidates.json", JSON.stringify(out, null, 2) + "\n");
+fs.writeFileSync(
+  "design/photo-candidates.json",
+  JSON.stringify(out, null, 2) + "\n",
+);
 
 // 確認ページ。番号（例: 登窯広場 3）を伝えてもらえば、その写真をデータに登録する
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const esc = (s) =>
+  String(s).replace(
+    /[&<>"]/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+  );
 const html = `<!doctype html><meta charset="utf-8"><title>写真の候補</title>
 <style>
 body{font-family:sans-serif;background:#f7f5f0;color:#262626;margin:24px}
@@ -85,16 +103,20 @@ figcaption{padding:6px 8px;font-size:12px;color:#6f6a60} b{color:#262626;font-si
 <p>使いたい写真の番号を「場所名 番号」で教えてください（例: 登窯広場 3）。どれも合わなければ「なし」で大丈夫です（MVのサムネイルで代わりにします）。</p>
 ${out
   .map(
-    (s) => `<h2>${esc(s.name)}（${s.list.length}枚）</h2><div class="grid">${
-      s.list.length === 0
-        ? "<p>近くに写真がありませんでした</p>"
-        : s.list
-            .map(
-              (x, i) => `<figure><a href="${esc(x.page)}" target="_blank"><img src="${esc(x.thumb)}" loading="lazy"></a>
+    (s) =>
+      `<h2>${esc(s.name)}（${s.list.length}枚）</h2><div class="grid">${
+        s.list.length === 0
+          ? "<p>近くに写真がありませんでした</p>"
+          : s.list
+              .map(
+                (
+                  x,
+                  i,
+                ) => `<figure><a href="${esc(x.page)}" target="_blank"><img src="${esc(x.thumb)}" loading="lazy"></a>
 <figcaption><b>${i + 1}</b>　約${x.dist}m・${esc(x.license)}<br>${esc(x.artist)}</figcaption></figure>`,
-            )
-            .join("")
-    }</div>`,
+              )
+              .join("")
+      }</div>`,
   )
   .join("")}`;
 fs.writeFileSync("design/photo-review.html", html);

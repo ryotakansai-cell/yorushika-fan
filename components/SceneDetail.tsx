@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AerialMiniMap } from "@/components/AerialMiniMap";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { MapEmbed } from "@/components/MapEmbed";
 import { ScenePlayer } from "@/components/ScenePlayer";
@@ -11,7 +12,7 @@ import type { SceneDetail as Detail } from "@/lib/map";
 // 現地の見せ方は、使えるものから順に:
 //   1. Googleマップの埋め込み（写真・ストリートビュー）… オーナーが場面ごとに登録したもの
 //   2. Wikimedia Commons の写真 … 場所ごとに1枚
-//   3. どちらも無ければ、ストリートビューを開くリンク
+//   3. どちらも無ければ、その場所の航空写真（国土地理院。日本中どこでも出せる）
 // 画像をこのサイトに保存しないのは、他人の写真の著作権のため（Commonsは条件付きで使える）
 export function SceneDetail({ detail: d }: { detail: Detail }) {
   return (
@@ -64,10 +65,7 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
                   />
                 )}
               </div>
-              <figcaption className="mt-1 text-xs text-muted">
-                MV（公式YouTube）
-                {sc.atLabel && `・${sc.atLabel} の場面で止めています`}
-              </figcaption>
+              {/* 注釈は付けない。見出しの「0:48 の場面」で十分（2026-10-03 オーナーの指摘） */}
             </figure>
 
             <figure>
@@ -124,7 +122,7 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
   );
 }
 
-/** 右側の「現地」。埋め込み → Commons の写真 → リンクの順に、使えるもので見せる */
+/** 右側の「現地」。埋め込み → Commons の写真 → 航空写真の順に、使えるもので見せる */
 function Present({
   scene: sc,
   detail: d,
@@ -163,17 +161,13 @@ function Present({
       </>
     );
   }
+  // 写真も埋め込みも無い場所は、その場所の航空写真を出す（空の枠にしない）
   return (
-    <div className="flex aspect-video flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-line text-sm text-muted">
-      <span>現地の写真はまだありません</span>
-      <a
-        href={sc.ref?.url ?? d.streetViewUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-ink transition hover:text-accent"
-      >
-        {sc.ref ? sc.ref.label : "ストリートビューで見る"}
-      </a>
-    </div>
+    <>
+      <AerialMiniMap lat={d.lat} lon={d.lon} title={`${d.name}の航空写真`} />
+      <figcaption className="mt-1 text-xs text-muted">
+        現地の航空写真（国土地理院）
+      </figcaption>
+    </>
   );
 }

@@ -30,7 +30,13 @@
         "label": "SH Diary（場面と現地の写真を並べて比較しているファンの記録）",
         "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
       }
-    ]
+    ],
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Himi_Line_from_railroad_crossing_west_of_Amaharashi_Station.JPG/500px-Himi_Line_from_railroad_crossing_west_of_Amaharashi_Station.JPG",
+      "page": "https://commons.wikimedia.org/wiki/File:Himi_Line_from_railroad_crossing_west_of_Amaharashi_Station.JPG",
+      "license": "CC BY-SA 4.0",
+      "artist": "そらみみ"
+    }
   },
   {
     "id": "amaharashi-onnaiwa",
@@ -59,7 +65,13 @@
         "label": "SH Diary（場面と現地の写真を並べて比較しているファンの記録）",
         "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
       }
-    ]
+    ],
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Shibuya%2C_Takaoka%2C_Toyama_Prefecture_933-0136%2C_Japan_-_panoramio_%284%29.jpg/500px-Shibuya%2C_Takaoka%2C_Toyama_Prefecture_933-0136%2C_Japan_-_panoramio_%284%29.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Shibuya,_Takaoka,_Toyama_Prefecture_933-0136,_Japan_-_panoramio_(4).jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "kiwa dokokano"
+    }
   },
   {
     "id": "amaharashi-station",
@@ -86,7 +98,13 @@
         "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
       }
     ],
-    "note": "0:37 は駅前の自転車駐車場"
+    "note": "0:37 は駅前の自転車駐車場",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/View_of_Amaharashi_Station_20150122.JPG/500px-View_of_Amaharashi_Station_20150122.JPG",
+      "page": "https://commons.wikimedia.org/wiki/File:View_of_Amaharashi_Station_20150122.JPG",
+      "license": "CC BY-SA 4.0",
+      "artist": "そらみみ"
+    }
   },
   {
     "id": "shimonada-station",
@@ -108,10 +126,10 @@
       {
         "work": "だから僕は音楽を辞めた",
         "videoId": "KTZ-y85Erus",
-        "at": 232,
+        "at": 234,
         "verified": {
           "date": "2026-10-03",
-          "how": "MVの3:52の場面と現地の写真（Googleマップ）で、ホームの屋根とベンチの形が一致"
+          "how": "MVの3:54の場面と現地の写真（Googleマップ）で、ホームの屋根とベンチの形が一致"
         }
       }
     ],
@@ -120,7 +138,13 @@
         "label": "GATE12（MVに登場した駅の紹介記事）",
         "url": "https://thegate12.com/jp/article/442"
       }
-    ]
+    ],
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/%E4%B8%8B%E7%81%98%E9%A7%85_-_panoramio.jpg/500px-%E4%B8%8B%E7%81%98%E9%A7%85_-_panoramio.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:%E4%B8%8B%E7%81%98%E9%A7%85_-_panoramio.jpg",
+      "license": "CC BY 3.0",
+      "artist": "thaka"
+    }
   },
   {
     "id": "negawa-ryokudo",
@@ -167,7 +191,13 @@
         "url": "https://cgworld.jp/feature/202103-yorushika.html"
       }
     ],
-    "note": "n-bunaさんが、曲のモデルは「昭和記念公園にある欅の樹」で、それを桜に見立てて書いたと話している。公園内のどの欅かは語られていないので、ピンは公園に置いている"
+    "note": "n-bunaさんが、曲のモデルは「昭和記念公園にある欅の樹」で、それを桜に見立てて書いたと話している。公園内のどの欅かは語られていないので、ピンは公園に置いている",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Orychophragmus_violaceus_in_Showa_kinen_park.jpg/500px-Orychophragmus_violaceus_in_Showa_kinen_park.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Orychophragmus_violaceus_in_Showa_kinen_park.jpg",
+      "license": "CC BY 2.0",
+      "artist": "TANAKA Juuyoh (田中十洋)"
+    }
   },
   {
     "id": "tokoname-noborigama",
@@ -201,7 +231,13 @@
         "label": "ちたまるNavi（知多半島の地域メディア）",
         "url": "https://www.chitamaru.jp/art/6245/"
       }
-    ]
+    ],
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/%E5%B8%B8%E6%BB%91%EF%BC%88%E7%99%BB%E7%AA%AF%E5%BA%83%E5%A0%B4%EF%BC%89_-_panoramio.jpg/500px-%E5%B8%B8%E6%BB%91%EF%BC%88%E7%99%BB%E7%AA%AF%E5%BA%83%E5%A0%B4%EF%BC%89_-_panoramio.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:%E5%B8%B8%E6%BB%91%EF%BC%88%E7%99%BB%E7%AA%AF%E5%BA%83%E5%A0%B4%EF%BC%89_-_panoramio.jpg",
+      "license": "CC BY 3.0",
+      "artist": "gundam2345"
+    }
   },
   {
     "id": "tokoname-tojiki-kaikan",
@@ -277,7 +313,13 @@
       }
     ],
     "note": "島内の場所ごとの位置は未登録。ピンは島に置いている",
-    "approximate": true
+    "approximate": true,
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/%E7%8C%BF%E5%B3%B6_-_panoramio.jpg/500px-%E7%8C%BF%E5%B3%B6_-_panoramio.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:%E7%8C%BF%E5%B3%B6_-_panoramio.jpg",
+      "license": "CC BY 3.0",
+      "artist": "menma1/2"
+    }
   },
   {
     "id": "shimoda-shirahama",
@@ -302,7 +344,13 @@
         "label": "ファンによる聖地まとめ",
         "url": "https://ayataka1020.com/231/"
       }
-    ]
+    ],
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Sunrise_%28202405897%29.jpeg/500px-Sunrise_%28202405897%29.jpeg",
+      "page": "https://commons.wikimedia.org/wiki/File:Sunrise_(202405897).jpeg",
+      "license": "CC0",
+      "artist": "Kunio Okita"
+    }
   },
   {
     "id": "kinugawakan-honten",
@@ -327,6 +375,12 @@
         "url": "https://ruins-cat.com/blog-entry-350.html"
       }
     ],
-    "note": "1999年に閉業した廃墟ホテル。崩落の危険があり、敷地に無断で入ると不法侵入になります。外から見るだけにしてください"
+    "note": "1999年に閉業した廃墟ホテル。崩落の危険があり、敷地に無断で入ると不法侵入になります。外から見るだけにしてください",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Kinugawa_Kan_Honten.jpg/500px-Kinugawa_Kan_Honten.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Kinugawa_Kan_Honten.jpg",
+      "license": "CC BY-SA 4.0",
+      "artist": "Miyuki Meinaka"
+    }
   }
 ]
