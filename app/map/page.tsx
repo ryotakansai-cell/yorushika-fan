@@ -24,7 +24,7 @@ export default function MapPage() {
         まだ確かめられていないものには「推定」、n-bunaさんやMV監督がインタビューで触れたものには「制作者の発言」と付けています。
       </p>
       <p className="mt-2 text-sm leading-relaxed text-muted">
-        カードを押すと地図がその場所へ動き、「見比べる」でMVの場面と現地の様子を並べて見られます。
+        カードを押すと地図がその場所へ動き、「MVの場面を見る」で、MVの場面と今の景色を並べて見られます。
         ライブ会場や展示の開催場所は
         <Link href="/live" className="text-ink transition hover:text-accent">
           ライブ・展示の記録

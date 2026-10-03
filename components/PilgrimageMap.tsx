@@ -10,9 +10,9 @@ import type { Spot, SpotCategory } from "@/lib/map";
 
 // 聖地巡礼マップの本体。地図と写真カードの一覧を並べる。
 //
-// 動きは「選ぶ → 見比べる」の2段階（2026-10-03 オーナーと決めた）:
+// 動きは「選ぶ → MVの場面を見る」の2段階（2026-10-03 オーナーと決めた）:
 //   1. カードを押す → 地図がその場所へ飛び、吹き出しが開く。カードは「選択中」になる
-//   2. 選択中のカード（または吹き出し）の「見比べる」→ 見比べ画面（/map/<id>）が地図の上に重なって開く
+//   2. 選択中のカード（または吹き出し）の「MVの場面を見る」→ 見比べ画面（/map/<id>）が地図の上に重なって開く
 // 押すたびに見比べ画面が開くと、地図を眺めながら次々に場所を見て回る楽しさが無くなるため。
 //
 // 配置: PCは左に地図（スクロールしても固定）・右にカード。スマホは上に地図（固定）・下にカード。
@@ -382,7 +382,7 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
 
 /**
  * 吹き出しの中身。文字列の HTML ではなく DOM で組む（名前に記号が入っても崩れない）。
- * 「見比べる」は普通のリンクだとページ全体の読み込みになり、地図の上に重なる画面にならない。
+ * 「MVの場面を見る」は普通のリンクだとページ全体の読み込みになり、地図の上に重なる画面にならない。
  * そこで押されたら Next.js の画面切り替え（router.push）で開く
  */
 function popupContent(s: Spot, navigate: (href: string) => void) {
@@ -403,7 +403,7 @@ function popupContent(s: Spot, navigate: (href: string) => void) {
   if (s.detailHref) {
     const a = document.createElement("a");
     a.href = s.detailHref;
-    a.textContent = "見比べる";
+    a.textContent = "MVの場面を見る";
     a.addEventListener("click", (e) => {
       e.preventDefault();
       navigate(s.detailHref!);
@@ -467,7 +467,7 @@ function SpotCard({
           : "border-line hover:border-accent/50"
       }`}
     >
-      {/* カードの本体はボタン。リンク（見比べる など）はボタンの中に入れられない決まりなので、下の段に分けている */}
+      {/* カードの本体はボタン。リンク（MVの場面を見る など）はボタンの中に入れられない決まりなので、下の段に分けている */}
       <button
         type="button"
         onClick={onSelect}
@@ -544,7 +544,7 @@ function SpotCard({
                 scroll={false}
                 className="rounded-full bg-accent px-4 py-1.5 text-card transition hover:opacity-90"
               >
-                見比べる
+                MVの場面を見る
               </Link>
             ) : (
               s.entries[0] && (
