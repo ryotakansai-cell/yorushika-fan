@@ -59,8 +59,17 @@ type SceneItem = {
     work: string;
     videoId: string;
     at?: number;
-    /** 人が場面と現地を見比べて一致を確かめたとき。いつ・何を見て一致としたか */
-    verified?: { date: string; how: string };
+    /**
+     * 人が場面と現地を見比べて一致を確かめたとき。いつ・何を見て一致としたか。
+     * ref は照合に使った写真へのリンク。画像はこのサイトに載せず（権利のため）、元の場所へ案内する
+     */
+    verified?: {
+      date: string;
+      how: string;
+      ref?: { label: string; url: string };
+    };
+    /** 場面ごとの注記（MVの駐輪場は建て替えで現存しない、など） */
+    note?: string;
   }[];
   sources: { label: string; url: string }[];
   note?: string;
@@ -92,6 +101,10 @@ export type SpotEntry = {
   title: string;
   /** MVの舞台だけ: この場面を人が照合して一致を確かめた（何を見て一致としたか） */
   verifiedHow?: string;
+  /** 照合に使った写真へのリンク */
+  verifiedRef?: { label: string; url: string };
+  /** この場面だけの注記 */
+  note?: string;
   /** 表示用の日付（例: 2024.11.19・11.20 / 2023.05.09〜05.28） */
   dateLabel: string;
   source: string;
@@ -316,6 +329,8 @@ function sceneSpots(): Spot[] {
       entries: sc.scenes.map((x) => ({
         title: `${x.work}（MV）`,
         verifiedHow: x.verified?.how,
+        verifiedRef: x.verified?.ref,
+        note: x.note,
         dateLabel:
           x.at !== undefined
             ? `${formatSeconds(x.at)} の場面`

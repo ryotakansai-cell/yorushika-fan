@@ -309,6 +309,21 @@ function SpotRow({
                 照合済み
               </span>
             )}
+            {/* 照合に使った写真。画像はこのサイトに置かず（権利のため）元の場所へ案内する。
+                見た人が自分で見比べられるので、「照合済み」の根拠を確かめられる */}
+            {e.verifiedRef && (
+              <a
+                href={e.verifiedRef.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted transition hover:text-accent"
+              >
+                {e.verifiedRef.label}
+              </a>
+            )}
+            {e.note && (
+              <span className="basis-full text-xs text-muted">{e.note}</span>
+            )}
           </li>
         ))}
       </ul>
