@@ -42,7 +42,11 @@
       {
         "work": "花に亡霊",
         "videoId": "9lVPAWLWtWc",
-        "at": 191
+        "at": 191,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの3:11の場面と現地の写真（Googleマップ）で、青い陶製の柱のオブジェが一致"
+        }
       }
     ],
     "sources": [
@@ -63,12 +67,8 @@
       {
         "work": "ただ君に晴れ",
         "videoId": "-VKIqrvVOpo",
-        "at": 37
-      },
-      {
-        "work": "ただ君に晴れ",
-        "videoId": "-VKIqrvVOpo",
-        "at": 48
+        "at": 37,
+        "note": "MVの駐輪場は建て替えられていて、今は面影が無い（2025年10月のGoogleマップのクチコミ）"
       }
     ],
     "sources": [
@@ -81,7 +81,40 @@
         "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
       }
     ],
-    "note": "0:37 は駅の駐輪場、0:48 は駅の近くの踏切"
+    "note": "0:37 は駅前の自転車駐車場"
+  },
+  {
+    "id": "amaharashi-crossing",
+    "name": "雨晴駅近くの踏切",
+    "prefecture": "富山県",
+    "lat": 36.81696,
+    "lon": 137.03621,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "ただ君に晴れ",
+        "videoId": "-VKIqrvVOpo",
+        "at": 48,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの0:48の場面と現地の写真で、踏切と海へ続く道の並びが一致",
+          "ref": {
+            "label": "照合に使った現地の写真（Googleマップ）",
+            "url": "https://maps.app.goo.gl/LjUDUF4ua8dxSxQ47"
+          }
+        }
+      }
+    ],
+    "sources": [
+      {
+        "label": "GATE12（MVに登場した駅の紹介記事）",
+        "url": "https://thegate12.com/jp/article/442"
+      },
+      {
+        "label": "SH Diary（場面と現地の写真を並べて比較しているファンの記録）",
+        "url": "https://shun.hateblo.jp/entry/2024/03/12/204955"
+      }
+    ]
   },
   {
     "id": "amaharashi-onnaiwa",
@@ -94,7 +127,15 @@
       {
         "work": "ただ君に晴れ",
         "videoId": "-VKIqrvVOpo",
-        "at": 160
+        "at": 160,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの2:40の場面と、女岩の朝日の写真で、岩の形と松の形が一致",
+          "ref": {
+            "label": "照合に使った写真（photolibrary）",
+            "url": "https://www.photolibrary.jp/img354/210_3263533.html"
+          }
+        }
       }
     ],
     "sources": [
@@ -114,7 +155,21 @@
     "scenes": [
       {
         "work": "だから僕は音楽を辞めた",
-        "videoId": "KTZ-y85Erus"
+        "videoId": "KTZ-y85Erus",
+        "at": 3,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの0:03の場面と現地の写真（Googleマップ）で、ホームの屋根とベンチの形が一致"
+        }
+      },
+      {
+        "work": "だから僕は音楽を辞めた",
+        "videoId": "KTZ-y85Erus",
+        "at": 232,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの3:52の場面と現地の写真（Googleマップ）で、ホームの屋根とベンチの形が一致"
+        }
       }
     ],
     "sources": [
@@ -181,27 +236,62 @@
     "scenes": [
       {
         "work": "パレード",
-        "videoId": "ry3Tupx4BL4"
+        "videoId": "ry3Tupx4BL4",
+        "at": 74,
+        "note": "煉瓦造りの遺構（トイレ跡）。Googleレンズで猿島と出たが、暗い場面なのでまだ照合していない"
+      },
+      {
+        "work": "パレード",
+        "videoId": "ry3Tupx4BL4",
+        "at": 217,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの3:37の場面と、猿島の防空指揮所（監視所）跡の写真で、円筒形の建物と手すり・はしごが一致",
+          "ref": {
+            "label": "照合に使った写真（Instagram）",
+            "url": "https://www.instagram.com/p/C-zhLelPXY9/"
+          }
+        }
+      },
+      {
+        "work": "パレード",
+        "videoId": "ry3Tupx4BL4",
+        "at": 245,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの4:05の場面と、Googleレンズで見つかった猿島の切り通し（要塞跡の通路）の写真で、両側の壁と木の通路・欄干が一致"
+        }
       }
     ],
     "sources": [
       {
         "label": "ファンによる聖地まとめ",
         "url": "https://ayataka1020.com/231/"
+      },
+      {
+        "label": "ファンによる猿島の聖地マップ（X）",
+        "url": "https://x.com/FQb53/status/1869938539041042661"
       }
-    ]
+    ],
+    "note": "島内の場所ごとの位置は未登録。ピンは島に置いている",
+    "approximate": true
   },
   {
     "id": "shimoda-shirahama",
     "name": "白浜海岸（伊豆下田）",
     "prefecture": "静岡県",
-    "lat": 34.68715,
-    "lon": 138.97264,
+    "lat": 34.69206,
+    "lon": 138.97409,
     "evidence": "estimate",
     "scenes": [
       {
         "work": "都落ち",
-        "videoId": "pHdJmDFYqTU"
+        "videoId": "pHdJmDFYqTU",
+        "at": 17,
+        "verified": {
+          "date": "2026-10-03",
+          "how": "MVの0:17の場面と現地の写真（Googleマップのストリートビュー）で、浜と鳥居のある岩が一致"
+        }
       }
     ],
     "sources": [
