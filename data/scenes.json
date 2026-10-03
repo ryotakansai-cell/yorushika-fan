@@ -18,7 +18,8 @@
             "label": "現地の写真（Googleマップ）",
             "url": "https://maps.app.goo.gl/LjUDUF4ua8dxSxQ47"
           }
-        }
+        },
+        "embed": "https://www.google.com/maps/embed?pb=!4v1791038609043!6m8!1m7!1sjmH32Jqwwv9O6_kWG-wu8Q!2m2!1d36.81670558442416!2d137.0360393194318!3f28.311841346588544!4f0.16322971714208734!5f3.325193203789971"
       }
     ],
     "sources": [
@@ -48,6 +49,10 @@
           "url": "https://azatabi.com/tadakiminihare-amaharashi/"
         }
       ]
+    },
+    "pin": {
+      "videoId": "-VKIqrvVOpo",
+      "frame": "hq1"
     }
   },
   {
@@ -95,6 +100,10 @@
           "url": "https://azatabi.com/tadakiminihare-amaharashi/"
         }
       ]
+    },
+    "pin": {
+      "videoId": "-VKIqrvVOpo",
+      "frame": "hq3"
     }
   },
   {
@@ -138,6 +147,10 @@
           "url": "https://azatabi.com/tadakiminihare-amaharashi/"
         }
       ]
+    },
+    "pin": {
+      "videoId": "-VKIqrvVOpo",
+      "frame": "hqdefault"
     }
   },
   {
@@ -164,6 +177,12 @@
         "verified": {
           "date": "2026-10-03",
           "how": "MVの3:54の場面と現地の写真（Googleマップ）で、ホームの屋根とベンチの形が一致"
+        },
+        "photo": {
+          "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/%E9%BB%84%E6%98%8F%E3%81%AE%E4%B8%8B%E7%81%98%E9%A7%85_%28Shimonada_Station_in_twilight%29_22_Nov%2C_2014_-_panoramio.jpg/500px-%E9%BB%84%E6%98%8F%E3%81%AE%E4%B8%8B%E7%81%98%E9%A7%85_%28Shimonada_Station_in_twilight%29_22_Nov%2C_2014_-_panoramio.jpg",
+          "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%84%E6%98%8F%E3%81%AE%E4%B8%8B%E7%81%98%E9%A7%85_(Shimonada_Station_in_twilight)_22_Nov,_2014_-_panoramio.jpg",
+          "license": "CC BY-SA 3.0",
+          "artist": "Hiroaki Kaneko"
         }
       }
     ],
@@ -178,6 +197,10 @@
       "page": "https://commons.wikimedia.org/wiki/File:%E4%B8%8B%E7%81%98%E9%A7%85_-_panoramio.jpg",
       "license": "CC BY 3.0",
       "artist": "thaka"
+    },
+    "pin": {
+      "videoId": "KTZ-y85Erus",
+      "frame": "hqdefault"
     }
   },
   {
@@ -203,7 +226,17 @@
         "url": "https://iine-tachikawa.net/topics/131249/"
       }
     ],
-    "note": "監督の森江康太さんが、スタッフでロケハンして桜の樹やベンチ、縁石の雰囲気をつかんでから3Dで背景を作ったと話している"
+    "note": "監督の森江康太さんが、スタッフでロケハンして桜の樹やベンチ、縁石の雰囲気をつかんでから3Dで背景を作ったと話している",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/%E6%A0%B9%E5%B7%9D%E7%B7%91%E9%81%93_02.jpg/500px-%E6%A0%B9%E5%B7%9D%E7%B7%91%E9%81%93_02.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:%E6%A0%B9%E5%B7%9D%E7%B7%91%E9%81%93_02.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "根川孝太郎"
+    },
+    "pin": {
+      "videoId": "Sw1Flgub9s8",
+      "frame": "hqdefault"
+    }
   },
   {
     "id": "showa-kinen-park",
@@ -231,6 +264,10 @@
       "page": "https://commons.wikimedia.org/wiki/File:Orychophragmus_violaceus_in_Showa_kinen_park.jpg",
       "license": "CC BY 2.0",
       "artist": "TANAKA Juuyoh (田中十洋)"
+    },
+    "pin": {
+      "videoId": "Sw1Flgub9s8",
+      "frame": "hq2"
     }
   },
   {
@@ -248,6 +285,12 @@
         "verified": {
           "date": "2026-10-03",
           "how": "MVの2:05の場面と現地の写真（Googleマップ）で、「登窯広場」の看板・パイプの枠・案内地図の看板が一致"
+        },
+        "photo": {
+          "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/%E5%B8%B8%E6%BB%91_-_panoramio_-_gundam2345_%283%29.jpg/500px-%E5%B8%B8%E6%BB%91_-_panoramio_-_gundam2345_%283%29.jpg",
+          "page": "https://commons.wikimedia.org/wiki/File:%E5%B8%B8%E6%BB%91_-_panoramio_-_gundam2345_(3).jpg",
+          "license": "CC BY 3.0",
+          "artist": "gundam2345"
         }
       },
       {
@@ -271,6 +314,10 @@
       "page": "https://commons.wikimedia.org/wiki/File:%E5%B8%B8%E6%BB%91%EF%BC%88%E7%99%BB%E7%AA%AF%E5%BA%83%E5%A0%B4%EF%BC%89_-_panoramio.jpg",
       "license": "CC BY 3.0",
       "artist": "gundam2345"
+    },
+    "pin": {
+      "videoId": "MH5noJJfqDY",
+      "frame": "hq2"
     }
   },
   {
@@ -297,7 +344,11 @@
         "label": "ちたまるNavi（知多半島の地域メディア）",
         "url": "https://www.chitamaru.jp/art/6245/"
       }
-    ]
+    ],
+    "pin": {
+      "videoId": "MH5noJJfqDY",
+      "frame": "hqdefault"
+    }
   },
   {
     "id": "sarushima",
@@ -310,8 +361,12 @@
       {
         "work": "パレード",
         "videoId": "ry3Tupx4BL4",
-        "at": 74,
-        "note": "煉瓦造りの遺構（トイレ跡）。Googleレンズで猿島と出たが、暗い場面なのでまだ照合していない"
+        "at": 165,
+        "verified": {
+          "date": "2026-10-04",
+          "how": "MVの2:45の場面と、猿島の現地の写真（Googleマップ）で一致"
+        },
+        "embed": "https://www.google.com/maps/embed?pb=!4v1791041498912!6m8!1m7!1s9f-yBeNPrO8e7YcA3C8hGg!2m2!1d35.28517217130761!2d139.6936123377497!3f152.46096461485476!4f15.468357581739312!5f0.7820865974627469"
       },
       {
         "work": "パレード",
@@ -324,7 +379,9 @@
             "label": "写真（Instagram）",
             "url": "https://www.instagram.com/p/C-zhLelPXY9/"
           }
-        }
+        },
+        "note": "展望台広場",
+        "embed": "https://www.google.com/maps/embed?pb=!4v1791040990057!6m8!1m7!1s7SUXRv1QbwL26-t3mpfREQ!2m2!1d35.28644886131752!2d139.6944336559321!3f339.31305773501145!4f13.087199029798441!5f0.4000000000000002"
       },
       {
         "work": "パレード",
@@ -333,7 +390,8 @@
         "verified": {
           "date": "2026-10-03",
           "how": "MVの4:05の場面と、Googleレンズで見つかった猿島の切り通し（要塞跡の通路）の写真で、両側の壁と木の通路・欄干が一致"
-        }
+        },
+        "embed": "https://www.google.com/maps/embed?pb=!4v1791040160448!6m8!1m7!1sHefp2F73TGiGSnVETYFzbQ!2m2!1d35.28558054352993!2d139.6936527684926!3f189.51255466233593!4f-5.6973487839933625!5f0.7820865974627469"
       }
     ],
     "sources": [
@@ -353,6 +411,10 @@
       "page": "https://commons.wikimedia.org/wiki/File:%E7%8C%BF%E5%B3%B6_-_panoramio.jpg",
       "license": "CC BY 3.0",
       "artist": "menma1/2"
+    },
+    "pin": {
+      "videoId": "ry3Tupx4BL4",
+      "frame": "hq2"
     }
   },
   {
@@ -370,7 +432,8 @@
         "verified": {
           "date": "2026-10-03",
           "how": "MVの0:17の場面と現地の写真（Googleマップのストリートビュー）で、浜と鳥居のある岩が一致"
-        }
+        },
+        "embed": "https://www.google.com/maps/embed?pb=!4v1791041728745!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJRFp2Y0M0SWc.!2m2!1d34.6920559770869!2d138.9740943061958!3f123.50925155899988!4f6.680619224440761!5f0.7820865974627469"
       }
     ],
     "sources": [
@@ -384,6 +447,10 @@
       "page": "https://commons.wikimedia.org/wiki/File:Sunrise_(202405897).jpeg",
       "license": "CC0",
       "artist": "Kunio Okita"
+    },
+    "pin": {
+      "videoId": "pHdJmDFYqTU",
+      "frame": "hqdefault"
     }
   },
   {
@@ -415,6 +482,10 @@
       "page": "https://commons.wikimedia.org/wiki/File:Kinugawa_Kan_Honten.jpg",
       "license": "CC BY-SA 4.0",
       "artist": "Miyuki Meinaka"
+    },
+    "pin": {
+      "videoId": "ry3Tupx4BL4",
+      "frame": "hq1"
     }
   }
 ]

@@ -71,6 +71,11 @@ type SceneItem = {
     /** 場面ごとの注記（MVの駐輪場は建て替えで現存しない、など） */
     note?: string;
     /**
+     * この場面だけの写真。同じ場所の2つの場面に同じ写真が並ぶと見比べる楽しさが無いので、
+     * 場面に合う写真（下灘駅の夕方の場面には夕方の写真など）を場面ごとに付けられるようにしている
+     */
+    photo?: PhotoCredit;
+    /**
      * Googleマップの埋め込みURL（写真・ストリートビュー）。Googleマップの「共有 → 地図を埋め込む」で得られる。
      * 一般の人がGoogleマップに上げた写真は投稿者に著作権があり、こちらで保存して載せることはできない。
      * 埋め込みはGoogle自身の表示機能で見せるので、画像をコピーせずに現地の様子を見せられる
@@ -84,6 +89,12 @@ type SceneItem = {
    * 巡礼記の文章は写さず、要点を自分の言葉でまとめ、出典を付ける。場所ごとに少しずつ足していく
    */
   memo?: PilgrimMemo;
+  /**
+   * 地図のピンに使うMVの画像。YouTube が公式に出している4枚
+   * （hqdefault＝代表、hq1・hq2・hq3＝動画の途中から自動で取った画像）から、場面に一番近いものを選ぶ。
+   * 好きな秒数の画面は公式には取れず、切り抜いてこちらに置くと公式映像の無断複製になるため
+   */
+  pin?: { videoId: string; frame: "hqdefault" | "hq1" | "hq2" | "hq3" };
   /**
    * カードと見比べ画面に出す現地の写真（Wikimedia Commons の自由ライセンスの写真）。
    * 撮影者名とライセンスを表示する条件で使える。オーナーが候補から選んだものだけ入れる
@@ -209,6 +220,8 @@ export type Spot = {
   streetViewUrl?: string;
   /** カードの画像（今はMVの舞台だけ。ライブ会場・展示は写真が揃ったら足す） */
   image?: SpotImage;
+  /** 地図のピンの画像（MVの公式画像のうち、場面に一番近いもの） */
+  pinImage?: string;
   /** 見比べ画面（D）へのリンク。MVの舞台だけ */
   detailHref?: string;
   /**
@@ -369,6 +382,7 @@ function sceneSpots(): Spot[] {
       // MVの場面と見比べられるよう、その地点のストリートビューを開く（APIキー不要の公式のURL形式）
       streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
       image: sceneImage(sc),
+      pinImage: `https://i.ytimg.com/vi/${sc.pin?.videoId ?? sc.scenes[0].videoId}/${sc.pin?.frame ?? "hqdefault"}.jpg`,
       detailHref: `/map/${sc.id}`,
       rank,
     };
@@ -459,6 +473,8 @@ export type SceneDetail = {
     note?: string;
     embed?: string;
     ref?: { label: string; url: string };
+    /** この場面だけの写真（無ければ場所の写真を使う） */
+    photo?: PhotoCredit;
   }[];
   memo?: PilgrimMemo;
   /** 近くの聖地（NEARBY_KM 以内。近い順） */
@@ -526,6 +542,7 @@ export function getSceneDetail(id: string): SceneDetail | undefined {
       note: x.note,
       embed: checkEmbed(x.embed, `${sc.id} ${x.work}`),
       ref: x.verified?.ref,
+      photo: x.photo,
     })),
     memo: sc.memo,
     nearby: (scenesJson as SceneItem[])
