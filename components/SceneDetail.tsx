@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { MapEmbed } from "@/components/MapEmbed";
+import { ScenePlayer } from "@/components/ScenePlayer";
 import type { SceneDetail as Detail } from "@/lib/map";
 
 // 聖地の見比べ画面（D）の中身。/map/<id> の単独ページと、地図に重なる画面の両方で使う。
@@ -47,16 +48,25 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
           <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
             <figure>
               <div className="overflow-hidden rounded-lg border border-line bg-ink">
-                <LiteYouTube
-                  videoId={sc.videoId}
-                  title={`${sc.work}（MV）`}
-                  start={sc.at}
-                  sizes="(min-width: 768px) 384px, 100vw"
-                />
+                {/* 場面の秒数が分かっていれば、その場面で止まった状態で出す。
+                    分からなければ、押すと最初から再生される普通のプレーヤー */}
+                {sc.at !== undefined ? (
+                  <ScenePlayer
+                    videoId={sc.videoId}
+                    start={sc.at}
+                    title={`${sc.work}（MV）`}
+                  />
+                ) : (
+                  <LiteYouTube
+                    videoId={sc.videoId}
+                    title={`${sc.work}（MV）`}
+                    sizes="(min-width: 768px) 384px, 100vw"
+                  />
+                )}
               </div>
               <figcaption className="mt-1 text-xs text-muted">
                 MV（公式YouTube）
-                {sc.atLabel && `・押すと ${sc.atLabel} から再生`}
+                {sc.atLabel && `・${sc.atLabel} の場面で止めています`}
               </figcaption>
             </figure>
 

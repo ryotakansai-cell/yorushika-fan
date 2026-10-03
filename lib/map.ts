@@ -263,64 +263,9 @@ function todayInTokyo() {
   );
 }
 
-/** 同じ年の日付は2つ目以降の年を省いて短くする（2024.11.19・11.20） */
-function joinDates(dates: string[]) {
-  return dates
-    .map((d, i) =>
-      i > 0 && d.slice(0, 4) === dates[0].slice(0, 4)
-        ? formatDate(d.slice(5))
-        : formatDate(d),
-    )
-    .join("・");
-}
-
 /** 座標で引くと地図アプリでは「ただの地点」になるので、名前で引けるものは名前で引く */
 function googleMapsUrl(query: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-}
-
-function liveSpots(): Spot[] {
-  const performances = performancesJson as Performance[];
-  return (venuesJson as Venue[]).map((v) => {
-    const shows = performances
-      .filter((p) => p.venue === v.name && p.date)
-      .sort((a, b) => a.date!.localeCompare(b.date!));
-
-    // 同じライブの複数日（2日公演など）は1行にまとめる
-    const byLive = new Map<string, Performance[]>();
-    for (const s of shows) {
-      byLive.set(s.live, [...(byLive.get(s.live) ?? []), s]);
-    }
-    // 新しいライブが上に来るよう、各ライブの初日で並べてから表示用の形にする
-    const entries = [...byLive.entries()]
-      .sort(([, a], [, b]) => b[0].date!.localeCompare(a[0].date!))
-      .map(([live, list]) => ({
-        title: live,
-        dateLabel: joinDates(list.map((s) => s.date!)),
-        source: list[0].source,
-      }));
-
-    // 閉館・番地不明の会場は名前で引くと別の場所や「閉業」が出るので座標で引く
-    const exact = !v.closed && !v.approximate;
-    return {
-      id: `live:${v.name}`,
-      name: v.currentName ? `${v.name}（現 ${v.currentName}）` : v.name,
-      category: "live",
-      kindLabel: "ライブ会場",
-      lat: v.lat,
-      lon: v.lon,
-      prefecture: v.prefecture,
-      approximate: v.approximate ?? false,
-      closed: Boolean(v.closed),
-      status: null,
-      note: v.note,
-      latest: shows.at(-1)?.date ?? "",
-      entries,
-      googleMapsUrl: googleMapsUrl(
-        exact ? (v.currentName ?? v.name) : `${v.lat},${v.lon}`,
-      ),
-    };
-  });
 }
 
 function eventSpots(today: string): Spot[] {
@@ -410,17 +355,12 @@ function sceneSpots(): Spot[] {
   });
 }
 
-/** 地図に載せる全地点。都道府県（北→南）、同じ県の中は新しい順 */
+/**
+ * 地図に載せる地点。2026-10-03 から MVの舞台だけ（ライブ会場・展示は /live の一覧に移した）。
+ * 並びは scenes.json に書いた順（代表的な場所が先頭）
+ */
 export function getSpots(): Spot[] {
-  const prefIndex = (p: string) => {
-    const i = PREFECTURES.indexOf(p);
-    return i === -1 ? PREFECTURES.length : i;
-  };
-  return [...sceneSpots(), ...liveSpots(), ...eventSpots(todayInTokyo())].sort(
-    (a, b) =>
-      prefIndex(a.prefecture) - prefIndex(b.prefecture) ||
-      b.latest.localeCompare(a.latest),
-  );
+  return sceneSpots();
 }
 
 /** MVページの「この曲の舞台」用。その動画に出てくる場所と場面 */
@@ -532,4 +472,84 @@ export function getSceneDetail(id: string): SceneDetail | undefined {
       ref: x.verified?.ref,
     })),
   };
+}
+
+// --------------------------------------------------------------
+// ライブ・展示の記録（/live）。2026-10-03 にマップから外して一覧ページにした。
+// ライブ会場は他のアーティストにも共通する情報で、「MVの聖地を巡りたい」人には雑音になるため
+// --------------------------------------------------------------
+
+export type LiveShow = {
+  date: string;
+  dateLabel: string;
+  venue: string;
+  prefecture: string;
+  note?: string;
+  closed: boolean;
+  googleMapsUrl: string;
+};
+
+export type LiveTour = {
+  live: string;
+  first: string;
+  periodLabel: string;
+  source: string;
+  shows: LiveShow[];
+};
+
+/** 公演をライブ（ツアー）ごとにまとめる。新しいツアーが上 */
+export function getLiveHistory(): LiveTour[] {
+  const venues = new Map((venuesJson as Venue[]).map((v) => [v.name, v]));
+  const byLive = new Map<string, Performance[]>();
+  for (const p of performancesJson as Performance[]) {
+    if (!p.date) continue;
+    byLive.set(p.live, [...(byLive.get(p.live) ?? []), p]);
+  }
+  return [...byLive.entries()]
+    .map(([live, list]) => {
+      const shows = [...list].sort((a, b) => a.date!.localeCompare(b.date!));
+      const first = shows[0].date!;
+      const last = shows.at(-1)!.date!;
+      return {
+        live,
+        first,
+        periodLabel:
+          first === last
+            ? formatDate(first)
+            : `${formatDate(first)}〜${formatDate(
+                last.slice(0, 4) === first.slice(0, 4) ? last.slice(5) : last,
+              )}`,
+        source: shows[0].source,
+        shows: shows.map((p) => {
+          const v = venues.get(p.venue);
+          // 閉館・番地不明の会場は名前で引くと別の場所や「閉業」が出るので座標で引く
+          const exact = v && !v.closed && !v.approximate;
+          return {
+            date: p.date!,
+            dateLabel: formatDate(p.date!),
+            venue: v?.currentName
+              ? `${p.venue}（現 ${v.currentName}）`
+              : p.venue,
+            prefecture: v?.prefecture ?? "",
+            note: v?.note,
+            closed: Boolean(v?.closed),
+            googleMapsUrl: googleMapsUrl(
+              exact
+                ? (v.currentName ?? v.name)
+                : v
+                  ? `${v.lat},${v.lon}`
+                  : p.venue,
+            ),
+          };
+        }),
+      };
+    })
+    .sort((a, b) => b.first.localeCompare(a.first));
+}
+
+/** 展示・コラボの一覧。新しい順 */
+export function getEventHistory(): Spot[] {
+  return eventSpots(todayInTokyo()).sort((a, b) =>
+    b.latest.localeCompare(a.latest),
+  );
 }

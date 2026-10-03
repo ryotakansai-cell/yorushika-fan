@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     { url: `${SITE_URL}/mv`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/map`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${SITE_URL}/live`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/links`, changeFrequency: "monthly", priority: 0.6 },
   ];
 

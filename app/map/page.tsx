@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PilgrimageMap } from "@/components/PilgrimageMap";
 import { getSpots } from "@/lib/map";
 
@@ -6,41 +7,37 @@ export const metadata: Metadata = {
   alternates: { canonical: "/map" },
   title: "聖地巡礼マップ",
   description:
-    "ヨルシカのMVの舞台、ライブ会場、展示・コラボの開催場所を地図にまとめています。MVの場面から再生して、ストリートビューと見比べられます。",
+    "ヨルシカのMVの舞台（聖地）を地図にまとめています。MVの場面と現地の様子を並べて見比べられます。",
 };
 
-// 展示の「開催中・終了」は今日の日付で決まるので、1日1回作り直す。
-// データ自体は JSON なので、アクセスのたびに作り直す必要はない
-export const revalidate = 86400;
+// データは JSON なので、ビルド時に一度だけ作る（展示を外したので日付で変わる表示も無くなった）
 
 export default function MapPage() {
   const spots = getSpots();
-  const count = (c: string) => spots.filter((s) => s.category === c).length;
 
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-10">
       <h1 className="font-serif text-2xl text-ink">聖地巡礼マップ</h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
-        MVの舞台 {count("scene")} か所、ライブ会場 {count("live")}{" "}
-        か所、展示・コラボの開催場所 {count("event")} か所を載せています。
-        ライブ会場と展示は公式の告知が出典です。
+        ヨルシカのMVの舞台 {spots.length}{" "}
+        か所を載せています。MVの場面と現地の写真を見比べて確かめたものを中心に、出典と一緒に載せています。
+        まだ確かめられていないものには「推定」、n-bunaさんやMV監督がインタビューで触れたものには「制作者の発言」と付けています。
       </p>
       <p className="mt-2 text-sm leading-relaxed text-muted">
-        MVの舞台は、MVの場面と現地の写真を見比べて確かめたものを中心に、出典と一緒に載せています。
-        まだ確かめられていないものには「推定」、n-bunaさんやMV監督がインタビューで触れたものには「制作者の発言」と付けています。
         カードを押すと地図がその場所へ動き、「見比べる」でMVの場面と現地の様子を並べて見られます。
+        ライブ会場や展示の開催場所は
+        <Link href="/live" className="text-ink transition hover:text-accent">
+          ライブ・展示の記録
+        </Link>
+        にまとめています。
       </p>
 
       {/* 巡礼する人へのお願い。地元に迷惑がかかるとファン全体の印象が悪くなる */}
       <div className="mt-6 rounded-lg border border-line bg-card px-4 py-3 text-sm leading-relaxed text-muted">
         <p className="text-ink">訪れる前に</p>
         <ul className="mt-1 list-disc space-y-0.5 pl-5">
-          <li>終了した展示は、会場に行っても見られません。</li>
           <li>
             駅は列車が運行しています。ホームでの撮影は、列車や他の利用者の妨げにならないようにしましょう。
-          </li>
-          <li>
-            ライブ会場は公演の無い日は閉まっていることがあります。敷地内での撮影は各施設のルールに従ってください。
           </li>
           <li>
             廃墟は崩落の危険があり、敷地に無断で入ると不法侵入になります。外から見るだけにしてください。
