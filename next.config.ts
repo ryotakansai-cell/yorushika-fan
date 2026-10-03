@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "i.ytimg.com" },
       { protocol: "https", hostname: "upload.wikimedia.org" },
+      // Commons の縮小画像はこちらのドメインで返ってくる（upload だけだと表示できずページがエラーになった）
+      { protocol: "https", hostname: "thumb.wikimedia.org" },
     ],
   },
 };

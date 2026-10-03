@@ -421,6 +421,9 @@ export type SceneDetail = {
   id: string;
   name: string;
   prefecture: string;
+  /** 写真も埋め込みも無いとき、航空写真の小さな地図を出すのに使う */
+  lat: number;
+  lon: number;
   evidenceLabel?: string;
   evidence: Evidence;
   note?: string;
@@ -455,6 +458,8 @@ export function getSceneDetail(id: string): SceneDetail | undefined {
     id: sc.id,
     name: sc.name,
     prefecture: sc.prefecture,
+    lat: sc.lat,
+    lon: sc.lon,
     evidence,
     evidenceLabel: shownLabel(evidence),
     note: sc.note,
