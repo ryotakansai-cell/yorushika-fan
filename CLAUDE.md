@@ -46,6 +46,7 @@ lib/
 ├── discography.ts            作品データの型と読み込み
 ├── videos.ts                 動画データの読み込みと種類の判定（MV / ライブ / トレーラー …）
 ├── links.ts                  公式リンク（公式サイトから辿れるものだけ）
+├── og.tsx                    SNS に貼ったときの画像（OGP）の共通部品。フォント・アイコン・写真の取得
 ├── db.ts                     Turso接続（ニュース用）
 ├── map.ts                    3つのJSONを地図用の Spot にそろえる
 └── news/
@@ -127,6 +128,14 @@ sitemap（`app/sitemap.ts`）は動画ページも含めてJSONから自動で�
 - 動画カードはスマホで横並び（サムネ左・文字右）、sm以上で縦積み
 - `<main>` には必ず `w-full` を付ける（`mx-auto` だけだと中身の幅に引っ張られて、
   スマホで画面より広くなる。ゲームトレンドで実際に起きた）
+- SNS にURLを貼ったときの画像（OGP 画像。2026-10-04 追加）は2種類。`app/opengraph-image.tsx`（サイト共通。
+  アイコンとサイト名）と `app/map/[slug]/opengraph-image.tsx`（聖地ごと。左に現地の写真、右に場所と曲名）。
+  - 写真は Commons のもので、撮影者名とライセンスを画像の中に入れる。写真が無い場所は国土地理院の航空写真＋中央に印
+  - MVの画面・YouTube のサムネイルは使わない（看板の素材にすると公式画像の複製・加工になるため）
+  - 日本語フォントは丸ごとだと画像生成の上限（500KB）を超えるので、Google Fonts の `text=` で使う文字だけ取る
+  - 聖地ごとの画像には generateStaticParams を書いてビルド時に作る。書かないと SNS が読みに来るたびに作り直しになり、
+    写真やフォントを毎回取りに行く。1枚0.5〜1.4MB
+  - 名前のかっこは次の行に小さく出す（「白浜海岸（伊／豆下田）」とかっこの途中で折り返したため）
 - アイコンは「紙と墨の三日月と水平線」（`design/bot-icon/b-paper.svg`。2026-10-04 オーナーが選んだ）。
   サイト（app/icon.svg・favicon.ico・apple-icon.png）と Bluesky ボットで同じ絵を使う。絵を変えたら `npm run make:icons`。
   それまでの favicon.ico は Next.js のひな形の Vercel の三角のままだった
