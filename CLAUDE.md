@@ -66,6 +66,7 @@ scripts/
 ├── migrate.mjs               npm run db:migrate（DBの表を作る。何度実行しても安全）
 ├── fetch-live-venues.mjs     npm run fetch:live（公式のLIVEカテゴリーから日程・会場を抜く）
 ├── geocode-venues.mjs        npm run geocode:venues（会場の座標候補を出すだけ。保存しない）
+├── make-icons.mjs            npm run make:icons（design/bot-icon/b-paper.svg から app/ のアイコン3種を作る）
 └── lib/safe-write.mjs        取得データの保存。前回より8割未満に減ったら保存せず止まる
 .github/workflows/
 ├── collect.yml               毎時47分に /api/cron/collect を呼ぶ（ニュースの収集）
@@ -126,6 +127,12 @@ sitemap（`app/sitemap.ts`）は動画ページも含めてJSONから自動で�
 - 動画カードはスマホで横並び（サムネ左・文字右）、sm以上で縦積み
 - `<main>` には必ず `w-full` を付ける（`mx-auto` だけだと中身の幅に引っ張られて、
   スマホで画面より広くなる。ゲームトレンドで実際に起きた）
+- アイコンは「紙と墨の三日月と水平線」（`design/bot-icon/b-paper.svg`。2026-10-04 オーナーが選んだ）。
+  サイト（app/icon.svg・favicon.ico・apple-icon.png）と Bluesky ボットで同じ絵を使う。絵を変えたら `npm run make:icons`。
+  それまでの favicon.ico は Next.js のひな形の Vercel の三角のままだった
+- Bluesky の背景画像は `design/bluesky-banner/D.png`（国土地理院の航空写真を丸く切り抜いて7つの町を並べたもの。
+  右下に出典を入れてある）。案は同じフォルダの banners.html / banners-v2.html。MVの公式画像は看板の素材に使わない
+  （サイトで YouTube の画像をそのまま見せるのとは違い、複製・加工になるため）
 
 ## 環境変数
 

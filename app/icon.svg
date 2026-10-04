@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <defs>
+    <mask id="moon">
+      <rect width="1000" height="1000" fill="#000"/>
+      <circle cx="500" cy="450" r="220" fill="#fff"/>
+      <circle cx="585" cy="395" r="200" fill="#000"/>
+    </mask>
+  </defs>
+  <rect width="1000" height="1000" fill="#f7f5f0"/>
+  <rect width="1000" height="1000" fill="#262626" mask="url(#moon)"/>
+  <line x1="230" y1="760" x2="770" y2="760" stroke="#262626" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="690" cy="640" r="18" fill="#3d6485"/>
+</svg>

@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Bluesky バナー案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* サイトと同じ色（app/globals.css の paper / ink / accent）とアイコンの夜空 */
+  :root { --paper:#f7f5f0; --ink:#262626; --accent:#3d6485; --night-top:#16212d; --night-bottom:#3d6485; }
+  body { margin:0; background:#e8e4dc; font-family:"Noto Sans JP",sans-serif; color:var(--ink); }
+  .wrap { padding:24px; display:flex; flex-direction:column; gap:28px; }
+  h2 { font:600 18px "Noto Serif JP",serif; margin:0 0 8px; }
+  .note { font-size:13px; margin:0 0 8px; color:#555; }
+  /* Bluesky のバナーは 3:1（推奨 3000×1000）。ここでは 1500×500 で描き、書き出すときに2倍にする */
+  .banner { position:relative; width:1500px; height:500px; overflow:hidden; }
+  /* Bluesky ではバナーの左下にアイコンが重なる。そこを避けて配置しているか確かめるための目安 */
+  .avatar-guide { position:absolute; left:40px; bottom:-60px; width:150px; height:150px; border-radius:50%;
+    border:2px dashed rgba(255,80,80,.7); pointer-events:none; }
+  .hide-guide .avatar-guide { display:none; }
+  .serif { font-family:"Noto Serif JP",serif; }
+  .credit { position:absolute; right:14px; bottom:8px; font-size:10px; opacity:.75; }
+</style>
+</head>
+<body>
+<div class="wrap" id="root"></div>
+<script>
+// scripts で data/scenes.json から作った、バナー用のデータ
+window.AREAS=[
+ {
+  "name": "雨晴",
+  "lat": 36.81599,
+  "lon": 137.0396033333333,
+  "works": [
+   "ただ君に晴れ"
+  ],
+  "spots": [
+   {
+    "id": "amaharashi-crossing",
+    "name": "雨晴駅近くの踏切",
+    "lat": 36.81696,
+    "lon": 137.03621
+   },
+   {
+    "id": "amaharashi-onnaiwa",
+    "name": "女岩（雨晴海岸）",
+    "lat": 36.81451,
+    "lon": 137.04521
+   },
+   {
+    "id": "amaharashi-station",
+    "name": "雨晴駅",
+    "lat": 36.8165,
+    "lon": 137.03739
+   }
+  ]
+ },
+ {
+  "name": "下灘",
+  "lat": 33.65542,
+  "lon": 132.58941,
+  "works": [
+   "だから僕は音楽を辞めた"
+  ],
+  "spots": [
+   {
+    "id": "shimonada-station",
+    "name": "下灘駅",
+    "lat": 33.65542,
+    "lon": 132.58941
+   }
+  ]
+ },
+ {
+  "name": "立川",
+  "lat": 35.69943,
+  "lon": 139.40323,
+  "works": [
+   "春泥棒"
+  ],
+  "spots": [
+   {
+    "id": "negawa-ryokudo",
+    "name": "根川緑道",
+    "lat": 35.6866,
+    "lon": 139.41214
+   },
+   {
+    "id": "showa-kinen-park",
+    "name": "国営昭和記念公園",
+    "lat": 35.71226,
+    "lon": 139.39432
+   }
+  ]
+ },
+ {
+  "name": "常滑",
+  "lat": 34.88805,
+  "lon": 136.8383,
+  "works": [
+   "夜行",
+   "花に亡霊"
+  ],
+  "spots": [
+   {
+    "id": "tokoname-noborigama",
+    "name": "登窯広場",
+    "lat": 34.88653,
+    "lon": 136.83978
+   },
+   {
+    "id": "tokoname-tojiki-kaikan",
+    "name": "常滑市陶磁器会館 西の交差点",
+    "lat": 34.88957,
+    "lon": 136.83682
+   }
+  ]
+ },
+ {
+  "name": "猿島",
+  "lat": 35.28607,
+  "lon": 139.69406,
+  "works": [
+   "パレード"
+  ],
+  "spots": [
+   {
+    "id": "sarushima",
+    "name": "猿島",
+    "lat": 35.28607,
+    "lon": 139.69406
+   }
+  ]
+ },
+ {
+  "name": "下田",
+  "lat": 34.69206,
+  "lon": 138.97409,
+  "works": [
+   "都落ち"
+  ],
+  "spots": [
+   {
+    "id": "shimoda-shirahama",
+    "name": "白浜海岸（伊豆下田）",
+    "lat": 34.69206,
+    "lon": 138.97409
+   }
+  ]
+ },
+ {
+  "name": "鬼怒川",
+  "lat": 36.83664,
+  "lon": 139.72186,
+  "works": [
+   "パレード"
+  ],
+  "spots": [
+   {
+    "id": "kinugawakan-honten",
+    "name": "きぬ川館本店（廃墟）",
+    "lat": 36.83664,
+    "lon": 139.72186
+   }
+  ]
+ }
+];
+window.PHOTOS=[
+ {
+  "spot": "雨晴駅近くの踏切",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Himi_Line_from_railroad_crossing_west_of_Amaharashi_Station.JPG/500px-Himi_Line_from_railroad_crossing_west_of_Amaharashi_Station.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:Himi_Line_from_railroad_crossing_west_of_Amaharashi_Station.JPG",
+  "license": "CC BY-SA 4.0",
+  "artist": "そらみみ"
+ },
+ {
+  "spot": "女岩（雨晴海岸）",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Shibuya%2C_Takaoka%2C_Toyama_Prefecture_933-0136%2C_Japan_-_panoramio_%284%29.jpg/500px-Shibuya%2C_Takaoka%2C_Toyama_Prefecture_933-0136%2C_Japan_-_panoramio_%284%29.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Shibuya,_Takaoka,_Toyama_Prefecture_933-0136,_Japan_-_panoramio_(4).jpg",
+  "license": "CC BY-SA 3.0",
+  "artist": "kiwa dokokano"
+ },
+ {
+  "spot": "雨晴駅",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/View_of_Amaharashi_Station_20150122.JPG/500px-View_of_Amaharashi_Station_20150122.JPG",
+  "page": "https://commons.wikimedia.org/wiki/File:View_of_Amaharashi_Station_20150122.JPG",
+  "license": "CC BY-SA 4.0",
+  "artist": "そらみみ"
+ },
+ {
+  "spot": "下灘駅",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/%E4%B8%8B%E7%81%98%E9%A7%85_-_panoramio.jpg/500px-%E4%B8%8B%E7%81%98%E9%A7%85_-_panoramio.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:%E4%B8%8B%E7%81%98%E9%A7%85_-_panoramio.jpg",
+  "license": "CC BY 3.0",
+  "artist": "thaka"
+ },
+ {
+  "spot": "下灘駅",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/%E9%BB%84%E6%98%8F%E3%81%AE%E4%B8%8B%E7%81%98%E9%A7%85_%28Shimonada_Station_in_twilight%29_22_Nov%2C_2014_-_panoramio.jpg/500px-%E9%BB%84%E6%98%8F%E3%81%AE%E4%B8%8B%E7%81%98%E9%A7%85_%28Shimonada_Station_in_twilight%29_22_Nov%2C_2014_-_panoramio.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:%E9%BB%84%E6%98%8F%E3%81%AE%E4%B8%8B%E7%81%98%E9%A7%85_(Shimonada_Station_in_twilight)_22_Nov,_2014_-_panoramio.jpg",
+  "license": "CC BY-SA 3.0",
+  "artist": "Hiroaki Kaneko"
+ },
+ {
+  "spot": "根川緑道",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/%E6%A0%B9%E5%B7%9D%E7%B7%91%E9%81%93_02.jpg/500px-%E6%A0%B9%E5%B7%9D%E7%B7%91%E9%81%93_02.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:%E6%A0%B9%E5%B7%9D%E7%B7%91%E9%81%93_02.jpg",
+  "license": "CC BY-SA 3.0",
+  "artist": "根川孝太郎"
+ },
+ {
+  "spot": "国営昭和記念公園",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Orychophragmus_violaceus_in_Showa_kinen_park.jpg/500px-Orychophragmus_violaceus_in_Showa_kinen_park.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Orychophragmus_violaceus_in_Showa_kinen_park.jpg",
+  "license": "CC BY 2.0",
+  "artist": "TANAKA Juuyoh (田中十洋)"
+ },
+ {
+  "spot": "登窯広場",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/%E5%B8%B8%E6%BB%91%EF%BC%88%E7%99%BB%E7%AA%AF%E5%BA%83%E5%A0%B4%EF%BC%89_-_panoramio.jpg/500px-%E5%B8%B8%E6%BB%91%EF%BC%88%E7%99%BB%E7%AA%AF%E5%BA%83%E5%A0%B4%EF%BC%89_-_panoramio.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:%E5%B8%B8%E6%BB%91%EF%BC%88%E7%99%BB%E7%AA%AF%E5%BA%83%E5%A0%B4%EF%BC%89_-_panoramio.jpg",
+  "license": "CC BY 3.0",
+  "artist": "gundam2345"
+ },
+ {
+  "spot": "登窯広場",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/%E5%B8%B8%E6%BB%91_-_panoramio_-_gundam2345_%283%29.jpg/500px-%E5%B8%B8%E6%BB%91_-_panoramio_-_gundam2345_%283%29.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:%E5%B8%B8%E6%BB%91_-_panoramio_-_gundam2345_(3).jpg",
+  "license": "CC BY 3.0",
+  "artist": "gundam2345"
+ },
+ {
+  "spot": "猿島",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/%E7%8C%BF%E5%B3%B6_-_panoramio.jpg/500px-%E7%8C%BF%E5%B3%B6_-_panoramio.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:%E7%8C%BF%E5%B3%B6_-_panoramio.jpg",
+  "license": "CC BY 3.0",
+  "artist": "menma1/2"
+ },
+ {
+  "spot": "白浜海岸（伊豆下田）",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/Sunrise_%28202405897%29.jpeg/500px-Sunrise_%28202405897%29.jpeg",
+  "page": "https://commons.wikimedia.org/wiki/File:Sunrise_(202405897).jpeg",
+  "license": "CC0",
+  "artist": "Kunio Okita"
+ },
+ {
+  "spot": "きぬ川館本店（廃墟）",
+  "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/61/Kinugawa_Kan_Honten.jpg/500px-Kinugawa_Kan_Honten.jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:Kinugawa_Kan_Honten.jpg",
+  "license": "CC BY-SA 4.0",
+  "artist": "Miyuki Meinaka"
+ }
+];
+</script>
+<script>
+// ---- 共通: 緯度経度 → バナー上の座標 ----
+// 正距円筒図法を、35度付近の経度の縮みだけ補正して使う。7か所は東西に長く並ぶので 3:1 にちょうど収まる
+function makeProjector(areas, box) {
+  const k0 = Math.cos(35 * Math.PI / 180);
+  const xs = areas.map(a => a.lon * k0), ys = areas.map(a => -a.lat);
+  const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+  const s = Math.min((box.w) / (maxX - minX), (box.h) / (maxY - minY));
+  const offX = box.x + (box.w - (maxX - minX) * s) / 2, offY = box.y + (box.h - (maxY - minY) * s) / 2;
+  return (lat, lon) => [offX + (lon * k0 - minX) * s, offY + (-lat - minY) * s];
+}
+// 毎回同じ星空になるように、乱数は固定の種から作る
+function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+const byLon = [...AREAS].sort((a, b) => a.lon - b.lon);
+const ROUTE = ["下灘", "常滑", "雨晴", "鬼怒川", "立川", "猿島", "下田"].map(n => AREAS.find(a => a.name === n));
+// 立川と猿島は近くて文字が重なるので、立川だけ文字を点の左に出す
+const LEFT = new Set(["立川"]);
+const root = document.getElementById("root");
+// #A 〜 #E で1案だけを余白なしで出す（画像に書き出すため）。#A-guide ならアイコンの目安も出す
+const only = location.hash.slice(1).split("-")[0];
+if (only) {
+  document.body.style.background = "none";
+  root.style.padding = "0";
+  if (!location.hash.includes("guide")) document.body.classList.add("hide-guide");
+}
+function section(title, note, inner) {
+  if (only && !title.startsWith(only + ".")) return document.createElement("div");
+  const d = document.createElement("div");
+  if (only) { const b = document.createElement("div"); b.className = "banner"; b.innerHTML = inner + '<div class="avatar-guide"></div>'; root.appendChild(b); return b; }
+  d.innerHTML = `<h2>${title}</h2><p class="note">${note}</p>`;
+  const b = document.createElement("div"); b.className = "banner"; b.innerHTML = inner + '<div class="avatar-guide"></div>';
+  d.appendChild(b); root.appendChild(d); return b;
+}
+const box = { x: 380, y: 70, w: 1040, h: 340 };
+const P = makeProjector(AREAS, box);
+
+// ---- A: 星座 ----
+{
+  const r = rng(7); let stars = "";
+  for (let i = 0; i < 160; i++) stars += `<circle cx="${r()*1500}" cy="${r()*500}" r="${r()*1.4+.3}" fill="#f7f5f0" opacity="${r()*.5+.15}"/>`;
+  const pts = ROUTE.map(a => P(a.lat, a.lon));
+  const line = pts.map(p => p.join(",")).join(" ");
+  let marks = "";
+  ROUTE.forEach((a, i) => {
+    const [x, y] = pts[i];
+    if (LEFT.has(a.name)) { marks += `<circle cx="${x}" cy="${y}" r="16" fill="#f7f5f0" opacity=".12"/><circle cx="${x}" cy="${y}" r="5" fill="#f7f5f0"/><text x="${x - 26}" y="${y}" text-anchor="end" class="serif" font-size="17" fill="#f7f5f0">${a.name}</text><text x="${x - 26}" y="${y + 18}" text-anchor="end" font-size="11" fill="#f7f5f0" opacity=".65">${a.works.join("・")}</text>`; return; }
+    marks += `<circle cx="${x}" cy="${y}" r="16" fill="#f7f5f0" opacity=".12"/><circle cx="${x}" cy="${y}" r="5" fill="#f7f5f0"/>
+      <text x="${x}" y="${y - 22}" text-anchor="middle" class="serif" font-size="17" fill="#f7f5f0">${a.name}</text>
+      <text x="${x}" y="${y + 32}" text-anchor="middle" font-size="11" fill="#f7f5f0" opacity=".65">${a.works.join("・")}</text>`;
+  });
+  section("A. 星座 ― 聖地を星に見立てた夜空", "アイコンの夜空と続きの色。7つの町を一筆書きの線でつなぎ、星座のように見せる。素材は座標だけなので権利の心配が無い",
+    `<svg width="1500" height="500"><defs><linearGradient id="skyA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16212d"/><stop offset="1" stop-color="#3d6485"/></linearGradient></defs>
+     <rect width="1500" height="500" fill="url(#skyA)"/>${stars}
+     <polyline points="${line}" fill="none" stroke="#f7f5f0" stroke-width="1.2" opacity=".45"/>${marks}</svg>`);
+}
+
+// ---- B: 紙の地図 ----
+{
+  const pts = ROUTE.map(a => P(a.lat, a.lon));
+  let grid = "";
+  // 経緯線（1度ごと）。古い地図や巡礼の手帳の雰囲気を出す
+  for (let lon = 132; lon <= 141; lon++) { const [x1, y1] = P(38, lon), [x2, y2] = P(32, lon); grid += `<line x1="${x1}" y1="0" x2="${x2}" y2="500" stroke="#262626" stroke-width=".5" opacity=".18"/><text x="${x1 + 4}" y="492" font-size="10" fill="#262626" opacity=".4">${lon}°E</text>`; }
+  for (let lat = 33; lat <= 38; lat++) { const [x, y] = P(lat, 135); grid += `<line x1="0" y1="${y}" x2="1500" y2="${y}" stroke="#262626" stroke-width=".5" opacity=".18"/><text x="1490" y="${y - 4}" text-anchor="end" font-size="10" fill="#262626" opacity=".4">${lat}°N</text>`; }
+  let marks = "";
+  ROUTE.forEach((a, i) => {
+    const [x, y] = pts[i];
+    const L = LEFT.has(a.name), tx = L ? x - 14 : x + 14, anc = L ? "end" : "start";
+    marks += `<circle cx="${x}" cy="${y}" r="7" fill="#f7f5f0" stroke="#262626" stroke-width="2.5"/><circle cx="${x}" cy="${y}" r="2.5" fill="#3d6485"/>
+      <text x="${tx}" y="${y - 6}" text-anchor="${anc}" class="serif" font-size="18" fill="#262626">${a.name}</text>
+      <text x="${tx}" y="${y + 13}" text-anchor="${anc}" font-size="11.5" fill="#3d6485">${a.works.map(w => "「" + w + "」").join("")}</text>`;
+  });
+  section("B. 紙の地図 ― 巡礼の手帳", "サイトと同じ紙の色と墨色。経緯線を引いた古地図風に、聖地を点線の旅路でつなぐ。素材は座標だけ",
+    `<svg width="1500" height="500"><rect width="1500" height="500" fill="#f7f5f0"/>${grid}
+     <polyline points="${pts.map(p => p.join(",")).join(" ")}" fill="none" stroke="#262626" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round"/>${marks}
+     <text x="40" y="70" class="serif" font-size="30" fill="#262626">ヨルシカの聖地をめぐる</text>
+     <text x="42" y="98" font-size="13" fill="#262626" opacity=".6">yorushika-fan.vercel.app/map</text></svg>`);
+}
+
+// ---- C: 写真の帯 ----
+{
+  // 1つの町から1枚。廃墟は明るいバナーに合わないので外す
+  const pick = ["女岩（雨晴海岸）", "下灘駅", "根川緑道", "登窯広場", "猿島", "白浜海岸（伊豆下田）"];
+  const ph = pick.map(n => PHOTOS.filter(p => p.spot === n).pop()).filter(Boolean);
+  const w = 1120 / ph.length;
+  const strips = ph.map((p, i) => `<div style="position:absolute;left:${380 + i * w}px;top:0;width:${w - 6}px;height:500px;background:url('${p.thumb.replace("/500px-", "/960px-")}') center/cover"></div>`).join("");
+  const credit = ph.map(p => `${p.artist}（${p.license}）`).join(" / ");
+  section("C. 写真の帯 ― 今の景色を6枚並べる", "Wikimedia Commons の自由ライセンスの写真。撮影者名とライセンスを右下に必ず入れる。CC BY-SA を含むので、このバナー自体も CC BY-SA になる",
+    `<div style="position:absolute;inset:0;background:linear-gradient(#16212d,#3d6485)"></div>${strips}
+     <div style="position:absolute;left:40px;top:60px;color:#f7f5f0"><div class="serif" style="font-size:30px;line-height:1.5">ヨルシカの<br>聖地の、今の景色</div><div style="font-size:13px;opacity:.7;margin-top:10px">雨晴・下灘・根川・常滑・猿島・白浜</div></div>
+     <div class="credit" style="color:#fff;background:rgba(0,0,0,.45);padding:2px 6px;right:0;bottom:0">写真：${credit}・Wikimedia Commons</div>`);
+}
+
+// ---- D: 航空写真の丸 ----
+{
+  // 町ごとに代表の1か所を空から見る（国土地理院のシームレス空中写真。出典を書けば加工して使える）
+  const rep = { "雨晴": "amaharashi-onnaiwa", "下灘": "shimonada-station", "立川": "negawa-ryokudo", "常滑": "tokoname-noborigama", "猿島": "sarushima", "下田": "shimoda-shirahama", "鬼怒川": "kinugawakan-honten" };
+  const z = 16, D = 128;
+  function aerial(lat, lon) {
+    const n = 2 ** z, xt = (lon + 180) / 360 * n, la = lat * Math.PI / 180;
+    const yt = (1 - Math.log(Math.tan(la) + 1 / Math.cos(la)) / Math.PI) / 2 * n;
+    let t = "";
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) {
+      const tx = Math.floor(xt) + dx, ty = Math.floor(yt) + dy;
+      t += `<img src="https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/${z}/${tx}/${ty}.jpg" style="position:absolute;width:256px;height:256px;left:${(tx - xt) * 256 + D / 2}px;top:${(ty - yt) * 256 + D / 2}px">`;
+    }
+    return t;
+  }
+  const gap = 1000 / (byLon.length - 1);
+  let html = `<div style="position:absolute;inset:0;background:#f7f5f0"></div>
+    <svg width="1500" height="500" style="position:absolute"><line x1="${420}" y1="230" x2="${420 + gap * (byLon.length - 1)}" y2="230" stroke="#262626" stroke-width="1.6" stroke-dasharray="2 7" stroke-linecap="round"/></svg>`;
+  byLon.forEach((a, i) => {
+    const s = a.spots.find(x => x.id === rep[a.name]);
+    const cx = 420 + gap * i, cy = 230 + (i % 2 ? 30 : -30);
+    html += `<div style="position:absolute;left:${cx - D / 2}px;top:${cy - D / 2}px;width:${D}px;height:${D}px;border-radius:50%;overflow:hidden;border:4px solid #f7f5f0;box-shadow:0 0 0 2px #262626">${aerial(s.lat, s.lon)}</div>
+      <div class="serif" style="position:absolute;left:${cx - 80}px;width:160px;text-align:center;top:${cy + D / 2 + 10}px;font-size:17px">${a.name}</div>
+      <div style="position:absolute;left:${cx - 90}px;width:180px;text-align:center;top:${cy + D / 2 + 36}px;font-size:11px;color:#3d6485">${a.works.join("・")}</div>`;
+  });
+  html += `<div class="credit">航空写真：国土地理院（シームレス空中写真）を加工</div>`;
+  section("D. 空から見た聖地 ― 航空写真の丸", "地図のピンと同じ丸い形で、7つの町を空から。国土地理院の航空写真は出典を書けば加工して使える",
+    html);
+}
+
+// ---- E: 路線図 ----
+{
+  const gap = 1040 / (byLon.length - 1), y = 260;
+  let st = "";
+  byLon.forEach((a, i) => {
+    const x = 410 + gap * i;
+    st += `<circle cx="${x}" cy="${y}" r="13" fill="#f7f5f0" stroke="#262626" stroke-width="5"/>
+      <text x="${x}" y="${y - 34}" text-anchor="middle" class="serif" font-size="24" fill="#262626">${a.name}</text>
+      <text x="${x}" y="${y + 46}" text-anchor="middle" font-size="12" fill="#262626" opacity=".7">${a.works.join("・")}</text>`;
+  });
+  section("E. 路線図 ― 夜行線", "雨晴駅・下灘駅にちなんで、聖地を駅に見立てた路線図。曲名「夜行」から線の名前を取る。素材は文字と図形だけ",
+    `<svg width="1500" height="500"><rect width="1500" height="500" fill="#f7f5f0"/>
+     <line x1="380" y1="${y}" x2="1480" y2="${y}" stroke="#3d6485" stroke-width="14" stroke-linecap="round"/>${st}
+     <rect x="40" y="56" width="120" height="44" rx="6" fill="#3d6485"/><text x="100" y="86" text-anchor="middle" class="serif" font-size="22" fill="#f7f5f0">夜行線</text>
+     <text x="40" y="132" font-size="13" fill="#262626" opacity=".6">ヨルシカの聖地をめぐる、架空の路線</text></svg>`);
+}
+</script>
+</body>
+</html>
