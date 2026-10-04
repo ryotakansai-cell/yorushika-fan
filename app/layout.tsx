@@ -35,6 +35,11 @@ export const metadata: Metadata = {
     locale: "ja_JP",
     type: "website",
   },
+  // Google Search Console で「このサイトの持ち主」と確かめるための印（URL プレフィックスのプロパティ）。
+  // 確認が済んだ後も消すと確認が外れるので、残しておく。秘密の値ではない
+  verification: {
+    google: "vO_TQCT6WkioOdPWM1fO83G0oR10QtyJ_0vwjT2LvDY",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
