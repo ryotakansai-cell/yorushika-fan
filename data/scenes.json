@@ -253,6 +253,30 @@
       "license": "CC BY-SA 3.0",
       "artist": "根川孝太郎"
     },
+    "memo": {
+      "access": "JR立川駅から歩いて約20分。立川市柴崎町にある、水辺に沿った全長1km余りの緑道（長さは資料によって1.3〜1.4km）。",
+      "when": "川沿いの桜並木で知られ、立川市も「川面いっぱいに咲くみごとな桜」と紹介している。春泥棒の景色に近いのは桜の季節。",
+      "now": "2024年12月〜2025年1月に、樹木診断で不健全とされた桜が切られた（現地の看板を伝えた地域メディアによる。立川市の公式ページでは本数を確かめられていない）。MVのロケハンのころとは、桜の並びが変わっているところがある。",
+      "manners": "道幅は広くないので、ベンチや道をふさいで撮らないこと。",
+      "sources": [
+        {
+          "label": "立川市緑の十二景2（根川のサクラ堤）（立川市）",
+          "url": "https://www.city.tachikawa.lg.jp/kanko/sports/1002924/1002994/1003016.html"
+        },
+        {
+          "label": "根川緑道のサクラ伐採のお知らせ（いいね立川）",
+          "url": "https://iine-tachikawa.net/topics/129361/"
+        },
+        {
+          "label": "根川緑道（Wikipedia）",
+          "url": "https://ja.wikipedia.org/wiki/%E6%A0%B9%E5%B7%9D%E7%B7%91%E9%81%93"
+        },
+        {
+          "label": "タチオンWalking 根川緑道（立川市の地域サイト）",
+          "url": "https://tachikawaonline.jp/walk/negawa.htm"
+        }
+      ]
+    },
     "pin": {
       "videoId": "Sw1Flgub9s8",
       "frame": "hqdefault"
@@ -284,6 +308,20 @@
       "page": "https://commons.wikimedia.org/wiki/File:Orychophragmus_violaceus_in_Showa_kinen_park.jpg",
       "license": "CC BY 2.0",
       "artist": "TANAKA Juuyoh (田中十洋)"
+    },
+    "memo": {
+      "access": "JR青梅線の西立川駅から歩いて約2分の西立川口が一番近い。JR立川駅からは歩いて約15分。有料の公園で、大人の入園料は450円（65歳以上は210円、中学生以下は無料）。車なら公園の駐車場（普通車900円）が使える。",
+      "when": "開園時間は3〜10月が9:30〜17:00（4〜9月の土日祝は18:00まで）、11〜2月が9:30〜16:30。12月31日・1月1日と、1月の第4月曜日とその翌日は休園。",
+      "sources": [
+        {
+          "label": "国営昭和記念公園 公式サイト（ご利用案内）",
+          "url": "https://www.showakinen-koen.jp/guide/"
+        },
+        {
+          "label": "国営昭和記念公園（昭島市）",
+          "url": "https://www.city.akishima.lg.jp/shisei/shisetsu/1008435/1007432.html"
+        }
+      ]
     },
     "pin": {
       "videoId": "Sw1Flgub9s8",
