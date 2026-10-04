@@ -559,6 +559,30 @@
       "license": "CC0",
       "artist": "Kunio Okita"
     },
+    "memo": {
+      "access": "伊豆急下田駅から東海バスで「白浜神社前」下車すぐ（所要は資料によって約10〜17分）。東京駅から伊豆急下田駅までは直通の特急で約2時間半。車なら白濱神社の駐車場（60台。参拝者は1時間無料）がある。",
+      "when": "鳥居の立つ大明神岩は白浜大浜の北の端にあり、朝日が鳥居の向こうから昇る。夏は海水浴場になり（2025年は7月19日〜8月31日）、晴れた週末は午前の早いうちに周りの駐車場が満車になる（記事の時点で）。",
+      "tips": "MVの0:17は、浜と鳥居のある岩が映る場面。白濱神社の境内から鳥居までは歩いてすぐ。",
+      "manners": "鳥居は白濱神社の鳥居。神社の駐車場で1時間無料になるのは参拝する人だけで、海で遊ぶなら海岸側の駐車場を使う。",
+      "sources": [
+        {
+          "label": "交通・宿泊（伊豆白濱神社）",
+          "url": "https://ikonahime.jp/access/"
+        },
+        {
+          "label": "白浜神社（下田市）",
+          "url": "https://www.city.shimoda.shizuoka.jp/category/100100midokoro/110770.html"
+        },
+        {
+          "label": "白浜神社のコラム（Izu Letters）",
+          "url": "https://izu-letters.jp/column/detail.php?c=126"
+        },
+        {
+          "label": "白浜大浜海水浴場のコラム（Izu Letters）",
+          "url": "https://izu-letters.jp/column/detail.php?c=45"
+        }
+      ]
+    },
     "pin": {
       "videoId": "pHdJmDFYqTU",
       "frame": "hqdefault"
