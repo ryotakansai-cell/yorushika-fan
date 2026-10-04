@@ -335,6 +335,25 @@
       "license": "CC BY 3.0",
       "artist": "gundam2345"
     },
+    "memo": {
+      "access": "名鉄の常滑駅から歩いて約15分。陶磁器会館から、やきもの散歩道の路地を歩いて向かう。車なら陶磁器会館駐車場（1回500円）か、やきもの散歩道駐車場（8時間300円）に停める。",
+      "tips": "同じ広場に、夜行（2:05）と花に亡霊（3:11）の2曲の場面がある。",
+      "manners": "やきもの散歩道は、住んでいる人の生活と仕事の場。家をのぞいたり、私有地に入ったりしないこと。路地はとても狭く、車では通り抜けられない。",
+      "sources": [
+        {
+          "label": "やきもの散歩道（とこなめ観光協会）",
+          "url": "https://www.tokoname-kankou.net/spot/detail/1/"
+        },
+        {
+          "label": "車でやきもの散歩道へ来る方へのお願い（とこなめ観光協会）",
+          "url": "https://www.tokoname-kankou.net/news/detail/128/"
+        },
+        {
+          "label": "ヨルシカの聖地巡礼（ちたまるNavi）",
+          "url": "https://www.chitamaru.jp/art/6245/"
+        }
+      ]
+    },
     "pin": {
       "videoId": "MH5noJJfqDY",
       "frame": "hq2"
@@ -365,6 +384,24 @@
         "url": "https://www.chitamaru.jp/art/6245/"
       }
     ],
+    "memo": {
+      "access": "名鉄の常滑駅から歩いて約5分。陶磁器会館はやきもの散歩道の入口にあたる。車なら陶磁器会館駐車場（1回500円）か、やきもの散歩道駐車場（8時間300円）に停める。",
+      "manners": "陶磁器会館の西の交差点は車の多い道路。車道に出て撮らないこと。やきもの散歩道は、住んでいる人の生活と仕事の場。家をのぞいたり、私有地に入ったりしないこと。路地はとても狭く、車では通り抜けられない。",
+      "sources": [
+        {
+          "label": "やきもの散歩道（とこなめ観光協会）",
+          "url": "https://www.tokoname-kankou.net/spot/detail/1/"
+        },
+        {
+          "label": "車でやきもの散歩道へ来る方へのお願い（とこなめ観光協会）",
+          "url": "https://www.tokoname-kankou.net/news/detail/128/"
+        },
+        {
+          "label": "ヨルシカの聖地巡礼（ちたまるNavi）",
+          "url": "https://www.chitamaru.jp/art/6245/"
+        }
+      ]
+    },
     "pin": {
       "videoId": "MH5noJJfqDY",
       "frame": "hqdefault"
@@ -431,6 +468,22 @@
       "page": "https://commons.wikimedia.org/wiki/File:%E7%8C%BF%E5%B3%B6_-_panoramio.jpg",
       "license": "CC BY 3.0",
       "artist": "menma1/2"
+    },
+    "memo": {
+      "access": "京急の横須賀中央駅から歩いて約15分の三笠桟橋から、船で約10分。船は1時間に1本ほどで、荒天の日は欠航する。往復の乗船料と島の入園料が要り、料金は横須賀市に住んでいるかどうかと乗る日によって変わる。",
+      "when": "島から帰る最終便は、3〜10月が17:00、11〜2月が16:00（2026年10月時点の公式サイトの時刻表）。島にいられるのは最終便までなので、帰りの便を決めてから回るとよい。",
+      "tips": "MVの3:37は展望台広場にある防空指揮所跡、4:05は要塞跡の切り通し。",
+      "manners": "島の中には立ち入りが禁止されている場所がある。トンネルの中は暗く、足元も悪いところがある。ゴミはすべて持ち帰る。火器・ドローン・撮影会は禁止されている。",
+      "sources": [
+        {
+          "label": "猿島公園（横須賀市）",
+          "url": "https://www.city.yokosuka.kanagawa.jp/5560/sisetu/fc00000431.html"
+        },
+        {
+          "label": "猿島公式サイト（渡船の時刻表・注意事項）",
+          "url": "https://sarushima.jp/"
+        }
+      ]
     },
     "pin": {
       "videoId": "ry3Tupx4BL4",
