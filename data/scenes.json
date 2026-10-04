@@ -198,6 +198,26 @@
       "license": "CC BY 3.0",
       "artist": "thaka"
     },
+    "memo": {
+      "access": "JR予讃線の下灘駅で降りる。松山駅から普通列車で約50分、列車は1時間に1本ほど（伊予市駅で乗り換えになる便もある）。無人駅なので、帰りの時刻を先に調べておくと安心。車なら、駅の西約200mに無料の駐車場（20台）がある（伊予市の観光案内による）。",
+      "when": "夕日が駅の上屋の正面へ沈むのは6〜9月ごろ。日没の少し前から人が増え、沈むと多くの人が帰っていく。毎年9月にはホームで「夕焼けプラットホームコンサート」が開かれる。",
+      "tips": "MVの3:54は夕方の場面なので、同じ光で見比べるなら日没前後に行くとよい。曇りの日は夕日が見えないので、天気予報を確かめてから。",
+      "manners": "ホームは列車を使う人の場所でもある。線路に降りたり、乗り降りする人の邪魔になる場所で撮ったりしないこと。",
+      "sources": [
+        {
+          "label": "JR下灘駅（伊予市観光公式サイト）",
+          "url": "https://iyokankou.jp/spot/spot-409/"
+        },
+        {
+          "label": "JR下灘駅（伊予市役所）",
+          "url": "https://www.city.iyo.lg.jp/machizukuri/kanko/guidemap/jrshimonada.html"
+        },
+        {
+          "label": "下灘駅と夕日を撮ってきた！（nicomap）",
+          "url": "https://nicomap.net/spot/shimonada-station/"
+        }
+      ]
+    },
     "pin": {
       "videoId": "KTZ-y85Erus",
       "frame": "hqdefault"
