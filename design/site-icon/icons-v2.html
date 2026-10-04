@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>サイトのアイコン案 v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#e8e4dc; font-family:"Noto Sans JP",sans-serif; color:#262626; }
+  .grid { display:grid; grid-template-columns:repeat(3, 330px); gap:22px; padding:26px; }
+  .card { background:#fff; border-radius:14px; padding:18px; }
+  .row { display:flex; align-items:flex-end; gap:18px; }
+  .round { flex-shrink:0; width:180px; height:180px; border-radius:50%; overflow:hidden; box-shadow:0 0 0 1px rgba(0,0,0,.08); }
+  .tab { display:flex; flex-direction:column; gap:10px; align-items:center; }
+  .tabbar { display:flex; align-items:center; gap:6px; background:#dee1e6; border-radius:8px 8px 0 0; padding:6px 10px; font-size:11px; }
+  .tabbar.dark { background:#35363a; color:#eee; }
+  h3 { margin:12px 0 2px; font-size:15px; }
+  p { margin:0; font-size:12px; color:#555; line-height:1.6; }
+  svg { display:block; }
+</style>
+</head>
+<body>
+<div class="grid" id="g"></div>
+<script>
+// サイトの色（app/globals.css）: 紙 #f7f5f0 / 墨 #262626 / 青 #3d6485
+const P = "#f7f5f0", INK = "#262626", BLUE = "#3d6485";
+// 三日月は「大きい円から、少しずらした円をくり抜く」で作る（今のボットのアイコンと同じ作り方）
+const moon = (id, cx, cy, r, ox, oy, r2, color) => `
+  <mask id="${id}"><rect width="1000" height="1000" fill="#000"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff"/><circle cx="${cx + ox}" cy="${cy + oy}" r="${r2}" fill="#000"/></mask>
+  <rect width="1000" height="1000" fill="${color}" mask="url(#${id})"/>`;
+
+const ICONS = [
+  { title: "1. 紙と墨の三日月（前の案）", note: "比べるために再掲",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>${moon(k, 500, 500, 260, 100, -70, 235, INK)}<circle cx="700" cy="690" r="20" fill="${BLUE}"/>` },
+  { title: "3a. 月と水平線", note: "一番そぎ落とした形。墨の月と細い水平線だけ。余白で「海の上の夜」を感じさせる",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>${moon(k, 500, 430, 200, 80, -55, 182, INK)}<line x1="190" y1="700" x2="810" y2="700" stroke="${INK}" stroke-width="16" stroke-linecap="round"/>` },
+  { title: "3b. 水面に映る月", note: "3a の水平線の下に、月の光が映る短い線を2本。海だと分かりやすくなる",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>${moon(k, 500, 400, 190, 76, -52, 173, INK)}
+      <line x1="170" y1="650" x2="830" y2="650" stroke="${INK}" stroke-width="16" stroke-linecap="round"/>
+      <line x1="400" y1="735" x2="600" y2="735" stroke="${INK}" stroke-width="14" stroke-linecap="round"/>
+      <line x1="450" y1="810" x2="550" y2="810" stroke="${INK}" stroke-width="14" stroke-linecap="round"/>` },
+  { title: "3c. 墨の海", note: "下半分を墨で塗り、月の映りを紙の色で抜く。白黒の対比が強く、小さくても目立つ",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/><rect y="620" width="1000" height="380" fill="${INK}"/>${moon(k, 500, 390, 180, 72, -50, 164, INK)}
+      <line x1="400" y1="710" x2="600" y2="710" stroke="${P}" stroke-width="14" stroke-linecap="round"/>
+      <line x1="450" y1="785" x2="550" y2="785" stroke="${P}" stroke-width="14" stroke-linecap="round"/>` },
+  { title: "3d. 夜の海（反転）", note: "3a・3b を反転した夜版。墨の地に紙色の月と水平線。白系ではないが、いちばん引き締まって見える",
+    svg: k => `<rect width="1000" height="1000" fill="${INK}"/>${moon(k, 500, 420, 195, 78, -54, 177, P)}
+      <line x1="190" y1="680" x2="810" y2="680" stroke="${P}" stroke-width="14" stroke-linecap="round"/>
+      <line x1="410" y1="760" x2="590" y2="760" stroke="${P}" stroke-width="12" stroke-linecap="round" opacity=".7"/>` },
+  { title: "3e. 線で描いた月", note: "月を塗らずに輪郭の線だけで描く。上品だが、16px のタブでは線が細くて見えにくい",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>
+      <mask id="${k}o"><rect width="1000" height="1000" fill="#fff"/><circle cx="580" cy="375" r="182" fill="#000"/></mask>
+      <circle cx="500" cy="430" r="200" fill="none" stroke="${INK}" stroke-width="22" mask="url(#${k}o)"/>
+      <mask id="${k}i"><rect width="1000" height="1000" fill="#000"/><circle cx="500" cy="430" r="200" fill="#fff"/></mask>
+      <circle cx="580" cy="375" r="182" fill="none" stroke="${INK}" stroke-width="22" mask="url(#${k}i)"/>
+      <line x1="190" y1="700" x2="810" y2="700" stroke="${INK}" stroke-width="16" stroke-linecap="round"/>` },
+];
+
+const g = document.getElementById("g");
+ICONS.forEach((ic, i) => {
+  // 同じ id の mask が並ぶと先のものが使われてしまうので、大きさごとに id を変える
+  const make = (sz, k) => `<svg width="${sz}" height="${sz}" viewBox="0 0 1000 1000">${ic.svg(`i${i}${k}`)}</svg>`;
+  g.insertAdjacentHTML("beforeend", `<div class="card">
+    <div class="row">
+      <div class="round">${make(180, "a")}</div>
+      <div class="tab">
+        <div class="tabbar">${make(16, "b")}<span>ヨルシカ非公式…</span></div>
+        <div class="tabbar dark">${make(16, "c")}<span>ヨルシカ非公式…</span></div>
+        ${make(48, "d")}
+      </div>
+    </div>
+    <h3>${ic.title}</h3><p>${ic.note}</p></div>`);
+});
+</script>
+</body>
+</html>

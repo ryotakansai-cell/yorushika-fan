@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>サイトのアイコン案</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#e8e4dc; font-family:"Noto Sans JP",sans-serif; color:#262626; }
+  .grid { display:grid; grid-template-columns:repeat(4, 330px); gap:22px; padding:26px; }
+  .card { background:#fff; border-radius:14px; padding:18px; }
+  .row { display:flex; align-items:flex-end; gap:18px; }
+  .round { flex-shrink:0; width:180px; height:180px; border-radius:50%; overflow:hidden; box-shadow:0 0 0 1px rgba(0,0,0,.08); }
+  .tab { display:flex; flex-direction:column; gap:10px; align-items:center; }
+  .tabbar { display:flex; align-items:center; gap:6px; background:#dee1e6; border-radius:8px 8px 0 0; padding:6px 10px; font-size:11px; }
+  .tabbar.dark { background:#35363a; color:#eee; }
+  h3 { margin:12px 0 2px; font-size:15px; }
+  p { margin:0; font-size:12px; color:#555; line-height:1.6; }
+  svg { display:block; }
+</style>
+</head>
+<body>
+<div class="grid" id="g"></div>
+<script>
+// サイトの色（app/globals.css）: 紙 #f7f5f0 / 墨 #262626 / 青 #3d6485
+const P = "#f7f5f0", INK = "#262626", BLUE = "#3d6485";
+// 三日月は「大きい円から、少しずらした円をくり抜く」で作る（今のボットのアイコンと同じ作り方）
+const moon = (id, cx, cy, r, ox, oy, r2, color) => `
+  <mask id="${id}"><rect width="1000" height="1000" fill="#000"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff"/><circle cx="${cx + ox}" cy="${cy + oy}" r="${r2}" fill="#000"/></mask>
+  <rect width="1000" height="1000" fill="${color}" mask="url(#${id})"/>`;
+
+const ICONS = [
+  { title: "1. 紙と墨の三日月", note: "今の夜空アイコンを白黒に反転。サイトの紙と墨の色そのまま。小さくしても形が崩れにくい",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>${moon(k, 500, 500, 260, 100, -70, 235, INK)}<circle cx="700" cy="690" r="20" fill="${BLUE}"/>` },
+  { title: "2. 白地に青い三日月", note: "差し色の青で月を描く。1より柔らかい印象。夜空アイコンとも色でつながる",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>${moon(k, 500, 500, 260, 100, -70, 235, BLUE)}<circle cx="300" cy="300" r="14" fill="${BLUE}" opacity=".6"/><circle cx="720" cy="300" r="10" fill="${BLUE}" opacity=".45"/>` },
+  { title: "3. 海の上の月", note: "聖地の多く（雨晴・下灘・白浜・猿島）が海辺なので、水平線と海を入れた。下半分だけ淡い青",
+    svg: k => `<defs><linearGradient id="${k}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe9f1"/><stop offset="1" stop-color="#9fb8cc"/></linearGradient></defs>
+      <rect width="1000" height="1000" fill="${P}"/><rect y="610" width="1000" height="390" fill="url(#${k}s)"/>
+      ${moon(k, 500, 400, 170, 70, -50, 155, INK)}
+      <line x1="0" y1="610" x2="1000" y2="610" stroke="${INK}" stroke-width="14"/>
+      <line x1="380" y1="700" x2="620" y2="700" stroke="${P}" stroke-width="12" stroke-linecap="round" opacity=".9"/>
+      <line x1="430" y1="770" x2="570" y2="770" stroke="${P}" stroke-width="12" stroke-linecap="round" opacity=".7"/>` },
+  { title: "4. 明朝の「夜」", note: "見出しと同じ明朝体の一文字。文字だけなので一番すっきり。ヨルシカの「夜」とも重なる",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/><text x="500" y="690" text-anchor="middle" font-family="Noto Serif JP" font-weight="600" font-size="560" fill="${INK}">夜</text><circle cx="770" cy="250" r="22" fill="${BLUE}"/>` },
+  { title: "5. 月の入ったピン", note: "聖地巡礼マップのピンの形に三日月。「場所をめぐるサイト」と一目で分かる",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>
+      <path d="M500 860 C 400 720 270 590 270 430 A 230 230 0 1 1 730 430 C 730 590 600 720 500 860 Z" fill="${BLUE}"/>
+      ${moon(k, 500, 430, 130, 55, -40, 118, P)}` },
+  { title: "6. 窓から見る夜", note: "前に作った窓の案を白い枠に。紙の地の中に夜空がのぞく。小さいと窓枠が細く見えにくい",
+    svg: k => `<defs><clipPath id="${k}w"><rect x="270" y="190" width="460" height="620" rx="230"/></clipPath></defs>
+      <rect width="1000" height="1000" fill="${P}"/>
+      <g clip-path="url(#${k}w)"><rect width="1000" height="1000" fill="#1f3347"/>${moon(k, 600, 400, 95, 40, -28, 86, P)}<circle cx="390" cy="360" r="10" fill="${P}" opacity=".8"/></g>
+      <rect x="270" y="190" width="460" height="620" rx="230" fill="none" stroke="${INK}" stroke-width="22"/>
+      <line x1="500" y1="190" x2="500" y2="810" stroke="${INK}" stroke-width="16"/><line x1="270" y1="540" x2="730" y2="540" stroke="${INK}" stroke-width="16"/>` },
+  { title: "7. 薄藍の空と墨の月", note: "白に近い淡い青のグラデーション。夜空アイコンの昼版のような雰囲気。白すぎず、Bluesky の暗い画面でも埋もれない",
+    svg: k => `<defs><linearGradient id="${k}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f5f0"/><stop offset="1" stop-color="#c9d8e4"/></linearGradient></defs>
+      <rect width="1000" height="1000" fill="url(#${k}g)"/>${moon(k, 500, 480, 250, 95, -68, 226, INK)}<circle cx="705" cy="660" r="18" fill="${INK}"/><circle cx="290" cy="290" r="10" fill="${INK}" opacity=".5"/>` },
+  { title: "8. 月と線路", note: "雨晴駅・下灘駅の線路がまっすぐ奥へ伸び、その先に月。旅の感じが出るが、小さいと線路が潰れる",
+    svg: k => `<rect width="1000" height="1000" fill="${P}"/>${moon(k, 500, 300, 140, 60, -40, 128, BLUE)}
+      <path d="M180 960 L470 520 M820 960 L530 520" stroke="${INK}" stroke-width="22" stroke-linecap="round"/>
+      ${[600, 690, 800, 930].map((y, i) => { const t = (y - 520) / 440, h = 30 + t * 320; return `<line x1="${500 - h}" y1="${y}" x2="${500 + h}" y2="${y}" stroke="${INK}" stroke-width="${8 + t * 14}"/>`; }).join("")}` },
+];
+
+const g = document.getElementById("g");
+ICONS.forEach((ic, i) => {
+  // 同じ id の mask が並ぶと先のものが使われてしまうので、大きさごとに id を変える
+  const make = (sz, k) => `<svg width="${sz}" height="${sz}" viewBox="0 0 1000 1000">${ic.svg(`i${i}${k}`)}</svg>`;
+  g.insertAdjacentHTML("beforeend", `<div class="card">
+    <div class="row">
+      <div class="round">${make(180, "a")}</div>
+      <div class="tab">
+        <div class="tabbar">${make(16, "b")}<span>ヨルシカ非公式…</span></div>
+        <div class="tabbar dark">${make(16, "c")}<span>ヨルシカ非公式…</span></div>
+        ${make(48, "d")}
+      </div>
+    </div>
+    <h3>${ic.title}</h3><p>${ic.note}</p></div>`);
+});
+</script>
+</body>
+</html>
