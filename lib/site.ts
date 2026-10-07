@@ -7,7 +7,7 @@ export const SITE_NAME = "ヨルシカ非公式まとめ";
 
 // 公開URL。sitemap や正式URL（canonical）のように、
 // 「どのドメインのページか」を検索エンジンに伝える場面で絶対URLが要る
-export const SITE_URL = "https://yorushika-fan.vercel.app";
+export const SITE_URL = "https://yorushika.sukinote.com";
 
 // 公式サイトと誤解されないよう、全ページのフッターに出す注意書き
 export const DISCLAIMER =

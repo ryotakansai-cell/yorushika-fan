@@ -10,7 +10,7 @@ export const contentType = "image/png";
 
 const SUB = "ニュース・MV・聖地巡礼マップ";
 const NOTE = "ヨルシカの非公式ファンサイト";
-const URL_TEXT = "yorushika-fan.vercel.app";
+const URL_TEXT = "yorushika.sukinote.com";
 
 export default async function Image() {
   const [fonts, mark] = await Promise.all([
