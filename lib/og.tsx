@@ -14,7 +14,7 @@ export const OG_COLORS = {
   muted: "#6b6b6b",
 };
 
-const UA = "yorushika-fan/1.0 (+https://yorushika-fan.vercel.app)";
+const UA = "yorushika-fan/1.0 (+https://yorushika.sukinote.com)";
 
 /**
  * Google Fonts から「使う文字だけ」入ったフォントを取ってくる。

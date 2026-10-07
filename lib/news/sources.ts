@@ -30,7 +30,7 @@ const OFFICIAL_YOUTUBE_CHANNEL = "UCRIgIJQWuBJ0Cv_VlU3USNA";
 
 // Redditなどは、名乗らないアクセスを弾くことがあるので、何者かを明示する
 const USER_AGENT =
-  "yorushika-fan/1.0 (+https://yorushika-fan.vercel.app; non-commercial fan site)";
+  "yorushika-fan/1.0 (+https://yorushika.sukinote.com; non-commercial fan site)";
 
 // 1件しかないときに配列ではなくオブジェクトになるのを防ぐため、
 // 記事にあたる要素は常に配列として読む

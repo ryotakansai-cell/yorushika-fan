@@ -1,11 +1,9 @@
 name: ニュース・noteの収集
 
 on:
-  schedule:
-    # 毎時47分。「0分」は世界中のジョブが集中してGitHub側で遅延・スキップされやすい。
-    # ゲームトレンドの収集（23分・38分）とも重ならない時刻にしている
-    - cron: "47 * * * *"
-  # GitHubの画面から手動でも実行できるようにする（動作確認用）
+  # 定期実行は Cloudflare Workers の Cron Triggers（cron-worker/）に移した。
+  # GitHub の schedule は混雑時に飛ばされ、毎時のはずが数時間おきになるため。
+  # ここは手動で1回だけ収集したいとき用に残している
   workflow_dispatch:
 
 jobs:
@@ -17,4 +15,4 @@ jobs:
         run: |
           curl --fail --silent --show-error \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            "https://yorushika-fan.vercel.app/api/cron/collect"
+            "https://yorushika.sukinote.com/api/cron/collect"

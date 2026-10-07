@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/SiteHeader";
 import { DISCLAIMER, OFFICIAL_SITE, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -68,8 +67,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </div>
         </footer>
 
-        {/* どのページが見られているかを測る（Vercelの管理画面で有効化が必要） */}
-        <Analytics />
+        {/* アクセス解析は Cloudflare Web Analytics に移す予定（Vercel Analytics は
+            Vercel の外では動かないため外した） */}
       </body>
     </html>
   );
