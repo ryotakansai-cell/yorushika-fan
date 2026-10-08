@@ -7,6 +7,25 @@
 
 表示名は仮で「ヨルシカ非公式まとめ」（`lib/site.ts` の `SITE_NAME`）。
 
+- 本番: https://yorushika.sukinote.com（Cloudflare Workers）
+- 旧URL: https://yorushika-fan.vercel.app（Vercel。アカウント停止中で開けない）
+
+### ホスティング（2026-10 に Vercel → Cloudflare Workers へ移した）
+
+Vercel Hobby がアカウントごと30日停止した（配信トレンドと共有のアカウントで、
+画像最適化の変換が上限5,000回の215%）。詳しい経緯と比較は game-trends の CLAUDE.md。
+ドメインは `sukinote.com`（Cloudflare Registrar）のサブドメイン。
+
+- サイト本体は Worker `yorushika`（OpenNext で Next.js を変換。`wrangler.jsonc`）。
+  Custom Domain なので DNS の行は Cloudflare が自動で作る
+- 毎時のニュース収集は Worker `yorushika-cron`（`cron-worker/`）が毎時47分に
+  `/api/cron/collect` を叩く。GitHub Actions の schedule は混雑時に飛ばされるのでやめた
+- **main に push すると Cloudflare（Workers Builds）が自動でビルド・デプロイする。**
+  ボットの毎日のデータ更新もこれで反映される。ビルド時にトップページが DB を読むので、
+  Workers Builds の「Build variables」にも `TURSO_*` を入れてある
+- 画像最適化は使わない（`next.config.ts` の `images.unoptimized`）
+- 手元で確認するときは `npm run preview`（Windows は開発者モードが必要）
+
 作者のプロフィールと、やり取りの好みはユーザー全体の `~/.claude/CLAUDE.md` にある。
 
 ## 技術構成
@@ -18,8 +37,8 @@
 | スタイル       | Tailwind CSS v4                                          |
 | コード整形     | Prettier                                                 |
 | データ         | 作品・MVはリポジトリ内のJSON。ニュースは Turso（libSQL） |
-| ホスティング   | Vercel                                                   |
-| 定期実行       | GitHub Actions（毎時47分にニュースを収集）               |
+| ホスティング   | Cloudflare Workers 有料（OpenNext）                      |
+| 定期実行       | Cloudflare Cron Triggers（毎時47分にニュースを収集）     |
 | 外部API        | YouTube Data API v3（データ取得時のみ）、各種RSS         |
 
 ## ディレクトリ構成
@@ -70,7 +89,7 @@ scripts/
 ├── make-icons.mjs            npm run make:icons（design/bot-icon/b-paper.svg から app/ のアイコン3種を作る）
 └── lib/safe-write.mjs        取得データの保存。前回より8割未満に減ったら保存せず止まる
 .github/workflows/
-├── collect.yml               毎時47分に /api/cron/collect を呼ぶ（ニュースの収集）
+├── collect.yml               /api/cron/collect を手動で呼ぶ（定期実行は cron-worker/ に移した）
 └── refresh-data.yml          毎日 日本時間6:15 に作品・MVのJSONを取り直し、変わっていればコミット
 ```
 
@@ -86,10 +105,10 @@ MV再生回数の推移など、変わる情報を扱う段階で初めてDBとc
 記憶や手入力で書くと間違いが混ざる。
 
 **作品・MVのJSONは GitHub Actions が毎日自動で取り直す（`refresh-data.yml`）。**
-変わっていればボットがコミットし、Vercel が自動でサイトを作り直す。人が手で
+変わっていればボットがコミットし、Cloudflare（Workers Builds）が自動でサイトを作り直す。人が手で
 スクリプトを実行しなくても、新曲や再生回数が反映される。静的なサイトのまま
 （実行時にDBもAPIも使わず速いまま）、データだけ定期的に新しくする作り。
-APIキーは Vercel ではなく GitHub Secrets に置く（スクリプトが動くのはGitHub上なので）。
+APIキーはサイト側ではなく GitHub Secrets に置く（スクリプトが動くのはGitHub上なので）。
 無人で動くので、取得件数が前回の8割を下回ったら保存せずエラーで止める
 （取得元の作りが変わって空のデータで上書きし、サイトから一覧が消える事故を防ぐ）。
 
@@ -149,15 +168,19 @@ sitemap（`app/sitemap.ts`）は動画ページも含めてJSONから自動で�
 YOUTUBE_API_KEY      scripts/fetch-videos.mjs でのみ使う（サイトの実行時には不要）
 TURSO_DATABASE_URL   ニュース・トレンド用のDB（ヨルシカ専用。ゲームトレンドとは別）
 TURSO_AUTH_TOKEN     同上。Read & Write、期限なし
-CRON_SECRET          /api/cron/collect の合言葉。Vercel の環境変数と GitHub Secrets にも同じ値
-BLUESKY_HANDLE       ボットのハンドル（yorushika-fan.bsky.social）。Vercel のみ
-BLUESKY_APP_PASSWORD ボット専用のアプリパスワード（本パスワードではない）。Vercel のみ
+CRON_SECRET          /api/cron/collect の合言葉。Worker yorushika と yorushika-cron の Secret、GitHub Secrets に同じ値
+BLUESKY_HANDLE       ボットのハンドル（yorushika-fan.bsky.social）。Worker yorushika の Secret のみ
+BLUESKY_APP_PASSWORD ボット専用のアプリパスワード（本パスワードではない）。Worker yorushika の Secret のみ
 ```
 
 `BLUESKY_*` が無いあいだは投稿しない（収集はそのまま動く）。
 
-`TURSO_*` と `CRON_SECRET` は Vercel の環境変数にも必要（ニュース一覧と収集APIが実行時に使う）。
-変更したら Vercel は Redeploy する。`YOUTUBE_API_KEY` は Vercel には不要。
+本番の値は Worker の Secret に置く。`.env.local` を変えたら、このフォルダで
+`npx wrangler secret bulk .env.local` を実行すれば反映される（値は表示されない。ビルド不要）。
+`BLUESKY_*` は手元から誤って投稿しないよう `.env.local` に入れず、
+`npx wrangler secret put BLUESKY_HANDLE` のように個別に入れる。
+`yorushika-cron` には `CRON_SECRET` だけを、`cron-worker` フォルダで入れる
+（フォルダを間違えるとサイト側に入る）。
 
 GitHub Secrets に置くもの：`CRON_SECRET`（ニュースの収集）、`YOUTUBE_API_KEY`（毎日のMV更新）。
 
@@ -165,7 +188,7 @@ GitHub Secrets に置くもの：`CRON_SECRET`（ニュースの収集）、`YOU
 `.env.local` の中身は読まない・表示しない（`node --env-file=.env.local` で渡す）。
 
 **YOUTUBE_API_KEY はゲームトレンドと同じキーで、1日1万ユニットの枠を共有している。**
-ゲームトレンドのcronが毎日約7,250使うので、こちらで使えるのは残り約2,750。
+ゲームトレンドのcronが毎日約7,250使う（2026-10 から Cloudflare で毎時きちんと動くようになった）ので、こちらで使えるのは残り約2,750。
 YouTubeの検索（1回100ユニット）を定期実行に入れるなら、別のキーを作ること。
 
 ## ニュース・トレンド機能の設計（2026-09-30 合意、2026-10-01 一覧まで実装）
@@ -175,7 +198,7 @@ YouTubeの検索（1回100ユニット）を定期実行に入れるなら、別
 
 ### 仕組み
 
-GitHub Actions が1時間ごとにVercel上のAPIルートを叩き、各情報源を取得して
+Cloudflare の Cron Triggers（yorushika-cron）が1時間ごとにAPIルートを叩き、各情報源を取得して
 Turso に保存する（ゲームトレンドの `app/api/cron/` と同じ作り。`CRON_SECRET` で保護）。
 表示のたびに取得する方式にしなかったのは、RSSは「最新N件だけを配る窓」なので、
 貯めないと記事が一覧から押し出されて消えるため（noteのタグRSSは25件＝約5日分しかない）。
@@ -386,9 +409,10 @@ OSM は世界中を描けるので将来のスウェーデンも載せられる�
 
 1. ~~作品一覧・MV一覧・公式リンク集~~ 実装済み
 2. ~~GitHubリポジトリ作成・Vercelへのデプロイ・サイト名の決定~~
-   https://yorushika-fan.vercel.app で公開中。サイト名は「ヨルシカ非公式まとめ」で確定
+   https://yorushika.sukinote.com で公開中（2026-10 に Vercel から移した）。サイト名は「ヨルシカ非公式まとめ」で確定
    （検索されるので「ヨルシカ」をそのまま含め、公式と区別するため「非公式」を付けた）。
-   sitemap・robots・各ページの正式URL・Vercel Analytics を設定済み
+   sitemap・robots・各ページの正式URL を設定済み。
+   Vercel Analytics は移行で外した（Cloudflare Web Analytics に置き換える予定）
 3. **ニュース・トレンド（進行中）** 設計は上の「ニュース・トレンド機能の設計」。
    済：DBの表、5つの情報源の収集、`/news` の一覧、毎時の自動収集。
    残り：キーワード抽出と急上昇ワード（`/trends`）、noteの7日間スキ数、Wikipedia閲覧数、
