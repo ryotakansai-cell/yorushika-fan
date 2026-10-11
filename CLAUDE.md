@@ -165,7 +165,8 @@ sitemap（`app/sitemap.ts`）は動画ページも含めてJSONから自動で�
 ## 環境変数
 
 ```
-YOUTUBE_API_KEY      scripts/fetch-videos.mjs でのみ使う（サイトの実行時には不要）
+YOUTUBE_API_KEY      scripts/fetch-videos.mjs でのみ使う（サイトの実行時には不要）。配信トレンドとは別の
+                     Google Cloud プロジェクト（yorushika-fan）のキー。枠を共有しないため 2026-10-11 に分けた
 TURSO_DATABASE_URL   ニュース・トレンド用のDB（ヨルシカ専用。ゲームトレンドとは別）
 TURSO_AUTH_TOKEN     同上。Read & Write、期限なし
 CRON_SECRET          /api/cron/collect の合言葉。Worker yorushika と yorushika-cron の Secret、GitHub Secrets に同じ値
