@@ -107,6 +107,13 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
     [spots],
   );
   const [selected, setSelected] = useState<string | null>(null);
+  // 地域（日本 / スウェーデン）。並びはデータの順なので、日本が先に来る。
+  // 地域が1つしか無ければ切り替えは出さない
+  const areas = useMemo(() => [...new Set(spots.map((s) => s.area))], [spots]);
+  const [area, setArea] = useState(areas[0]);
+  // 国土地理院の航空写真は日本しか写っていないので、日本のときだけ切り替えを出す
+  // （lib/map.ts の JAPAN を読み込むと地図データの JSON までブラウザに送られるので、文字で比べる）
+  const isJapan = area === "日本";
 
   // 「すべて」では、写真のある主役の「MVの舞台」を先頭にする。
   // 北から順のままだと、先頭が北海道のライブ会場になって MVの舞台が一覧の奥に埋もれていた。
@@ -115,13 +122,14 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
   const visible = useMemo(
     () =>
       spots
+        .filter((s) => s.area === area)
         .filter((s) => filter === "all" || s.category === filter)
         .sort(
           (a, b) =>
             CATEGORY_ORDER[a.category] - CATEGORY_ORDER[b.category] ||
             (a.rank ?? 0) - (b.rank ?? 0),
         ),
-    [spots, filter],
+    [spots, filter, area],
   );
 
   // ① 地図を作る（最初の1回だけ）
@@ -144,10 +152,8 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
         zoomSnap: 0.5,
       });
       // 中心と倍率を決め打ちにすると札幌や沖縄が画面の外に出たので、
-      // 全地点が収まる範囲を地点から計算して表示する
-      map.fitBounds(L.latLngBounds(spots.map((s) => [s.lat, s.lon])), {
-        padding: [24, 24],
-      });
+      // 最初の地域（日本）の全地点が収まる範囲を地点から計算して表示する
+      fitArea(map, L, areas[0]);
 
       // 背景は2種類作っておき、切り替えのときに入れ替える（BASES の説明を参照）。
       // どちらも出典の表示が利用の条件
@@ -253,18 +259,54 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
     const target = spots.find((s) => s.id === id);
     if (target) {
       select(target, false);
-      scrollToCard(target.id);
+      // 別の地域の場所だと、カードは地域を切り替えた次の描画で現れるので、少し待ってから動かす
+      setTimeout(() => scrollToCard(target.id), 50);
     }
+    // 開いた直後の1回だけ動かす。select は地域を見ていて地域の切り替えのたびに作り直されるので、
+    // 依存に入れると、切り替えるたびに # の場所へ引き戻されてしまう
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, spots]);
+
+  /** その地域の地点が全部収まる範囲を表示する */
+  function fitArea(
+    map: LeafletMap,
+    L: typeof import("leaflet"),
+    a: string,
+    animate = false,
+  ) {
+    const inArea = spots.filter((s) => s.area === a);
+    const bounds = L.latLngBounds(inArea.map((s) => [s.lat, s.lon]));
+    // 地点が近すぎると（スウェーデンは2か所）町が見えないほど拡大されるので、上限を付ける
+    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 7, animate });
+  }
+
+  /** 地域を切り替えたとき: 一覧と印をその地域にし、地図をその地域へ動かす */
+  async function changeArea(a: string) {
+    setArea(a);
+    setSelected(null);
+    if (a !== "日本") setBase("map");
+    const map = mapRef.current;
+    if (!map) return;
+    map.closePopup();
+    const L = (await import("leaflet")).default;
+    fitArea(map, L, a, true);
+  }
 
   /** カードを押したとき: 地図をその場所へ動かし、吹き出しを開いて選択中にする */
   function select(s: Spot, animate = true) {
     const map = mapRef.current;
     setSelected(s.id);
+    // MVページなどから別の地域の場所を開いたときは、一覧もその地域に切り替える
+    if (s.area !== area) {
+      setArea(s.area);
+      if (s.area !== "日本") setBase("map");
+    }
     if (!map) return;
     if (animate) map.flyTo([s.lat, s.lon], 15, { duration: 0.8 });
     else map.setView([s.lat, s.lon], 15);
-    markersRef.current.get(s.id)?.openPopup();
+    // 地域を切り替えた直後は、まだその印が地図に置かれていない（置くのは ② の effect）ので、先に置く。
+    // 置かれていない印の吹き出しは開けない
+    markersRef.current.get(s.id)?.addTo(map).openPopup();
   }
 
   function scrollToCard(id: string) {
@@ -277,8 +319,37 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
 
   return (
     <div>
+      {/* 地域の切り替え（日本 / スウェーデン）。地域が2つ以上あるときだけ出す */}
+      {areas.length > 1 && (
+        <div
+          className="mb-4 flex flex-wrap gap-2"
+          role="tablist"
+          aria-label="地域を切り替える"
+        >
+          {areas.map((a) => (
+            <button
+              key={a}
+              type="button"
+              role="tab"
+              aria-selected={area === a}
+              onClick={() => changeArea(a)}
+              className={`rounded-full border px-3 py-1 text-sm transition ${
+                area === a
+                  ? "border-accent bg-accent text-card"
+                  : "border-line bg-card text-muted hover:text-accent"
+              }`}
+            >
+              {a}
+              <span className="ml-1.5 text-xs opacity-80">
+                {spots.filter((s) => s.area === a).length}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* 種別の絞り込み。種別が2つ以上あるときだけ出す（今はMVの舞台だけなので出ない。
-          ジャケットの舞台などを足したら、自動でまた出てくる） */}
+          ライブ会場などを足したら、自動でまた出てくる） */}
       {categories.length > 1 && (
         <div
           className="mb-4 flex flex-wrap gap-2"
@@ -318,28 +389,30 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
             />
             {/* 背景の切り替え。Leaflet 付属の切り替えはサイトの見た目と合わず、画像のパスも
                 バンドラーと相性が悪いので、自分で作っている。地図の右上に重ねる */}
-            <div
-              className="absolute right-2 top-2 z-[1] flex overflow-hidden rounded-full border border-line bg-card/95 text-xs shadow-sm"
-              role="radiogroup"
-              aria-label="地図の表示"
-            >
-              {BASES.map((b) => (
-                <button
-                  key={b.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={base === b.value}
-                  onClick={() => setBase(b.value)}
-                  className={`px-3 py-1.5 transition ${
-                    base === b.value
-                      ? "bg-accent text-card"
-                      : "text-muted hover:text-accent"
-                  }`}
-                >
-                  {b.label}
-                </button>
-              ))}
-            </div>
+            {isJapan && (
+              <div
+                className="absolute right-2 top-2 z-[1] flex overflow-hidden rounded-full border border-line bg-card/95 text-xs shadow-sm"
+                role="radiogroup"
+                aria-label="地図の表示"
+              >
+                {BASES.map((b) => (
+                  <button
+                    key={b.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={base === b.value}
+                    onClick={() => setBase(b.value)}
+                    className={`px-3 py-1.5 transition ${
+                      base === b.value
+                        ? "bg-accent text-card"
+                        : "text-muted hover:text-accent"
+                    }`}
+                  >
+                    {b.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           {/* 凡例も、種別が2つ以上あるときだけ（1種類なら色の説明は要らない） */}
           {categories.length > 1 && (
@@ -382,6 +455,16 @@ export function PilgrimageMap({ spots }: { spots: Spot[] }) {
 }
 
 /**
+ * 見比べ画面を開くボタンの文言。押すと何が出るか分かる言い方にする（2026-10-03 オーナーの判断）。
+ * ジャケットの舞台は、ジャケットを載せられないので「MVの場面」の代わりに現地の様子と行き方が中心になる
+ */
+function detailLabel(s: Spot) {
+  return s.kindLabel === "ジャケットの舞台"
+    ? "現地の様子を見る"
+    : "MVの場面を見る";
+}
+
+/**
  * 吹き出しの中身。文字列の HTML ではなく DOM で組む（名前に記号が入っても崩れない）。
  * 「MVの場面を見る」は普通のリンクだとページ全体の読み込みになり、地図の上に重なる画面にならない。
  * そこで押されたら Next.js の画面切り替え（router.push）で開く
@@ -404,7 +487,7 @@ function popupContent(s: Spot, navigate: (href: string) => void) {
   if (s.detailHref) {
     const a = document.createElement("a");
     a.href = s.detailHref;
-    a.textContent = "MVの場面を見る";
+    a.textContent = detailLabel(s);
     a.addEventListener("click", (e) => {
       e.preventDefault();
       navigate(s.detailHref!);
@@ -439,7 +522,7 @@ function summary(s: Spot) {
     return s.entries
       .map(
         (e) =>
-          `${e.title.replace("（MV）", "")} ${e.dateLabel.replace(" の場面", "")}`,
+          `${e.title.replace(/（(MV|ジャケット)）/, "")} ${e.dateLabel.replace(" の場面", "")}`,
       )
       .join("・");
   }
@@ -545,7 +628,7 @@ function SpotCard({
                 scroll={false}
                 className="rounded-full bg-accent px-4 py-1.5 text-card transition hover:opacity-90"
               >
-                MVの場面を見る
+                {detailLabel(s)}
               </Link>
             ) : (
               s.entries[0] && (

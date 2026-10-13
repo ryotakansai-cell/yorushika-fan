@@ -2,14 +2,14 @@ import eventsJson from "@/data/events.json";
 import performancesJson from "@/data/live-performances.json";
 import scenesJson from "@/data/scenes.json";
 import venuesJson from "@/data/venues.json";
-import { formatDate } from "@/lib/discography";
+import { formatDate, yorushikaWorks } from "@/lib/discography";
 
 // 聖地巡礼マップに載せる「場所」を作る。
 // 元データは3つに分かれている:
 //   live-performances.json … 公演（公式サイトから自動で取り直せる）
 //   venues.json            … 会場の座標・閉館情報（人が確かめた値。自動では上書きしない）
 //   events.json            … 展示・コラボ（件数が少ないので手で書いている）
-//   scenes.json            … MVの舞台（出典と根拠の強さを付けて手で書いている）
+//   scenes.json            … MV・ジャケット写真の舞台（出典と根拠の強さを付けて手で書いている）
 // ページ側はこの違いを知らなくて済むように、ここで Spot という1つの形にそろえる。
 
 type Performance = {
@@ -49,15 +49,24 @@ type EventItem = {
 type SceneItem = {
   id: string;
   name: string;
+  /** 日本は都道府県、海外は「ストックホルム」のような都市名（国は country に書く） */
   prefecture: string;
+  /** 海外の場所だけ書く（「スウェーデン」）。地図の「日本 / 海外」の切り替えに使う */
+  country?: string;
   lat: number;
   lon: number;
   approximate?: boolean;
   evidence: Evidence;
-  /** その場所が出てくる作品。at はMVの何秒目の場面か（分かっているときだけ） */
+  /**
+   * その場所が出てくる作品。
+   * MVの場面なら videoId（at はMVの何秒目の場面か。分かっているときだけ）。
+   * ジャケット写真の舞台なら jacket: true（作品ページは discography.json から曲名で引く）。
+   * ジャケットはこのサイトに載せない約束なので、見比べ画面では公式の作品ページへ案内する
+   */
   scenes: {
     work: string;
-    videoId: string;
+    videoId?: string;
+    jacket?: boolean;
     at?: number;
     /**
      * 人が場面と現地を見比べて一致を確かめたとき。いつ・何を見て一致としたか。
@@ -200,6 +209,11 @@ export type Spot = {
   lat: number;
   lon: number;
   prefecture: string;
+  /**
+   * 地域（「日本」「スウェーデン」）。地図は地域ごとに切り替えて見せる。
+   * 日本とスウェーデンを1枚に収めると、ユーラシア大陸ごと縮小されてどこも見えなくなるため
+   */
+  area: string;
   address?: string;
   /** 番地まで特定できず、おおよその位置で置いているもの */
   approximate: boolean;
@@ -313,6 +327,7 @@ function eventSpots(today: string): Spot[] {
       lat: e.lat,
       lon: e.lon,
       prefecture: e.prefecture,
+      area: JAPAN,
       address: e.address,
       approximate: false,
       closed: false,
@@ -339,6 +354,54 @@ function formatSeconds(sec: number) {
   return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
 }
 
+export const JAPAN = "日本";
+
+type SceneEntry = SceneItem["scenes"][number];
+
+/** ジャケットの舞台の作品ページ（公式サイト）。作品名で discography.json から引く */
+function jacketUrl(work: string) {
+  const w = yorushikaWorks.find((x) => x.title === work);
+  if (!w) {
+    throw new Error(
+      `scenes.json のジャケットの作品が discography.json に無い: ${work}`,
+    );
+  }
+  return w.officialUrl;
+}
+
+/**
+ * 場面1つぶんの「元の作品」へのリンク。
+ * MVはその場面の秒数から再生されるリンク、ジャケットは公式の作品ページ。
+ * 画像を切り出して載せるのではなく公式へ飛ばすのは、権利の問題を避けるため
+ */
+function entrySource(x: SceneEntry, where: string) {
+  if (x.jacket) return jacketUrl(x.work);
+  if (!x.videoId) {
+    throw new Error(
+      `scenes.json の場面に videoId も jacket もありません: ${where}`,
+    );
+  }
+  return `https://www.youtube.com/watch?v=${x.videoId}${x.at !== undefined ? `&t=${x.at}s` : ""}`;
+}
+
+/** 「0:48 の場面」「ジャケット写真」 */
+function entryLabel(x: SceneEntry) {
+  if (x.jacket) return "ジャケット写真";
+  return x.at !== undefined
+    ? `${formatSeconds(x.at)} の場面`
+    : "場面の時刻は未確認";
+}
+
+/** 画面に出す所在地。海外は国名を前に付ける（「スウェーデン ストックホルム」） */
+function placeLabel(sc: SceneItem) {
+  return sc.country ? `${sc.country} ${sc.prefecture}` : sc.prefecture;
+}
+
+/** 場所の種類。MVの場面が1つでもあれば「MVの舞台」 */
+function sceneKindLabel(sc: SceneItem) {
+  return sc.scenes.some((x) => x.videoId) ? "MVの舞台" : "ジャケットの舞台";
+}
+
 function sceneSpots(): Spot[] {
   return (scenesJson as SceneItem[]).map((sc, rank) => {
     // 照合は場面ごとに記録する。同じ場所でも、確かめていない場面まで「照合済み」に見せないため。
@@ -348,32 +411,32 @@ function sceneSpots(): Spot[] {
       sc.evidence !== "official" && sc.scenes.some((x) => x.verified)
         ? "verified"
         : sc.evidence;
+    // ピンはMVの公式画像。ジャケットだけの場所はMVが無く、ジャケットも載せられないので、
+    // pinImage を付けずにカードと同じ現地の写真をピンにする
+    const pinVideo =
+      sc.pin?.videoId ?? sc.scenes.find((x) => x.videoId)?.videoId;
     return {
       id: `scene:${sc.id}`,
       name: sc.name,
       category: "scene",
-      kindLabel: "MVの舞台",
+      kindLabel: sceneKindLabel(sc),
       lat: sc.lat,
       lon: sc.lon,
-      prefecture: sc.prefecture,
+      prefecture: placeLabel(sc),
+      area: sc.country ?? JAPAN,
       approximate: sc.approximate ?? false,
       closed: false,
       status: null,
       note: sc.note,
       latest: "",
-      // 場面の秒数が分かっているものは、その場面から再生されるリンクにする。
-      // 画像を切り出して載せるのではなく公式の動画へ飛ばすのは、権利の問題を避けるため
       entries: sc.scenes.map((x) => ({
-        title: `${x.work}（MV）`,
+        title: `${x.work}（${x.jacket ? "ジャケット" : "MV"}）`,
         verifiedHow: x.verified?.how,
         verifiedRef: x.verified?.ref,
         note: x.note,
         embed: checkEmbed(x.embed, `${sc.id} ${x.work}`),
-        dateLabel:
-          x.at !== undefined
-            ? `${formatSeconds(x.at)} の場面`
-            : "場面の時刻は未確認",
-        source: `https://www.youtube.com/watch?v=${x.videoId}${x.at !== undefined ? `&t=${x.at}s` : ""}`,
+        dateLabel: entryLabel(x),
+        source: entrySource(x, `${sc.id} ${x.work}`),
       })),
       googleMapsUrl: googleMapsUrl(`${sc.lat},${sc.lon}`),
       evidence,
@@ -382,7 +445,9 @@ function sceneSpots(): Spot[] {
       // MVの場面と見比べられるよう、その地点のストリートビューを開く（APIキー不要の公式のURL形式）
       streetViewUrl: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${sc.lat},${sc.lon}`,
       image: sceneImage(sc),
-      pinImage: `https://i.ytimg.com/vi/${sc.pin?.videoId ?? sc.scenes[0].videoId}/${sc.pin?.frame ?? "hqdefault"}.jpg`,
+      pinImage: pinVideo
+        ? `https://i.ytimg.com/vi/${pinVideo}/${sc.pin?.frame ?? "hqdefault"}.jpg`
+        : undefined,
       detailHref: `/map/${sc.id}`,
       rank,
     };
@@ -391,6 +456,7 @@ function sceneSpots(): Spot[] {
 
 /**
  * 地図に載せる地点。2026-10-03 から MVの舞台だけ（ライブ会場・展示は /live の一覧に移した）。
+ * 2026-10-12 からジャケット写真の舞台（スウェーデン）も載せている。
  * 並びは scenes.json に書いた順（代表的な場所が先頭）
  */
 export function getSpots(): Spot[] {
@@ -435,15 +501,20 @@ export function getScenesForVideo(videoId: string): VideoScene[] {
   );
 }
 
-/** カードの画像。選んだ写真があればそれ、無ければ最初の場面のMVの公式サムネイル */
+/** カードの画像。選んだ写真があればそれ、無ければ最初のMVの場面の公式サムネイル */
 function sceneImage(sc: SceneItem): SpotImage {
   if (sc.photo) {
     return { src: sc.photo.thumb, alt: `${sc.name}の写真`, credit: sc.photo };
   }
-  const first = sc.scenes[0];
+  const mv = sc.scenes.find((x) => x.videoId);
+  // ジャケットだけの場所は、ジャケットを載せられないので写真が要る。
+  // 海外は写真が無いときの代わり（国土地理院の航空写真）も使えない（日本しか写っていない）
+  if (!mv || sc.country) {
+    throw new Error(`scenes.json の ${sc.id} には photo が必要です`);
+  }
   return {
-    src: `https://i.ytimg.com/vi/${first.videoId}/hqdefault.jpg`,
-    alt: `${first.work}のMV`,
+    src: `https://i.ytimg.com/vi/${mv.videoId}/hqdefault.jpg`,
+    alt: `${mv.work}のMV`,
   };
 }
 
@@ -454,7 +525,10 @@ function sceneImage(sc: SceneItem): SpotImage {
 export type SceneDetail = {
   id: string;
   name: string;
+  /** 日本は都道府県、海外は「スウェーデン ストックホルム」 */
   prefecture: string;
+  /** 「MVの舞台」「ジャケットの舞台」 */
+  kindLabel: string;
   /** 写真も埋め込みも無いとき、航空写真の小さな地図を出すのに使う */
   lat: number;
   lon: number;
@@ -467,8 +541,12 @@ export type SceneDetail = {
   streetViewUrl: string;
   scenes: {
     work: string;
-    videoId: string;
+    /** MVの場面のとき。ジャケットのときは undefined で、代わりに jacketUrl が入る */
+    videoId?: string;
+    /** ジャケット写真の舞台のとき、公式の作品ページ（ジャケットはそこで見てもらう） */
+    jacketUrl?: string;
     at?: number;
+    /** 「0:48」。ジャケットのときは「ジャケット写真」 */
     atLabel?: string;
     note?: string;
     embed?: string;
@@ -524,7 +602,8 @@ export function getSceneDetail(id: string): SceneDetail | undefined {
   return {
     id: sc.id,
     name: sc.name,
-    prefecture: sc.prefecture,
+    prefecture: placeLabel(sc),
+    kindLabel: sceneKindLabel(sc),
     lat: sc.lat,
     lon: sc.lon,
     evidence,
@@ -537,8 +616,13 @@ export function getSceneDetail(id: string): SceneDetail | undefined {
     scenes: sc.scenes.map((x) => ({
       work: x.work,
       videoId: x.videoId,
+      jacketUrl: x.jacket ? jacketUrl(x.work) : undefined,
       at: x.at,
-      atLabel: x.at !== undefined ? formatSeconds(x.at) : undefined,
+      atLabel: x.jacket
+        ? entryLabel(x)
+        : x.at !== undefined
+          ? formatSeconds(x.at)
+          : undefined,
       note: x.note,
       embed: checkEmbed(x.embed, `${sc.id} ${x.work}`),
       ref: x.verified?.ref,

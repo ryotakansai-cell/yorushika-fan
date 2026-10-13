@@ -37,38 +37,48 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
       )}
 
       {d.scenes.map((sc, i) => (
-        <section key={`${sc.videoId}-${sc.at ?? i}`} className="mt-8">
+        <section
+          key={`${sc.videoId ?? sc.work}-${sc.at ?? i}`}
+          className="mt-8"
+        >
           <h2 className="font-serif text-lg text-ink">
             {sc.work}
-            <span className="ml-2 text-sm text-muted">
-              {sc.atLabel ? `${sc.atLabel} の場面` : "場面の時刻は未確認"}
-            </span>
+            {/* ジャケットは下の枠に「ジャケット写真」と出るので、見出しには何も足さない */}
+            {!sc.jacketUrl && (
+              <span className="ml-2 text-sm text-muted">
+                {sc.atLabel ? `${sc.atLabel} の場面` : "場面の時刻は未確認"}
+              </span>
+            )}
           </h2>
           {sc.note && <p className="mt-1 text-xs text-muted">{sc.note}</p>}
 
           <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <figure>
-              {/* 左右の見出し。「見比べる」という言葉を使わずに、何と何が並んでいるかを示す */}
-              <p className="mb-1 text-xs text-muted">MVの場面</p>
-              <div className="overflow-hidden rounded-lg border border-line bg-ink">
-                {/* 場面の秒数が分かっていれば、その場面で止まった状態で出す。
-                    分からなければ、押すと最初から再生される普通のプレーヤー */}
-                {sc.at !== undefined ? (
-                  <ScenePlayer
-                    videoId={sc.videoId}
-                    start={sc.at}
-                    title={`${sc.work}（MV）`}
-                  />
-                ) : (
-                  <LiteYouTube
-                    videoId={sc.videoId}
-                    title={`${sc.work}（MV）`}
-                    sizes="(min-width: 768px) 384px, 100vw"
-                  />
-                )}
-              </div>
-              {/* 注釈は付けない。見出しの「0:48 の場面」で十分（2026-10-03 オーナーの指摘） */}
-            </figure>
+            {sc.jacketUrl ? (
+              <JacketLink work={sc.work} url={sc.jacketUrl} />
+            ) : (
+              <figure>
+                {/* 左右の見出し。「見比べる」という言葉を使わずに、何と何が並んでいるかを示す */}
+                <p className="mb-1 text-xs text-muted">MVの場面</p>
+                <div className="overflow-hidden rounded-lg border border-line bg-ink">
+                  {/* 場面の秒数が分かっていれば、その場面で止まった状態で出す。
+                      分からなければ、押すと最初から再生される普通のプレーヤー */}
+                  {sc.at !== undefined ? (
+                    <ScenePlayer
+                      videoId={sc.videoId!}
+                      start={sc.at}
+                      title={`${sc.work}（MV）`}
+                    />
+                  ) : (
+                    <LiteYouTube
+                      videoId={sc.videoId!}
+                      title={`${sc.work}（MV）`}
+                      sizes="(min-width: 768px) 384px, 100vw"
+                    />
+                  )}
+                </div>
+                {/* 注釈は付けない。見出しの「0:48 の場面」で十分（2026-10-03 オーナーの指摘） */}
+              </figure>
+            )}
 
             <figure>
               <p className="mb-1 text-xs text-muted">今の景色</p>
@@ -156,6 +166,32 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
         </Link>
       </div>
     </article>
+  );
+}
+
+/**
+ * 左側の「ジャケット」。ジャケット写真はこのサイトに載せない約束（公式画像の複製になる）なので、
+ * 画像の代わりに公式サイトの作品ページへ案内し、そこで見比べてもらう
+ */
+function JacketLink({ work, url }: { work: string; url: string }) {
+  return (
+    <figure>
+      <p className="mb-1 text-xs text-muted">ジャケット写真</p>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex flex-col items-center justify-center gap-2 rounded-lg border border-line bg-card px-6 py-8 text-center transition hover:border-accent md:aspect-video md:py-0"
+      >
+        <span className="font-serif text-lg text-ink transition group-hover:text-accent">
+          『{work}』
+        </span>
+        <span className="text-sm text-muted">
+          ジャケットは公式サイトの作品ページで見られます
+        </span>
+        <span className="text-xs text-accent">公式サイトで開く ↗</span>
+      </a>
+    </figure>
   );
 }
 

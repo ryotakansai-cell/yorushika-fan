@@ -21,9 +21,12 @@ export async function generateMetadata({
   const d = getSceneDetail(slug);
   if (!d) return { title: "見つかりません" };
   const works = [...new Set(d.scenes.map((s) => `「${s.work}」`))].join("");
+  const jacket = d.kindLabel === "ジャケットの舞台";
   return {
     title: `${d.name}（ヨルシカ${works}の聖地）`,
-    description: `ヨルシカ${works}のMVの舞台、${d.prefecture}の${d.name}。MVの場面と現地の様子を見比べられます。`,
+    description: jacket
+      ? `ヨルシカ${works}のジャケット写真の舞台、${d.prefecture}の${d.name}。行き方と現地の様子をまとめています。`
+      : `ヨルシカ${works}のMVの舞台、${d.prefecture}の${d.name}。MVの場面と現地の様子を見比べられます。`,
     alternates: { canonical: `/map/${d.id}` },
   };
 }

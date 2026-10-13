@@ -7,20 +7,24 @@ export const metadata: Metadata = {
   alternates: { canonical: "/map" },
   title: "聖地巡礼マップ",
   description:
-    "ヨルシカのMVの舞台（聖地）を地図にまとめています。MVの場面と現地の様子を並べて見比べられます。",
+    "ヨルシカのMVの舞台（聖地）と、スウェーデンにあるアルバムのジャケット写真の舞台を地図にまとめています。MVの場面と現地の様子を並べて見比べられます。",
 };
 
 // データは JSON なので、ビルド時に一度だけ作る（展示を外したので日付で変わる表示も無くなった）
 
 export default function MapPage() {
   const spots = getSpots();
+  const mv = spots.filter((s) => s.kindLabel === "MVの舞台").length;
+  const jacket = spots.length - mv;
 
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-10">
       <h1 className="font-serif text-2xl text-ink">聖地巡礼マップ</h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
-        ヨルシカのMVの舞台 {spots.length}{" "}
-        か所を載せています。MVの場面と現地の写真を見比べて確かめたものを中心に、出典と一緒に載せています。
+        ヨルシカのMVの舞台 {mv} か所
+        {jacket > 0 &&
+          `と、スウェーデンにあるアルバムのジャケット写真の舞台 ${jacket} か所`}
+        を載せています。MVの場面と現地の写真を見比べて確かめたものを中心に、出典と一緒に載せています。
         まだ確かめられていないものには「推定」、n-bunaさんやMV監督がインタビューで触れたものには「制作者の発言」と付けています。
       </p>
       <p className="mt-2 text-sm leading-relaxed text-muted">
