@@ -29,6 +29,10 @@ jobs:
       - name: 公式サイトから作品一覧を取得
         run: node scripts/fetch-discography.mjs
 
+      # 曲ごとのページ（/songs）の元。公式サイトの歌詞コーナーの曲の一覧
+      - name: 公式サイトから曲の一覧を取得
+        run: node scripts/fetch-songs.mjs
+
       - name: 公式YouTubeから動画一覧を取得
         run: node scripts/fetch-videos.mjs
         env:

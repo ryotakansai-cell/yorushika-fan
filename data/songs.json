@@ -1,0 +1,970 @@
+[
+  {
+    "id": 84,
+    "title": "あぶく",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/84/",
+    "releases": [
+      {
+        "release": "Digital Single「あぶく」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "title": "ポスト春",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/83/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "title": "櫂",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/82/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 20
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "title": "千鳥",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/81/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 19
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "title": "啄木鳥",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/80/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 16
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "title": "うめき",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/79/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 15
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "title": "火葬",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/78/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 12
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "title": "魔性",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/77/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "title": "花も騒めく",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/76/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "title": "雲になる",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/75/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "title": "茜",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/74/",
+    "releases": [
+      {
+        "release": "Digital Single「茜」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "title": "プレイシック",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/73/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 4
+      },
+      {
+        "release": "Digital Single「プレイシック」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "title": "修羅",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/72/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 9
+      },
+      {
+        "release": "Digital Single「修羅」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "title": "火星人",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/71/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 10
+      },
+      {
+        "release": "Digital Single「火星人」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "title": "へび",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/70/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 14
+      },
+      {
+        "release": "Digital Single「へび」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "title": "太陽",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/69/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 6
+      },
+      {
+        "release": "Digital Single「太陽」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "title": "アポリア",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/68/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 13
+      },
+      {
+        "release": "Digital Single「アポリア」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "title": "忘れてください",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/67/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 8
+      },
+      {
+        "release": "Digital Single「忘れてください」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "title": "ルバート",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/66/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 11
+      },
+      {
+        "release": "Digital Single「ルバート」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "title": "晴る",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/65/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 7
+      },
+      {
+        "release": "Digital Single「晴る」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "title": "斜陽",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/64/",
+    "releases": [
+      {
+        "release": "Digital Single「斜陽」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "title": "月光浴",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/63/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 18
+      },
+      {
+        "release": "Digital Single「月光浴」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "title": "テレパス",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/62/",
+    "releases": [
+      {
+        "release": "Digital Single「テレパス」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "title": "第一夜",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/61/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 16
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "title": "アルジャーノン",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/60/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 15
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "title": "左右盲",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/59/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 14
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "title": "いさな",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/58/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 13
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "title": "さよならモルテン",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/57/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 12
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "title": "老人と海",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/56/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 11
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "title": "靴の花火",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/55/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 10
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "title": "又三郎",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/54/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 9
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "title": "パドドゥ",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/53/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 8
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "title": "451",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/52/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 7
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "title": "月に吠える",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/51/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 6
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "title": "雪国",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/50/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "title": "チノカテ",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/49/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "title": "ブレーメン",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/48/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "title": "都落ち",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/47/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "title": "夏の肖像",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/46/",
+    "releases": [
+      {
+        "release": "音楽画集「幻燈」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "title": "嘘月",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/45/",
+    "releases": [
+      {
+        "release": "EP「創作」",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "title": "風を食む",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/44/",
+    "releases": [
+      {
+        "release": "EP「創作」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "title": "春泥棒",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/43/",
+    "releases": [
+      {
+        "release": "EP「創作」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "title": "強盗と花束",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/42/",
+    "releases": [
+      {
+        "release": "EP「創作」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "title": "花に亡霊",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/41/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 10
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "title": "夜行",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/40/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 9
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "title": "逃亡",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/39/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 8
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "title": "思想犯",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/38/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 7
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "title": "盗作",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/37/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 6
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "title": "花人局",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/36/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "title": "レプリカント",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/35/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "title": "爆弾魔",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/34/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "title": "春ひさぎ",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/33/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "title": "昼鳶",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/32/",
+    "releases": [
+      {
+        "release": "3rd Full Album「盗作」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "title": "ノーチラス",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/31/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 10
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "title": "エイミー",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/30/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 9
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "title": "声",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/29/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 8
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "title": "心に穴が空いた",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/28/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 7
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "title": "歩く",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/27/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 6
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "title": "雨晴るる",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/26/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "title": "神様のダンス",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/25/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "title": "雨とカプチーノ",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/24/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "title": "夕凪、某、花惑い",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/23/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "title": "憂一乗",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/22/",
+    "releases": [
+      {
+        "release": "2nd Full Album「エルマ」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "title": "だから僕は音楽を辞めた",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/21/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 10
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "title": "エルマ",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/20/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 9
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "title": "パレード",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/19/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 8
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "title": "夜紛い",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/18/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 7
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "title": "五月は花緑青の窓辺から",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/17/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 6
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "title": "六月は雨上がりの街を書く",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/16/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "title": "踊ろうぜ",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/15/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "title": "詩書きとコーヒー",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/14/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "title": "八月、某、月明かり",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/13/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "title": "藍二乗",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/12/",
+    "releases": [
+      {
+        "release": "1st Full Album「だから僕は音楽を辞めた」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "title": "冬眠",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/11/",
+    "releases": [
+      {
+        "release": "2nd Mini Album「負け犬にアンコールはいらない」",
+        "order": 6
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "title": "ただ君に晴れ",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/10/",
+    "releases": [
+      {
+        "release": "2nd Mini Album「負け犬にアンコールはいらない」",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "準透明少年",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/9/",
+    "releases": [
+      {
+        "release": "2nd Mini Album「負け犬にアンコールはいらない」",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "ヒッチコック",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/8/",
+    "releases": [
+      {
+        "release": "Digital Album「二人称」",
+        "order": 17
+      },
+      {
+        "release": "2nd Mini Album「負け犬にアンコールはいらない」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "爆弾魔",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/7/",
+    "releases": [
+      {
+        "release": "2nd Mini Album「負け犬にアンコールはいらない」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "負け犬にアンコールはいらない",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/6/",
+    "releases": [
+      {
+        "release": "2nd Mini Album「負け犬にアンコールはいらない」",
+        "order": 1
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "雲と幽霊",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/5/",
+    "releases": [
+      {
+        "release": "1st Mini Album 「夏草が邪魔をする」",
+        "order": 5
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "靴の花火",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/4/",
+    "releases": [
+      {
+        "release": "1st Mini Album 「夏草が邪魔をする」",
+        "order": 4
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "あの夏に咲け",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/3/",
+    "releases": [
+      {
+        "release": "1st Mini Album 「夏草が邪魔をする」",
+        "order": 3
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "言って。",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/2/",
+    "releases": [
+      {
+        "release": "1st Mini Album 「夏草が邪魔をする」",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "title": "カトレア",
+    "lyricsUrl": "https://yorushika.com/lyrics/detail/1/",
+    "releases": [
+      {
+        "release": "1st Mini Album 「夏草が邪魔をする」",
+        "order": 1
+      }
+    ]
+  }
+]

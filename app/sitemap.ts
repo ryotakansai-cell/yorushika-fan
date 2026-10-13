@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { sceneIds } from "@/lib/map";
 import { SITE_URL } from "@/lib/site";
+import { songs } from "@/lib/songs";
 import { videos } from "@/lib/videos";
 
 // sitemap.xml を自動生成する。
@@ -19,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    { url: `${SITE_URL}/songs`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/mv`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${SITE_URL}/map`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/live`, changeFrequency: "monthly", priority: 0.6 },
@@ -40,5 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...videoPages, ...scenePages];
+  // 曲ごとのページ。「曲名 MV」「曲名 聖地」のような検索の入口
+  const songPages: MetadataRoute.Sitemap = songs.map((s) => ({
+    url: `${SITE_URL}/songs/${s.id}`,
+    changeFrequency: "weekly",
+    priority: 0.8,
+  }));
+
+  return [...staticPages, ...songPages, ...videoPages, ...scenePages];
 }

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { VideoCard } from "@/components/VideoCard";
 import { findSingle, formatDate } from "@/lib/discography";
 import { getScenesForVideo } from "@/lib/map";
+import { findSongByTitle } from "@/lib/songs";
 import {
   VIDEO_KIND_LABEL,
   byKind,
@@ -48,6 +49,15 @@ export default async function VideoPage({ params }: Props) {
   // MVなら、その曲が出たシングルを公式のディスコグラフィーから探す
   const single = video.kind === "mv" ? findSingle(video.name) : undefined;
 
+  // 曲ごとのページ。ライブ映像は「花人局 / 春泥棒」のように2曲入りのことがあるので、分けて最初に見つかった曲
+  const song =
+    video.kind === "mv" || video.kind === "live"
+      ? video.name
+          .split(/\s*\/\s*/)
+          .map(findSongByTitle)
+          .find((s) => s !== undefined)
+      : undefined;
+
   // このMVに出てくる場所（聖地巡礼マップの「MVの舞台」）
   const scenes = getScenesForVideo(video.videoId);
 
@@ -89,10 +99,22 @@ export default async function VideoPage({ params }: Props) {
           </a>
         </li>
         {/* 歌詞は著作物なのでこのサイトには載せず、公式サイトの掲載ページへ案内する */}
+        {song && (
+          <li>
+            <Link
+              href={`/songs/${song.id}`}
+              className="inline-block rounded-full border border-line bg-card px-4 py-1.5 text-ink transition hover:border-accent hover:text-accent"
+            >
+              「{song.title}」のページ
+            </Link>
+          </li>
+        )}
         {(video.kind === "mv" || video.kind === "live") && (
           <li>
             <a
-              href="https://yorushika.com/discography/artist/2/"
+              href={
+                song?.lyricsUrl ?? "https://yorushika.com/discography/artist/2/"
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block rounded-full border border-line bg-card px-4 py-1.5 text-ink transition hover:border-accent hover:text-accent"

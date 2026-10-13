@@ -75,7 +75,34 @@ export async function getArticles(tab: Tab, limit = 300): Promise<Article[]> {
     args: [...categories, limit],
   });
 
-  return result.rows.map((r) => ({
+  return result.rows.map(toArticle);
+}
+
+/**
+ * 曲ページ用: 見出しに「曲名」（かぎかっこ付き）が出てくる記事。新しい順。
+ * かぎかっこ付きに限るのは、「声」「歩く」のような短い曲名がふつうの言葉として出てくる記事を拾わないため。
+ * 見出しで曲名を「」で囲むのは、ニュース・公式・note のどれでもふつうの書き方
+ */
+export async function getArticlesMentioning(
+  title: string,
+  limit = 10,
+): Promise<Article[]> {
+  const result = await getDbClient().execute({
+    sql: `
+      SELECT id, url, source, category, title, publisher, published_at, bookmark_count
+      FROM articles
+      WHERE removed_at IS NULL AND category IN ('official', 'news', 'fan')
+        AND (instr(title, ?) > 0 OR instr(title, ?) > 0)
+      ORDER BY published_at DESC
+      LIMIT ?
+    `,
+    args: [`「${title}」`, `『${title}』`, limit],
+  });
+  return result.rows.map(toArticle);
+}
+
+function toArticle(r: Record<string, unknown>): Article {
+  return {
     id: Number(r.id),
     url: String(r.url),
     source: r.source as Source,
@@ -84,7 +111,7 @@ export async function getArticles(tab: Tab, limit = 300): Promise<Article[]> {
     publisher: r.publisher === null ? null : String(r.publisher),
     publishedAt: String(r.published_at),
     bookmarkCount: r.bookmark_count === null ? null : Number(r.bookmark_count),
-  }));
+  };
 }
 
 // --------------------------------------------------------------
