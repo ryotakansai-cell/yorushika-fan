@@ -61,12 +61,18 @@ type SceneItem = {
    * その場所が出てくる作品。
    * MVの場面なら videoId（at はMVの何秒目の場面か。分かっているときだけ）。
    * ジャケット写真の舞台なら jacket: true（作品ページは discography.json から曲名で引く）。
-   * ジャケットはこのサイトに載せない約束なので、見比べ画面では公式の作品ページへ案内する
+   * ジャケットの画像はこのサイトに置かない。見比べ画面では、レーベルが YouTube に提供している
+   * 公式音源（「Yorushika - Topic」チャンネル。映像がジャケットそのもの）の埋め込みで見せる
    */
   scenes: {
     work: string;
     videoId?: string;
     jacket?: boolean;
+    /**
+     * ジャケットの舞台だけ: 収録曲の公式音源（Topic チャンネル）の動画ID。映像がジャケットになっている。
+     * 2026-10-13 に Apple Music の埋め込みも試したが、ジャケットが60pxほどの小さな画像で見比べに使えなかった
+     */
+    jacketVideo?: string;
     at?: number;
     /**
      * 人が場面と現地を見比べて一致を確かめたとき。いつ・何を見て一致としたか。
@@ -411,10 +417,11 @@ function sceneSpots(): Spot[] {
       sc.evidence !== "official" && sc.scenes.some((x) => x.verified)
         ? "verified"
         : sc.evidence;
-    // ピンはMVの公式画像。ジャケットだけの場所はMVが無く、ジャケットも載せられないので、
-    // pinImage を付けずにカードと同じ現地の写真をピンにする
+    // ピンは公式の画像（YouTube のサムネイル）。MVの舞台はMV、ジャケットの舞台はジャケットが映った公式音源
     const pinVideo =
-      sc.pin?.videoId ?? sc.scenes.find((x) => x.videoId)?.videoId;
+      sc.pin?.videoId ??
+      sc.scenes.find((x) => x.videoId)?.videoId ??
+      sc.scenes.find((x) => x.jacketVideo)?.jacketVideo;
     return {
       id: `scene:${sc.id}`,
       name: sc.name,
@@ -543,8 +550,10 @@ export type SceneDetail = {
     work: string;
     /** MVの場面のとき。ジャケットのときは undefined で、代わりに jacketUrl が入る */
     videoId?: string;
-    /** ジャケット写真の舞台のとき、公式の作品ページ（ジャケットはそこで見てもらう） */
+    /** ジャケット写真の舞台のとき、公式の作品ページ */
     jacketUrl?: string;
+    /** ジャケット写真の舞台のとき、ジャケットが映っている公式音源の動画ID */
+    jacketVideo?: string;
     at?: number;
     /** 「0:48」。ジャケットのときは「ジャケット写真」 */
     atLabel?: string;
@@ -617,6 +626,7 @@ export function getSceneDetail(id: string): SceneDetail | undefined {
       work: x.work,
       videoId: x.videoId,
       jacketUrl: x.jacket ? jacketUrl(x.work) : undefined,
+      jacketVideo: x.jacketVideo,
       at: x.at,
       atLabel: x.jacket
         ? entryLabel(x)
