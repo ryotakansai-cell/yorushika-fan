@@ -54,7 +54,11 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
 
           <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
             {sc.jacketUrl ? (
-              <JacketLink work={sc.work} url={sc.jacketUrl} />
+              <JacketLink
+                work={sc.work}
+                url={sc.jacketUrl}
+                videoId={sc.jacketVideo}
+              />
             ) : (
               <figure>
                 {/* 左右の見出し。「見比べる」という言葉を使わずに、何と何が並んでいるかを示す */}
@@ -170,10 +174,45 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
 }
 
 /**
- * 左側の「ジャケット」。ジャケット写真はこのサイトに載せない約束（公式画像の複製になる）なので、
- * 画像の代わりに公式サイトの作品ページへ案内し、そこで見比べてもらう
+ * 左側の「ジャケット」。ジャケットの画像はこのサイトに置かない（公式画像の複製になる）。
+ * レーベルが YouTube に提供している公式音源（映像がジャケット）を、MVと同じ公式の埋め込みで見せる。
+ * 押すまではサムネイル（＝ジャケット）が出て、押すと曲が流れる。
+ * 音源が見つからない作品は、公式サイトの作品ページへ案内する
  */
-function JacketLink({ work, url }: { work: string; url: string }) {
+function JacketLink({
+  work,
+  url,
+  videoId,
+}: {
+  work: string;
+  url: string;
+  videoId?: string;
+}) {
+  if (videoId) {
+    return (
+      <figure>
+        <p className="mb-1 text-xs text-muted">ジャケット写真</p>
+        <div className="overflow-hidden rounded-lg border border-line bg-ink">
+          <LiteYouTube
+            videoId={videoId}
+            title={`『${work}』のジャケット（公式音源）`}
+            sizes="(min-width: 768px) 384px, 100vw"
+          />
+        </div>
+        <figcaption className="mt-1 text-xs text-muted">
+          公式音源（YouTube）・{" "}
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-ink transition hover:text-accent"
+          >
+            公式サイトの作品ページ
+          </a>
+        </figcaption>
+      </figure>
+    );
+  }
   return (
     <figure>
       <p className="mb-1 text-xs text-muted">ジャケット写真</p>

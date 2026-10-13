@@ -1,0 +1,135 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>エルマの日記 照合チェック表</title>
+<style>
+  body{font-family:sans-serif;background:#f7f5f0;color:#262626;margin:24px;line-height:1.6}
+  h1{font-size:22px;margin:0 0 8px} h2{font-size:17px;margin:28px 0 8px}
+  p,li{font-size:14px} .muted{color:#6f6a60}
+  table{border-collapse:collapse;width:100%;background:#fffdf8;font-size:13px}
+  th,td{border:1px solid #e3ded3;padding:6px 8px;vertical-align:top;text-align:left}
+  th{background:#efebe2;position:sticky;top:0}
+  td.date{white-space:nowrap;font-variant-numeric:tabular-nums}
+  .song{color:#3d6485;font-weight:bold}
+  .star{color:#a0663a}
+  a{color:#3d6485} td.links a{display:block;white-space:nowrap}
+  select,input{font-size:13px} input{width:100%;box-sizing:border-box}
+  tr.done{background:#eef3ea} tr.skip{opacity:.5}
+  button{font-size:14px;padding:6px 14px;margin-right:8px}
+  textarea{width:100%;height:120px;font-size:12px;margin-top:8px}
+</style>
+
+<h1>エルマの日記 照合チェック表</h1>
+<p>
+  公式サイトで公開されているエルマの日記（<a href="https://yorushika.com/feature/elma" target="_blank">yorushika.com/feature/elma</a>、58枚）を、
+  2026-10-13 に Claude が全ページ読んで、場所と曲が出てくる日だけを抜き出したものです。
+  日記の文章は写さず、場所の手がかりだけを短くまとめています。
+</p>
+<ul>
+  <li><b>日記に写真はありません</b>（文章と歌詞だけ）。照合は「日記の記述」と「現地（ストリートビュー・Googleマップの写真）」を見比べる形になります。
+    エルマが追いかけている「エイミーが撮った写真」は、前作『だから僕は音楽を辞めた』の初回盤の木箱に入っていたもので、日記の公開ページには載っていません。</li>
+  <li><b>アルバム『エルマ』の全14曲が、日記の日付と対応しています</b>（歌の入らない4曲も、日記の場面と重なります）。
+    <span class="song">青い字</span>が曲名です。</li>
+  <li><span class="star">★</span> は「場所が特定できて、曲ともつながる」もの。マップに載せる候補の本命です。</li>
+  <li>候補の座標は、OpenStreetMap（OSM）と、ファンの巡礼ガイド（<a href="https://www.bilibili.com/opus/914329134968078340" target="_blank">bilibili・2024年</a>）のもの。どちらも公式の情報ではありません。</li>
+</ul>
+<p>
+  <b>やり方：</b>「日記」で該当ページを開き、「ストリートビュー」か「Googleマップ」で現地を見て、日記の記述と合うかを判定欄で選んでください。
+  判定はこのブラウザに保存されます。終わったら一番下の「結果をコピー」を押して、Claude に貼り付けてください。
+</p>
+
+<table id="t">
+  <thead>
+    <tr><th>日付</th><th>場所の手がかり（日記の要約）</th><th>曲</th><th>候補の場所</th><th>見る</th><th style="width:150px">判定</th><th style="width:200px">メモ</th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<h2>結果</h2>
+<button id="copy">結果をコピー</button><button id="clear">判定を全部消す</button>
+<textarea id="out" readonly></textarea>
+
+<script>
+const SLIDE = (n) => `https://yorushika.com/static/yorushika/official/feature/special/elma/image/slide${String(n).padStart(2, "0")}.jpg`;
+const GMAP = (lat, lon) => `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+const SV = (lat, lon) => `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lon}`;
+
+// slide: 公式サイトの日記の何枚目か / pt: 候補の座標（無ければ地図で引けない）
+const ROWS = [
+  { id: "train", date: "3/14", slide: 4, place: "コペンハーゲンから東へ向かう列車の中で国境を越える（デンマーク→スウェーデン）", song: "車窓（歌なし）", where: "移動中。1か所には決まらない" },
+  { id: "lund-station", date: "3/21–22", slide: 6, place: "マルメからルンドへ。エイミーが写真に撮った場所：中央駅を出て南側の広場、ルンド大学近くの民家の外壁（古い屋根の間から大聖堂が見える）", song: "夕凪、某、花惑い（3/22）", where: "ルンド中央駅（OSM）", pt: [55.70673, 13.18638], star: true },
+  { id: "lund-cathedral", date: "3/23", slide: 8, place: "ルンド大聖堂。12世紀のロマネスク様式、天文時計、地下聖堂、柱にしがみつく巨人の像。端の木の椅子で詩を書く", song: "", where: "ルンド大聖堂（OSM）", pt: [55.70406, 13.19359], star: true },
+  { id: "jonkoping", date: "4/5", slide: 10, place: "鉄道の不具合でヨンショーピングに泊まる。この国で2番目に大きい湖の南の湖畔の街。砂浜に座って沈まない夕陽を見る", song: "湖の街（歌なし）", where: "ヴェッテルン湖の南岸の灯台（bilibili・ファンの推定）", pt: [57.78481, 14.16308], star: true },
+  { id: "gamla-linkoping", date: "5/1", slide: 13, place: "リンショーピン。野外博物館ガムラ・リンショーピン、古い家の隣の森のベンチで詩の続きを書く", song: "", where: "ガムラ・リンショーピン（OSM・bilibili ほぼ一致）", pt: [58.4059, 15.58945], star: true },
+  { id: "stockholm-cafe", date: "5/15", slide: 13, place: "ストックホルムに着く。ドロットニングホルム宮殿近くのカフェで食事", song: "", where: "カフェの特定は無理そう" },
+  { id: "kamisama", date: "5/28", slide: 14, place: "（歌詞のページ。ストックホルム滞在中）", song: "神様のダンス", where: "場所の記述なし" },
+  { id: "gamla-stan-rain", date: "6/15", slide: 16, place: "ガムラスタンの石畳の路地。エイミーは5月末の詩で「雨上がりのガムラスタン」を書くと示していた", song: "", where: "ガムラスタン（街全体）" },
+  { id: "iron-boy", date: "6/25", slide: 18, place: "ガムラスタンの裏通りで上半身裸の少年を追う。通り脇の小さな門の先の静かな裏庭、木の隣の四角い鉄の台座に小さなベンチと少年の像。※日記は「ドロットニングホルム宮殿に近付いている」と書くが、実際に近いのはストックホルム王宮（約200m）", song: "", where: "鉄の少年像（フィンランド教会の裏庭。OSM・bilibili 一致）", pt: [59.3255, 18.07206], star: true },
+  { id: "ameharuru", date: "6/30", slide: 21, place: "（歌詞のページ。前日6/29に雨が止んだ。ストックホルム）", song: "雨晴るる", where: "場所の記述なし" },
+  { id: "ferry", date: "7/5", slide: 22, place: "ゴットランド島へ向かうフェリー（老婦人との出会い）", song: "", where: "移動中" },
+  { id: "visby-town", date: "7/6", slide: 23, place: "ヴィスビー。薔薇の咲く通り、古い遺跡、羊の彫像、街を囲む輪壁、海へ下る坂道", song: "", where: "ヴィスビー旧市街（街全体）" },
+  { id: "aruku", date: "7/8", slide: 24, place: "（歌詞のページ。ヴィスビー）", song: "歩く", where: "場所の記述なし" },
+  { id: "hogklint", date: "7/10", slide: 26, place: "街から少し離れて森を抜け、背の高い崖へ。岩の先端に立つと遠くにヴィスビーの街、港へ入る船", song: "", where: "Högklint（ヴィスビーの南約8km。OSM・bilibili 一致）", pt: [57.59849, 18.2014], star: true },
+  { id: "almedalen-bench", date: "7/12", slide: 26, place: "アルメダーレン公園から北へ、輪壁沿いの海岸線。内側は緑の自然公園。その北側で「輪壁を模して作られたベンチ」を見る（＝エルマのジャケットの場所）", song: "", where: "掲載済み（ヴィスビーの城壁）。アルメダーレン公園（OSM）", pt: [57.64087, 18.29085], star: true },
+  { id: "lookout", date: "7/20・8/15", slide: 39, place: "輪壁沿いのベンチで夕日（7/20）。雨の日、輪壁の見張り台に木の階段で上がると、下に輪壁を模したベンチが見える（8/15）→ ジャケットの場所の位置の裏付けに使える", song: "", where: "ヴィスビーの城壁（掲載済み）の近く", pt: [57.64614, 18.29511] },
+  { id: "forest-church", date: "7/22", slide: 31, place: "ヴィスビーを出てフォーレスンドへ向かう途中、森に囲まれた田舎道の教会。敷地に墓地、教会の左手の墓石、オークの木", song: "森の教会（歌なし）", where: "Rute kyrka（OSM・bilibili 一致）", pt: [57.83371, 18.92353], star: true },
+  { id: "faro-windmill", date: "7/24", slide: 32, place: "フォーレスンドの船着場から船でフォーレ島へ。島の至る所に風車", song: "", where: "風車（bilibili）。船着場は 57.86524, 19.05773（OSM）", pt: [57.95008, 19.15753] },
+  { id: "rauk", date: "7/27", slide: 33, place: "フォーレ島の北端の奇岩群（ラウク）。石灰岩の砂浜に数メートルの岩。エイミーが撮っていたのは、群れから離れてひとつだけ立つ岩", song: "", where: "Langhammars（OSM の自然保護区）。bilibili は約2km北東の地点", pt: [57.98193, 19.16115], star: true },
+  { id: "koe", date: "7/28", slide: 34, place: "（歌詞のページ。フォーレ島滞在中）", song: "声", where: "場所の記述なし" },
+  { id: "faro-return", date: "8/2", slide: 36, place: "フォーレ島から戻り、船着場近くのレストランで食事", song: "", where: "フォーレスンドの船着場付近", pt: [57.86524, 19.05773] },
+  { id: "medieval-week", date: "8/7・8/10", slide: 38, place: "ヴィスビーの中世週間（祭り）。8/10 はアルメダーレン公園の植木に囲まれた椅子で考え込む", song: "", where: "アルメダーレン公園（OSM）", pt: [57.64087, 18.29085] },
+  { id: "pier", date: "8/27", slide: 42, place: "街を出て北へ。森を抜けた先の人気のない浜と、砂浜沿いの桟橋（物語の山場）", song: "海底、月明かり（歌なし）", where: "ヴィスビーの北の海岸のどこか。bilibili も特定できていない" },
+  { id: "ame-cappuccino", date: "9/3", slide: 50, place: "宿に戻り、日記帳の余白に詩を書く（歌詞の中に「八月のヴィスビー」）", song: "雨とカプチーノ", where: "宿（特定しない）" },
+  { id: "santa-maria", date: "9/5", slide: 51, place: "サンタマリア大聖堂（ヴィスビー大聖堂）から東へ登る階段、丘の上のベンチで詩を書く", song: "憂一乗", where: "ヴィスビー大聖堂（Sankta Maria domkyrka。OSM）。ベンチは東の高台", pt: [57.64187, 18.29806], star: true },
+  { id: "kokoro", date: "9/6", slide: 52, place: "（詩を書く。ヴィスビー）", song: "心に穴が空いた", where: "場所の記述なし" },
+  { id: "second-pier", date: "9/8", slide: 54, place: "同じ海辺へもう一度。砂浜の先で、もう一つの古い桟橋。そこにエイミーのギターケースと詩", song: "ノーチラス", where: "8/27 の浜の近く。特定できていない" },
+  { id: "amy", date: "9/16", slide: 47, place: "（歌詞のページ）", song: "エイミー", where: "場所の記述なし" },
+];
+
+const KEY = "elma-diary-review";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {} };
+
+const tbody = document.querySelector("#t tbody");
+for (const r of ROWS) {
+  const tr = document.createElement("tr");
+  const links = [`<a href="${SLIDE(r.slide)}" target="_blank">日記（${r.slide}枚目）</a>`];
+  if (r.pt) links.push(`<a href="${SV(...r.pt)}" target="_blank">ストリートビュー</a>`, `<a href="${GMAP(...r.pt)}" target="_blank">Googleマップ</a>`);
+  tr.innerHTML = `
+    <td class="date">${r.star ? '<span class="star">★</span> ' : ""}${r.date}</td>
+    <td>${r.place}</td>
+    <td class="song">${r.song}</td>
+    <td>${r.where}${r.pt ? `<br><span class="muted">${r.pt.join(", ")}</span>` : ""}</td>
+    <td class="links">${links.join("")}</td>
+    <td><select>
+      <option value="">未確認</option>
+      <option value="match">一致（照合済みで載せる）</option>
+      <option value="estimate">推定で載せる</option>
+      <option value="skip">載せない</option>
+    </select></td>
+    <td><input placeholder="何を見て一致としたか など"></td>`;
+  const sel = tr.querySelector("select");
+  const memo = tr.querySelector("input");
+  const s = state[r.id] || {};
+  sel.value = s.judge || "";
+  memo.value = s.memo || "";
+  const paint = () => tr.className = sel.value === "match" || sel.value === "estimate" ? "done" : sel.value === "skip" ? "skip" : "";
+  paint();
+  sel.onchange = () => { state[r.id] = { ...state[r.id], judge: sel.value }; save(); paint(); };
+  memo.oninput = () => { state[r.id] = { ...state[r.id], memo: memo.value }; save(); };
+  tbody.append(tr);
+}
+
+document.querySelector("#copy").onclick = async () => {
+  const result = ROWS.filter((r) => state[r.id]?.judge || state[r.id]?.memo)
+    .map((r) => ({ id: r.id, date: r.date, ...state[r.id] }));
+  const text = JSON.stringify(result, null, 2);
+  document.querySelector("#out").value = text;
+  try { await navigator.clipboard.writeText(text); } catch {}
+};
+document.querySelector("#clear").onclick = () => {
+  if (!confirm("判定とメモを全部消しますか？")) return;
+  state = {}; save(); location.reload();
+};
+</script>
