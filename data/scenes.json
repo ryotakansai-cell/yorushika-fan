@@ -642,5 +642,104 @@
       "videoId": "ry3Tupx4BL4",
       "frame": "hq1"
     }
+  },
+  {
+    "id": "gamla-stan",
+    "name": "ガムラスタンの交差点",
+    "prefecture": "ストックホルム",
+    "country": "スウェーデン",
+    "lat": 59.3241,
+    "lon": 18.0731,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "だから僕は音楽を辞めた",
+        "jacket": true
+      }
+    ],
+    "note": "ストックホルムの旧市街ガムラスタン、Tyska Skolgränd と Baggensgatan の2本の路地が交わるところ。ジャケットでエイミーが立っている場所とされる。",
+    "sources": [
+      {
+        "label": "Wikipedia（英語）「That’s Why I Gave Up on Music」（ジャケットの場所の記述）",
+        "url": "https://en.wikipedia.org/wiki/That%27s_Why_I_Gave_Up_on_Music"
+      },
+      {
+        "label": "HMV「聖地巡礼ガイド ヨルシカと歩くスウェーデン旅行」（2026年6月。記者が現地でジャケットと同じ場所を撮影）",
+        "url": "https://www.hmv.co.jp/news/article/251216121/"
+      },
+      {
+        "label": "bilibili「ヨルシカ聖地巡礼ガイド【スウェーデン編】」（ファンの巡礼記。座標付き）",
+        "url": "https://www.bilibili.com/opus/914329134968078340"
+      }
+    ],
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/12/Tyska_Skolgr%C3%A4nd_Stockholm_2022-09-20_01.jpg/500px-Tyska_Skolgr%C3%A4nd_Stockholm_2022-09-20_01.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Tyska_Skolgr%C3%A4nd_Stockholm_2022-09-20_01.jpg",
+      "license": "CC0",
+      "artist": "Leonhard Lenz"
+    },
+    "memo": {
+      "access": "地下鉄（T-bana）のガムラスタン駅から直線で約350m。旧市街の中は石畳の細い路地なので歩いて回る。",
+      "now": "観光地の中だが、この路地は人通りが少なく静か（記事の時点で）。通り沿いにベンチがある。",
+      "manners": "住宅や店が並ぶ路地。戸口や窓の前で長く立ち止まらず、住んでいる人の迷惑にならないようにする。",
+      "sources": [
+        {
+          "label": "HMV「聖地巡礼ガイド ヨルシカと歩くスウェーデン旅行」（2026年6月。記者が現地でジャケットと同じ場所を撮影）",
+          "url": "https://www.hmv.co.jp/news/article/251216121/"
+        }
+      ]
+    }
+  },
+  {
+    "id": "visby-ringmuren",
+    "name": "ヴィスビーの城壁",
+    "prefecture": "ゴットランド島 ヴィスビー",
+    "country": "スウェーデン",
+    "lat": 57.64614,
+    "lon": 18.29511,
+    "approximate": true,
+    "evidence": "report",
+    "scenes": [
+      {
+        "work": "エルマ",
+        "jacket": true
+      }
+    ],
+    "note": "世界遺産の町ヴィスビーを囲む城壁の北側、Snäckgärdsporten（門）の近く。ジャケットでエルマが腰かけている場所とされ、海を見下ろす展望台がある。位置はファンの巡礼ガイドの座標による。",
+    "sources": [
+      {
+        "label": "Wikipedia（英語）「Elma (album)」（ジャケットの場所の記述）",
+        "url": "https://en.wikipedia.org/wiki/Elma_(album)"
+      },
+      {
+        "label": "HMV「聖地巡礼ガイド ヨルシカと歩くスウェーデン旅行」（2026年6月。記者が現地でジャケットと同じ場所を撮影）",
+        "url": "https://www.hmv.co.jp/news/article/251216121/"
+      },
+      {
+        "label": "bilibili「ヨルシカ聖地巡礼ガイド【スウェーデン編】」（ファンの巡礼記。座標付き）",
+        "url": "https://www.bilibili.com/opus/914329134968078340"
+      }
+    ],
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7a/Murfallet_fr%C3%A5n_insidan_av_ringmuren_Visby.jpg/500px-Murfallet_fr%C3%A5n_insidan_av_ringmuren_Visby.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Murfallet_fr%C3%A5n_insidan_av_ringmuren_Visby.jpg",
+      "license": "CC BY-SA 4.0",
+      "artist": "W.carter"
+    },
+    "memo": {
+      "access": "ストックホルムの南のニーネスハムン港からフェリーで約3時間15分（運航は Destination Gotland。時刻は季節で変わるので運航会社で確かめる）。ヴィスビーに着いたら、海沿いの城壁に沿って北へ歩く。",
+      "now": "緑に囲まれた場所で、人は少なめ（記事の時点で）。坂を上ると、ヴィスビーの街並みと海を一望できる。",
+      "manners": "城壁は世界遺産の一部。壁に登ったり、石を崩したり持ち帰ったりしない。",
+      "sources": [
+        {
+          "label": "HMV「聖地巡礼ガイド ヨルシカと歩くスウェーデン旅行」（2026年6月。記者が現地でジャケットと同じ場所を撮影）",
+          "url": "https://www.hmv.co.jp/news/article/251216121/"
+        },
+        {
+          "label": "Direct Ferries（ニーネスハムン〜ヴィスビーの所要時間）",
+          "url": "https://www.directferries.ie/nynashamn_visby_ferry.htm"
+        }
+      ]
+    }
   }
 ]

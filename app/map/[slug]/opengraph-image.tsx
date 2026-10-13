@@ -47,7 +47,7 @@ export default async function Image({
 
   const [fonts, mark, photoSrc, tiles] = await Promise.all([
     ogFonts(
-      LABEL + d.name + d.prefecture + works + SITE_NAME + credit + "MVの舞台",
+      LABEL + d.name + d.prefecture + works + SITE_NAME + credit + d.kindLabel,
     ),
     ogMark(),
     // 1280px の縮小画像。元の写真は数MBあることがあるので使わない
@@ -139,7 +139,16 @@ export default async function Image({
         <div
           style={{
             fontFamily: "serif",
-            fontSize: mainName.length > 7 ? 52 : 64,
+            // 9〜10文字は52だと1行に収まらず「ガムラスタンの交／差点」と折り返したので、1行に収まる42にする。
+            // 11文字以上はどのみち2行になるので、今まで通り52
+            fontSize:
+              mainName.length > 10
+                ? 52
+                : mainName.length > 8
+                  ? 42
+                  : mainName.length > 7
+                    ? 52
+                    : 64,
             marginTop: 14,
             lineHeight: 1.25,
           }}
@@ -173,7 +182,7 @@ export default async function Image({
             color: C.muted,
           }}
         >
-          MVの舞台
+          {d.kindLabel}
         </div>
         <div style={{ flex: 1, display: "flex" }} />
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
