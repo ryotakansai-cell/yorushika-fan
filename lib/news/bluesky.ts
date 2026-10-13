@@ -71,6 +71,9 @@ function skipReason(a: Candidate): string | null {
       return RELATED.test(a.title) || mentionsWorkInBrackets(a.title)
         ? null
         : "noteの見出しからヨルシカの話と分からない";
+    case "video":
+      // 一般の人の動画。投稿すると、本人が知らないうちにボットが宣伝する形になるため
+      return "YouTube（一般の動画）は投稿しない";
     case "overseas":
       return "海外（英語）は投稿しない";
     case "topic":
