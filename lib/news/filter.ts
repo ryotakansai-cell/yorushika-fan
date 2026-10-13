@@ -36,11 +36,12 @@ export function isBlocked(url: string) {
   }
 }
 
-// Googleニュースは、誰でも投稿できる場所（YouTube など）の一般の投稿も拾うことがある。
-// 2026-10-01 にファンのヲタ芸動画が「ニュース」として入ったので、媒体名で外す。
-// 公式YouTubeの動画は別の情報源（youtube）から公式として集めているので、ここで外しても困らない
-const UGC_PUBLISHERS =
-  /^(YouTube|TikTok|X|Twitter|Instagram|ニコニコ動画|niconico)$/i;
+// Googleニュースは、誰でも投稿できる場所の一般の投稿も拾うことがある。
+// 2026-10-01 にファンのヲタ芸動画が「ニュース」として入ったので、媒体名で外していた。
+// YouTube だけは 2026-10-12 から外さず、区分「YouTube」（video）として載せる
+// （演奏してみた などのファンの動画を見たい人がいる。オーナーの判断）。
+// 区分は sources.ts の fromGoogleNews で付けている
+const UGC_PUBLISHERS = /^(TikTok|X|Twitter|Instagram|ニコニコ動画|niconico)$/i;
 
 export function isRelevant(item: CollectedItem) {
   if (!item.url || !item.title) return false;
@@ -64,6 +65,7 @@ export function isRelevant(item: CollectedItem) {
       );
     case "reddit":
     case "youtube":
+    case "official_site":
       return true;
   }
 }

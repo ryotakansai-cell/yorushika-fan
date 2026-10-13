@@ -17,8 +17,8 @@ await db.batch(
     `CREATE TABLE IF NOT EXISTS articles (
       id             INTEGER PRIMARY KEY AUTOINCREMENT,
       url            TEXT NOT NULL UNIQUE,  -- 同じ記事を二重に保存しないための目印
-      source         TEXT NOT NULL,         -- google_news / note / hatena / reddit / youtube
-      category       TEXT NOT NULL,         -- news / official / fan / overseas / topic
+      source         TEXT NOT NULL,         -- official_site / google_news / note / hatena / reddit / youtube
+      category       TEXT NOT NULL,         -- news / official / fan / video / overseas / topic
       title          TEXT NOT NULL,
       publisher      TEXT,                  -- 媒体名、または書いた人
       published_at   TEXT NOT NULL,         -- 公開日時（ISO形式・UTC）
@@ -74,6 +74,19 @@ if (addedBsky) {
     "UPDATE articles SET bsky_status = 'backfill' WHERE bsky_status IS NULL",
   );
   console.log(`既存の記事 ${r.rowsAffected}件 を「投稿しない」にした`);
+}
+
+// ---- データの付け替え（条件に合う行だけ直すので、何度実行しても同じ結果になる）----
+
+// Googleニュースが拾った YouTube の一般の動画は、2026-10-12 から区分 video（表示は「YouTube」）。
+// それより前に「ニュース」として保存された分も付け替える（収集の ON CONFLICT は区分を更新しないため）
+const videos = await db.execute(`
+  UPDATE articles SET category = 'video'
+  WHERE source = 'google_news' AND category = 'news'
+    AND lower(publisher) IN ('youtube', 'youtu.be', 'm.youtube.com')
+`);
+if (videos.rowsAffected > 0) {
+  console.log(`YouTube の動画 ${videos.rowsAffected}件 を区分 video にした`);
 }
 
 const tables = await db.execute(

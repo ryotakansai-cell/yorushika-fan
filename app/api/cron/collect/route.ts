@@ -52,6 +52,12 @@ export async function GET(request: NextRequest) {
       kept: relevant.length,
       // 試運転のときは、落とした記事の見出しも見られるようにする
       ...(dryRun && {
+        // 区分ごとの件数（ニュースと YouTube の振り分けが合っているかを見るため）
+        byCategory: Object.fromEntries(
+          Map.groupBy(relevant, (it) => it.category)
+            .entries()
+            .map(([c, list]) => [c, list.map((it) => it.title).slice(0, 8)]),
+        ),
         dropped: r.value
           .filter((it) => !isRelevant(it))
           .map((it) => it.title)

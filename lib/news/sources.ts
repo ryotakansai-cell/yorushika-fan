@@ -1,6 +1,7 @@
 // ニュース・ブログ・noteなどの情報源から記事を集める。
 //
 // どの情報源も「公式に配布されているRSS」だけを使う。
+// 例外は公式サイトのお知らせで、RSSが無いので一覧ページのHTMLを読む（robots.txt の制限なし）。
 // note の内部API（/api/*）や検索（/search）は robots.txt で
 // 機械の利用が禁止されているので使わない。
 //
@@ -8,10 +9,16 @@
 // ここで全部 CollectedItem という同じ形にそろえてから返す。
 import { XMLParser } from "fast-xml-parser";
 
-export type Source = "google_news" | "note" | "hatena" | "reddit" | "youtube";
+export type Source =
+  "official_site" | "google_news" | "note" | "hatena" | "reddit" | "youtube";
 
-/** 一覧のタブ分けに使う区分 */
-export type Category = "news" | "official" | "fan" | "overseas" | "topic";
+/**
+ * 一覧のタブ分けに使う区分。
+ * video は Googleニュースが拾った YouTube の一般の動画（演奏してみた など）。
+ * 公式YouTubeの動画は official
+ */
+export type Category =
+  "news" | "official" | "fan" | "video" | "overseas" | "topic";
 
 export type CollectedItem = {
   url: string;
@@ -99,6 +106,80 @@ function toIso(v: string) {
   return Number.isNaN(d.getTime()) ? new Date().toISOString() : d.toISOString();
 }
 
+/** &amp; &lt; などの名前付きの文字参照を戻す（公式サイトの見出しで使われているもの） */
+function decodeNamedEntities(s: string) {
+  return s
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&amp;/g, "&"); // 最後に戻す。先に戻すと &amp;lt; が「<」まで戻ってしまう
+}
+
+// ---------------------------------------------------------------
+// 公式サイトのお知らせ（yorushika.com/news/ の一覧ページ）
+//
+// Googleニュースも公式サイトの記事を配るが、全部ではない。2026-10-12 に
+// 公式の最新10件と比べたら、Googleニュース経由で拾えていたのは3件だけで、
+// 「サポートミュージシャンに関するお知らせ」なども落ちていた。
+// 公式Xの告知も同じ内容が公式サイトに載るので、ここを読めば取りこぼさない。
+// 1時間に1回、一覧の1ページ目（10件）だけ読む
+// ---------------------------------------------------------------
+const OFFICIAL_SITE = "https://yorushika.com";
+
+/**
+ * 一覧には日付しか無い（時刻は詳細ページにも無い）。
+ * 今日の記事は「見つけた時刻」を公開時刻にする（毎時集めるので、ずれても1時間ほど）。
+ * 過去の日付の記事はその日の終わり（23:59）にする。0:00 にすると、
+ * 夜に出たお知らせが同じ日の朝のニュースより前に並んでしまうため。
+ * 公開時刻はDBに最初に入れたときの値のまま変わらない（collect の ON CONFLICT で更新しない）
+ */
+function officialDateToIso(ymd: string, now = new Date()) {
+  const [y, m, d] = ymd.split(".").map(Number);
+  // 日本時間のその日の 23:59:59 は、UTC では同じ日の 14:59:59
+  const endOfDay = Date.UTC(y, m - 1, d, 14, 59, 59);
+  return new Date(Math.min(endOfDay, now.getTime())).toISOString();
+}
+
+export async function fromOfficialSite(): Promise<CollectedItem[]> {
+  const url = `${OFFICIAL_SITE}/news/`;
+  const res = await fetch(url, {
+    headers: { "User-Agent": USER_AGENT },
+    cache: "no-store",
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${url}`);
+  const html = await res.text();
+
+  // 1件はこの形（2026-10-12 時点）:
+  // <a href="/news/detail/11836" class="clearfix">
+  // <p class="date">2026.10.09<span class="category">suis</span></p>
+  // <p class="tit">見出し</p></a>
+  const re =
+    /<a href="\/news\/detail\/(\d+)"[^>]*>\s*<p class="date">([\d.]+)<span class="category">[^<]*<\/span><\/p>\s*<p class="tit">([\s\S]*?)<\/p>/g;
+  const items: CollectedItem[] = [...html.matchAll(re)].map((m) => {
+    const title = decodeNamedEntities(stripHtml(m[3]));
+    return {
+      url: `${OFFICIAL_SITE}/news/detail/${m[1]}`,
+      title,
+      publisher: "ヨルシカ OFFICIAL SITE",
+      publishedAt: officialDateToIso(m[2]),
+      source: "official_site",
+      category: "official",
+      bookmarkCount: null,
+      text: title,
+    };
+  });
+  // ページは開けたのに1件も読めないのは、公式サイトの作りが変わったとき。
+  // 黙って0件にすると気づけないので、失敗として収集の報告に残す
+  if (items.length === 0) throw new Error(`お知らせを読み取れなかった: ${url}`);
+  return items;
+}
+
+// Googleニュースは、YouTube に一般の人が上げた動画（演奏してみた など）も拾う。
+// 媒体名は「YouTube」のことも「youtu.be」のこともある（2026-10-12 確認。後者が
+// 除外をすり抜けて「ニュース」として並んでいた）。ニュースではないので区分を video にする
+const YOUTUBE_PUBLISHERS = /^(YouTube|youtu\.be|m\.youtube\.com)$/i;
+
 // ---------------------------------------------------------------
 // Googleニュース（RSS 2.0）
 // 主要な音楽メディアや公式サイトのお知らせをまとめて拾える
@@ -109,30 +190,39 @@ export async function fromGoogleNews(): Promise<CollectedItem[]> {
     `https://news.google.com/rss/search?q=${q}&hl=ja&gl=JP&ceid=JP:ja`,
   );
 
-  return (xml.rss?.channel?.item ?? []).map((it: Record<string, unknown>) => {
+  const items: Record<string, unknown>[] = xml.rss?.channel?.item ?? [];
+  return items.flatMap((it): CollectedItem[] => {
     const publisher = text(it.source) || null;
-    const sourceUrl = (it.source as { "@_url"?: string } | undefined)?.[
-      "@_url"
-    ];
+    const sourceUrl =
+      (it.source as { "@_url"?: string } | undefined)?.["@_url"] ?? "";
+    // 公式サイトの記事は fromOfficialSite で直接取るので、こちらでは外す
+    // （残すと同じお知らせが別のURLで2件入る）
+    if (/yorushika\.com/.test(sourceUrl)) return [];
+
     // 見出しの末尾に「 - 媒体名」が付いているので取り除く
     let title = text(it.title);
     if (publisher && title.endsWith(` - ${publisher}`)) {
       title = title.slice(0, -(publisher.length + 3));
     }
-    // 公式サイトとレーベル（ユニバーサル ミュージック）の発表は「公式」として分ける
-    const isOfficial = /yorushika\.com|universal-music\.co\.jp/.test(
-      sourceUrl ?? "",
-    );
-    return {
-      url: text(it.link),
-      title,
-      publisher,
-      publishedAt: toIso(text(it.pubDate)),
-      source: "google_news",
-      category: isOfficial ? "official" : "news",
-      bookmarkCount: null,
-      text: title, // Googleニュースは本文を配らないので見出しだけ
-    };
+    // レーベル（ユニバーサル ミュージック）の発表は「公式」として分ける
+    const category: Category = /universal-music\.co\.jp/.test(sourceUrl)
+      ? "official"
+      : YOUTUBE_PUBLISHERS.test(publisher ?? "") ||
+          /youtube\.com|youtu\.be/.test(sourceUrl)
+        ? "video"
+        : "news";
+    return [
+      {
+        url: text(it.link),
+        title,
+        publisher,
+        publishedAt: toIso(text(it.pubDate)),
+        source: "google_news",
+        category,
+        bookmarkCount: null,
+        text: title, // Googleニュースは本文を配らないので見出しだけ
+      },
+    ];
   });
 }
 
@@ -234,6 +324,7 @@ export async function fromYouTube(): Promise<CollectedItem[]> {
 }
 
 export const SOURCES: Record<Source, () => Promise<CollectedItem[]>> = {
+  official_site: fromOfficialSite,
   google_news: fromGoogleNews,
   note: fromNote,
   hatena: fromHatena,

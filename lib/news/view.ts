@@ -33,6 +33,7 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   official: "公式",
   news: "ニュース",
   fan: "note",
+  video: "YouTube",
   overseas: "海外",
   topic: "話題",
 };
@@ -41,12 +42,13 @@ export const CATEGORY_LABEL: Record<Category, string> = {
  * タブごとに、どの区分の記事を出すか。
  * 「すべて」から海外（Reddit）を外しているのは、英語の投稿の割合が多く
  * （9日間で25件）、日本語のニュースや感想が埋もれて読みにくかったため。
- * 海外の投稿は「海外」タブで読める
+ * 海外の投稿は「海外」タブで読める。
+ * YouTube（ファンの演奏動画など）はファンの投稿なので「ファンの投稿」タブに入れる
  */
 const TAB_CATEGORIES: Record<Tab, Category[]> = {
-  all: ["official", "news", "fan", "topic"],
+  all: ["official", "news", "fan", "video", "topic"],
   news: ["official", "news"],
-  fan: ["fan"],
+  fan: ["fan", "video"],
   overseas: ["overseas"],
   topic: ["topic"],
 };

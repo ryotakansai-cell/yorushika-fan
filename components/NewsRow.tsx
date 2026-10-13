@@ -8,6 +8,7 @@ const BADGE: Record<string, string> = {
   official: "border-accent text-accent",
   news: "border-line text-muted",
   fan: "border-line text-muted",
+  video: "border-line text-muted",
   overseas: "border-line text-muted",
   topic: "border-line text-muted",
 };
