@@ -487,24 +487,38 @@ export type VideoScene = {
 };
 
 export function getScenesForVideo(videoId: string): VideoScene[] {
+  return findScenes((x) => x.videoId === videoId);
+}
+
+/**
+ * 曲ページ（/songs/<id>）の「この曲の舞台」用。MVの場面もジャケットの舞台も、作品名が一致すれば出す。
+ * 曲名と作品名は同じ表記（公式サイトの表記）で書いている前提
+ */
+export function getScenesForWork(title: string): VideoScene[] {
+  return findScenes((x) => x.work === title);
+}
+
+function findScenes(match: (x: SceneEntry) => boolean): VideoScene[] {
   return (scenesJson as SceneItem[]).flatMap((sc) =>
-    sc.scenes
-      .filter((x) => x.videoId === videoId)
-      .map((x) => {
-        // MVページでは「その場面」が照合済みかで根拠を出す（同じ場所の別の曲の照合は関係ない）
-        const evidence: Evidence =
-          sc.evidence !== "official" && x.verified ? "verified" : sc.evidence;
-        return {
-          spotId: `scene:${sc.id}`,
-          detailHref: `/map/${sc.id}`,
-          name: sc.name,
-          prefecture: sc.prefecture,
-          at: x.at,
-          atLabel: x.at !== undefined ? formatSeconds(x.at) : undefined,
-          evidence,
-          evidenceLabel: shownLabel(evidence),
-        };
-      }),
+    sc.scenes.filter(match).map((x) => {
+      // MVページでは「その場面」が照合済みかで根拠を出す（同じ場所の別の曲の照合は関係ない）
+      const evidence: Evidence =
+        sc.evidence !== "official" && x.verified ? "verified" : sc.evidence;
+      return {
+        spotId: `scene:${sc.id}`,
+        detailHref: `/map/${sc.id}`,
+        name: sc.name,
+        prefecture: placeLabel(sc),
+        at: x.at,
+        atLabel: x.jacket
+          ? "ジャケット"
+          : x.at !== undefined
+            ? formatSeconds(x.at)
+            : undefined,
+        evidence,
+        evidenceLabel: shownLabel(evidence),
+      };
+    }),
   );
 }
 

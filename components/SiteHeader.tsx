@@ -21,6 +21,7 @@ const NAV = [
     label: "作品",
     match: (p: string) => p.startsWith("/discography"),
   },
+  { href: "/songs", label: "曲", match: (p: string) => p.startsWith("/songs") },
   { href: "/mv", label: "MV", match: (p: string) => p.startsWith("/mv") },
   { href: "/map", label: "マップ", match: (p: string) => p.startsWith("/map") },
   {
