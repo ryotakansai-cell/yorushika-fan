@@ -2,6 +2,7 @@
 
 import "leaflet/dist/leaflet.css";
 import type { Circle, CircleMarker, Map as LeafletMap } from "leaflet";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
@@ -23,6 +24,8 @@ export type JourneyEntry = {
   precision?: "spot" | "town" | "area";
   /** 聖地巡礼マップの見比べ画面 */
   spotHref?: string;
+  /** その場所の写真（Wikimedia Commons。撮影者名とライセンスを必ず表示する） */
+  photo?: { thumb: string; page: string; license: string; artist: string };
 };
 
 // 色は globals.css と合わせている（Leaflet は CSS 変数を読めないので値で書く）
@@ -220,7 +223,32 @@ export function ElmaJourney({ entries }: { entries: JourneyEntry[] }) {
                 </span>
               )}
             </button>
-            {(e.songs.length > 0 || e.spotHref) && (
+
+            {/* その場所の写真。押すと Commons の元のページ（撮影者・ライセンスの詳細）へ */}
+            {e.photo && (
+              <figure className="mt-3">
+                <a
+                  href={e.photo.page}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="relative block aspect-[3/2] w-full max-w-sm overflow-hidden rounded-md border border-line bg-line">
+                    <Image
+                      src={e.photo.thumb}
+                      alt={`${e.town}の写真`}
+                      fill
+                      sizes="384px"
+                      className="object-cover"
+                    />
+                  </span>
+                </a>
+                <figcaption className="mt-1 text-xs text-muted">
+                  撮影：{e.photo.artist}（{e.photo.license}・Wikimedia Commons）
+                </figcaption>
+              </figure>
+            )}
+
+            {(e.songs.length > 0 || e.spotHref || e.pt) && (
               <div className="mt-2 flex flex-wrap gap-2 text-sm">
                 {e.songs.map((s) =>
                   s.href ? (
@@ -248,6 +276,27 @@ export function ElmaJourney({ entries }: { entries: JourneyEntry[] }) {
                   >
                     聖地巡礼マップで見る
                   </Link>
+                )}
+                {/* 今の景色を自分で確かめられるように。場所が特定できる日はストリートビュー、街のどこかなら地図 */}
+                {e.pt && e.precision === "spot" && (
+                  <a
+                    href={`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${e.pt[0]},${e.pt[1]}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border border-line px-3 py-0.5 text-muted transition hover:border-accent hover:text-accent"
+                  >
+                    ストリートビュー
+                  </a>
+                )}
+                {e.pt && e.precision !== "area" && (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${e.pt[0]},${e.pt[1]}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border border-line px-3 py-0.5 text-muted transition hover:border-accent hover:text-accent"
+                  >
+                    Googleマップ
+                  </a>
                 )}
               </div>
             )}

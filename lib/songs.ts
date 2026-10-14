@@ -35,6 +35,11 @@ export type DiaryEntry = {
   spot?: string;
   /** オーナーが現地の様子と照らし合わせて確かめた */
   verified?: boolean;
+  /**
+   * その場所の写真（Wikimedia Commons。Wikidata で場所の代表画像になっているもの）。
+   * 同じ街の写真が何日も並ばないよう、街の写真は最初の日だけ。場所が特定できない日（area）には付けない
+   */
+  photo?: { thumb: string; page: string; license: string; artist: string };
 };
 
 export const ELMA_DIARY_URL = "https://yorushika.com/feature/elma";

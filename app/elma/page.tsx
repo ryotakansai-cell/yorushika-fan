@@ -26,6 +26,7 @@ export default function ElmaPage() {
     pt: d.pt,
     precision: d.precision,
     spotHref: d.spot ? `/map/${d.spot}` : undefined,
+    photo: d.photo,
   }));
 
   return (
