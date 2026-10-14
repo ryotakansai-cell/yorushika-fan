@@ -76,6 +76,38 @@ if (addedBsky) {
   console.log(`既存の記事 ${r.rowsAffected}件 を「投稿しない」にした`);
 }
 
+// ---- みんなの写真（ファンが投稿した聖地の写真。2026-10-14 追加）----
+// 写真そのものは R2（yorushika-photos）に置き、ここには「どの聖地の、どの写真か」と投稿の情報だけを入れる。
+// 承認制にしない（投稿したらすぐ公開）。問題があれば通報か削除の依頼で後から消す
+await db.batch(
+  [
+    `CREATE TABLE IF NOT EXISTS photos (
+      id           INTEGER PRIMARY KEY AUTOINCREMENT,
+      spot_id      TEXT NOT NULL,          -- 聖地の id（data/scenes.json）
+      r2_key       TEXT NOT NULL UNIQUE,   -- R2 の中の置き場所
+      width        INTEGER NOT NULL,
+      height       INTEGER NOT NULL,
+      comment      TEXT,                   -- ひとこと（100字まで）
+      name         TEXT,                   -- 投稿した人の名前（任意。空なら「名無しのファン」）
+      taken_month  TEXT,                   -- 撮った年月（YYYY-MM。任意）
+      created_at   TEXT NOT NULL,
+      delete_hash  TEXT NOT NULL,          -- 削除の合言葉のハッシュ（合言葉そのものは投稿した人のブラウザにだけある）
+      ip_hash      TEXT NOT NULL,          -- 1日の投稿数の上限のため。IP そのものは保存しない
+      reports      INTEGER NOT NULL DEFAULT 0,
+      hidden_at    TEXT                    -- 通報が一定数たまった・オーナーが消した日時
+    )`,
+    `CREATE INDEX IF NOT EXISTS idx_photos_spot ON photos (spot_id, created_at DESC)`,
+    // 同じ人が同じ写真を何度も通報して消せないよう、通報した人（IP のハッシュ）を写真ごとに1回だけ数える
+    `CREATE TABLE IF NOT EXISTS photo_reports (
+      photo_id   INTEGER NOT NULL,
+      ip_hash    TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      PRIMARY KEY (photo_id, ip_hash)
+    )`,
+  ],
+  "write",
+);
+
 // ---- データの付け替え（条件に合う行だけ直すので、何度実行しても同じ結果になる）----
 
 // Googleニュースが拾った YouTube の一般の動画は、2026-10-12 から区分 video（表示は「YouTube」）。

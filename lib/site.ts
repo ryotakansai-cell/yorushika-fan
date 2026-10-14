@@ -14,3 +14,12 @@ export const DISCLAIMER =
   "本サイトはファンが個人で運営する非公式サイトです。楽曲・映像・画像の権利は各権利者に帰属します。";
 
 export const OFFICIAL_SITE = "https://yorushika.com/";
+
+/**
+ * Turnstile（ボット避け）の公開してよい側のキー。みんなの写真の投稿画面で使う。
+ * 本番のキーが無いあいだは空にして、投稿欄を「準備中」にする（テスト用のキーは必ず通るので、本番では使わない）。
+ * 開発サーバーでは Cloudflare 公式のテスト用キー（必ず「人間」と判定される）を使う
+ */
+export const TURNSTILE_SITE_KEY =
+  process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ??
+  (process.env.NODE_ENV === "development" ? "1x00000000000000000000AA" : "");

@@ -56,6 +56,7 @@ app/
 ├── links/page.tsx            公式リンク集
 ├── news/page.tsx             ニュースとファンの声（DBから読む。タブは ?tab=）
 ├── map/page.tsx              聖地巡礼マップ（1日1回作り直す。展示の開催中/終了が日付で変わるため）
+├── api/photos/               みんなの写真の一覧・投稿（route.ts）、削除（[id]）、通報（[id]/report）、画像（file/[...key]）
 └── api/cron/collect/route.ts 1時間ごとに各情報源を集めてDBに保存（CRON_SECRETで保護。?dryRun=1 で保存せず結果だけ）
 components/
 ├── SiteHeader.tsx            全ページ共通のヘッダー
@@ -65,7 +66,8 @@ components/
 ├── FeaturedVideo.tsx         「最新の公式映像」の欄（トップとMVで共用）
 ├── PilgrimageMap.tsx         地図（Leaflet）と一覧。地図はブラウザでだけ読み込む
 ├── ElmaJourney.tsx           エルマの旅の地図と年表（IntersectionObserver で画面のまん中の行を「今の日」にする）
-└── SpotQuiz.tsx              聖地クイズの本体（5問・距離で点数・結果を X / Bluesky に書くボタン）
+├── SpotQuiz.tsx              聖地クイズの本体（5問・距離で点数・結果を X / Bluesky に書くボタン）
+└── FanPhotos.tsx             見比べ画面の「みんなの写真」と投稿フォーム（入力→確認→Turnstile→投稿）
 lib/
 ├── site.ts                   サイト名・注意書き
 ├── discography.ts            作品データの型と読み込み
@@ -76,6 +78,8 @@ lib/
 ├── db.ts                     Turso接続（ニュース用）
 ├── map.ts                    3つのJSONを地図用の Spot にそろえる。クイズの問題（getQuizQuestions）もここ
 ├── geo.ts                    2点間の距離（ハバーサイン公式）。地図とクイズで共用（ブラウザ側に JSON を送らないよう分けた）
+├── photos.ts                 みんなの写真のサーバー側（R2・DB・Turnstile の確認・通報・削除）
+├── jpeg.ts                   JPEG から位置情報などの付加情報（APP1〜15・COM）を取り除く
 └── news/
     ├── sources.ts            各情報源（Googleニュース・note・はてブ・Reddit・公式YouTube）の取得
     ├── filter.ts             関連判定・除外リスト・URLの正規化
@@ -474,6 +478,19 @@ OSM は世界中を描けるので将来のスウェーデンも載せられる�
 - 守りは事前の審査ではなく、仕組みで持つ: Turnstile（ボット避け）、写真の位置情報（EXIF）を自動で消す、
   投稿時のチェック（自分で撮った写真か・知らない人の顔が大きく写っていないか）、通報ボタン、新しい投稿の通知、削除の窓口
 - エンカ（ファン同士が会う）掲示板は作らない（未成年が多い・チケット詐欺・付きまといに個人で対応できない）
+
+みんなの写真（2026-10-14 実装。本番で動かすには R2 と Turnstile の設定が要る）:
+
+- 写真は R2 のバケット yorushika-photos（wrangler.jsonc の PHOTOS）。公開バケットにせず /api/photos/file/ を通して返す
+  （消した写真がすぐ見えなくなるように。ブラウザに覚えさせるのは1時間）。置き場所の名前はランダム（推測で見られないように）
+- 投稿の情報は Turso の photos 表（npm run db:migrate で作る）。IP と削除の合言葉はハッシュにして保存
+- 位置情報は2回消す: ブラウザで長い辺1600pxの JPEG に描き直す（描き直すと付加情報は消える）＋サーバーで lib/jpeg.ts。
+  実際の GPS 入りのカメラ写真で、Exif が消えて画像は壊れないことを確かめた
+- 守り: Turnstile、投稿前の2つの確認（自分で撮った・知らない人の顔が写っていない）、1人1日10枚まで、
+  別々の3人から通報されたら自動で非表示（hidden_at）、投稿した人はそのブラウザからいつでも消せる（合言葉は localStorage）
+- 開発サーバーでは Turnstile の公式テスト用キー、R2 は wrangler が手元でまねたもの（next.config.ts の initOpenNextCloudflareForDev）
+- 本番のキーが無いあいだは「写真の投稿は準備中です」と出て、投稿は受け付けない
+- オーナーが消すとき: DB の photos に hidden_at を入れる（非表示）か、行と R2 の写真を消す。管理画面はまだ無い
 
 エルマの日記を公開ページで扱うときの線引き（2026-10-13 合意）:
 

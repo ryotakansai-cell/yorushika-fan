@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AerialMiniMap } from "@/components/AerialMiniMap";
+import { FanPhotos } from "@/components/FanPhotos";
 import { LiteYouTube } from "@/components/LiteYouTube";
 import { MapEmbed } from "@/components/MapEmbed";
 import { ScenePlayer } from "@/components/ScenePlayer";
@@ -94,6 +95,9 @@ export function SceneDetail({ detail: d }: { detail: Detail }) {
 
       {/* 巡礼メモ。実際に行く人が知りたいこと（行き方・時間・撮り方・今の様子・マナー） */}
       {d.memo && <Memo memo={d.memo} />}
+
+      {/* みんなの写真。ファンが撮った現地の写真と、その投稿（ページは静的なまま、ここだけブラウザで読む） */}
+      <FanPhotos spotId={d.id} spotName={d.name} />
 
       {/* 近くの聖地。歩いて回れる範囲（2km 以内）にある別の聖地 */}
       {d.nearby.length > 0 && (
