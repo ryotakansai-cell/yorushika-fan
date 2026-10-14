@@ -110,10 +110,35 @@ export default async function Home() {
           ゆかりの場所を地図で見る
         </span>
         <span className="mt-1 block text-xs leading-relaxed text-muted">
-          MVの舞台 {spots.length}{" "}
+          MVの舞台とジャケット写真の舞台 {spots.length}{" "}
           か所。MVの場面と現地の様子を並べて見比べられます。
         </span>
       </Link>
+      {/* 遊べる入口（聖地クイズ・エルマの旅）。マップを眺めるのとは別の楽しみ方 */}
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        <Link
+          href="/quiz"
+          className="group rounded-lg border border-line bg-card px-4 py-3 transition hover:border-accent"
+        >
+          <span className="font-serif text-ink transition group-hover:text-accent">
+            聖地クイズ
+          </span>
+          <span className="mt-1 block text-xs text-muted">
+            この場面はどこ？
+          </span>
+        </Link>
+        <Link
+          href="/elma"
+          className="group rounded-lg border border-line bg-card px-4 py-3 transition hover:border-accent"
+        >
+          <span className="font-serif text-ink transition group-hover:text-accent">
+            エルマの旅
+          </span>
+          <span className="mt-1 block text-xs text-muted">
+            日記を地図でたどる
+          </span>
+        </Link>
+      </div>
     </section>
   );
 

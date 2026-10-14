@@ -3,6 +3,7 @@ import performancesJson from "@/data/live-performances.json";
 import scenesJson from "@/data/scenes.json";
 import venuesJson from "@/data/venues.json";
 import { formatDate, yorushikaWorks } from "@/lib/discography";
+import { distanceKm, formatDistance } from "@/lib/geo";
 
 // 聖地巡礼マップに載せる「場所」を作る。
 // 元データは3つに分かれている:
@@ -522,6 +523,60 @@ function findScenes(match: (x: SceneEntry) => boolean): VideoScene[] {
   );
 }
 
+// --------------------------------------------------------------
+// 聖地クイズ（/quiz）。MVの場面やジャケットを見て、地図で場所を当てる
+// --------------------------------------------------------------
+
+export type QuizQuestion = {
+  /** 1問ごとの区別（同じ場所に複数の場面があるので、場所＋場面で作る） */
+  key: string;
+  /** 答えの場所。同じ回に同じ場所が2回出ないようにするのにも使う */
+  spotId: string;
+  name: string;
+  place: string;
+  /** 「日本」「スウェーデン」。地図の最初の表示範囲を決める */
+  area: string;
+  lat: number;
+  lon: number;
+  work: string;
+  /** MVの場面の問題: その動画と秒数（その場面で止めて見せる） */
+  videoId?: string;
+  at?: number;
+  /** ジャケットの問題: ジャケットが映った公式音源 */
+  jacketVideo?: string;
+  /** 「推定」「制作者の発言」 */
+  evidenceLabel?: string;
+};
+
+/**
+ * クイズの問題。場面の秒数が分かっているMVの場面と、ジャケットの舞台から作る。
+ * 秒数が分からない場面（春泥棒の2か所など）は、何を見せればいいか決まらないので出さない
+ */
+export function getQuizQuestions(): QuizQuestion[] {
+  return (scenesJson as SceneItem[]).flatMap((sc) =>
+    sc.scenes
+      .filter((x) => (x.videoId && x.at !== undefined) || x.jacketVideo)
+      .map((x) => {
+        const evidence: Evidence =
+          sc.evidence !== "official" && x.verified ? "verified" : sc.evidence;
+        return {
+          key: `${sc.id}:${x.videoId ?? x.jacketVideo}:${x.at ?? "jacket"}`,
+          spotId: sc.id,
+          name: sc.name,
+          place: placeLabel(sc),
+          area: sc.country ?? JAPAN,
+          lat: sc.lat,
+          lon: sc.lon,
+          work: x.work,
+          videoId: x.jacket ? undefined : x.videoId,
+          at: x.at,
+          jacketVideo: x.jacketVideo,
+          evidenceLabel: shownLabel(evidence),
+        };
+      }),
+  );
+}
+
 /** カードの画像。選んだ写真があればそれ、無ければ最初のMVの場面の公式サムネイル */
 function sceneImage(sc: SceneItem): SpotImage {
   if (sc.photo) {
@@ -584,31 +639,6 @@ export type SceneDetail = {
 
 /** 「近くの聖地」に出す範囲。歩いて回れるくらい（雨晴の駅・踏切・女岩はこの範囲に入る） */
 const NEARBY_KM = 2;
-
-/**
- * 2地点の直線距離（km）。地球を球とみなして緯度・経度から求める一般的な式（ハバーサイン公式）。
- * 数km の範囲なら、実際の距離とのずれは無視できる
- */
-function distanceKm(
-  a: { lat: number; lon: number },
-  b: { lat: number; lon: number },
-) {
-  const R = 6371; // 地球の半径（km）
-  const rad = (d: number) => (d * Math.PI) / 180;
-  const dLat = rad(b.lat - a.lat);
-  const dLon = rad(b.lon - a.lon);
-  const h =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(h));
-}
-
-/** 「約350m」「約1.2km」。直線距離なので「約」を付ける */
-function formatDistance(km: number) {
-  return km < 1
-    ? `約${Math.max(50, Math.round((km * 1000) / 50) * 50)}m`
-    : `約${km.toFixed(1)}km`;
-}
 
 /** 静的に作るページの一覧（generateStaticParams 用） */
 export function sceneIds() {

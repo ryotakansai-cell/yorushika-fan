@@ -39,6 +39,15 @@ export default function MapPage() {
         </Link>
         で、日記の日付順にたどれます。
       </p>
+      {/* 眺めるだけでなく遊べる入口。マップの場面からそのまま問題が出る */}
+      <p className="mt-3">
+        <Link
+          href="/quiz"
+          className="inline-block rounded-full border border-accent px-4 py-1.5 text-sm text-accent transition hover:bg-accent hover:text-card"
+        >
+          聖地クイズに挑戦する
+        </Link>
+      </p>
 
       {/* 巡礼する人へのお願い。地元に迷惑がかかるとファン全体の印象が悪くなる */}
       <div className="mt-6 rounded-lg border border-line bg-card px-4 py-3 text-sm leading-relaxed text-muted">
