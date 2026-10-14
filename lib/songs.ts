@@ -26,8 +26,14 @@ export type DiaryEntry = {
   /** 公式サイトの日記の何枚目か */
   slide: number;
   pt?: [number, number];
+  /**
+   * 位置の確かさ。spot＝日記の記述から場所が特定できる / town＝街のどこか（街の中心に置く） /
+   * area＝日記からは特定できない範囲（8/27・9/8 の浜。ヴィスビーの北の海岸のどこか）
+   */
+  precision?: "spot" | "town" | "area";
+  /** 聖地巡礼マップに載っている場所なら、その id（見比べ画面へつなぐ） */
   spot?: string;
-  approximate?: boolean;
+  /** オーナーが現地の様子と照らし合わせて確かめた */
   verified?: boolean;
 };
 
