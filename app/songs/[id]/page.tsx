@@ -167,7 +167,15 @@ export default async function SongPage({ params }: Props) {
       {/* 『エルマ』の曲は、エルマの日記のどの日に、どこで書かれたかが分かる */}
       {days.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-lg text-ink">エルマの日記で</h2>
+          <div className="flex items-baseline justify-between">
+            <h2 className="font-serif text-lg text-ink">エルマの日記で</h2>
+            <Link
+              href="/elma"
+              className="text-sm text-muted transition hover:text-accent"
+            >
+              エルマの旅を地図でたどる
+            </Link>
+          </div>
           <ul className="mt-3 space-y-2 text-sm">
             {days.map((d) => (
               <li key={d.date} className="flex gap-3">

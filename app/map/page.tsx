@@ -33,7 +33,11 @@ export default function MapPage() {
         <Link href="/live" className="text-ink transition hover:text-accent">
           ライブ・展示の記録
         </Link>
-        にまとめています。
+        にまとめています。 『エルマ』の曲がスウェーデンのどこで書かれたかは
+        <Link href="/elma" className="text-ink transition hover:text-accent">
+          エルマの旅
+        </Link>
+        で、日記の日付順にたどれます。
       </p>
 
       {/* 巡礼する人へのお願い。地元に迷惑がかかるとファン全体の印象が悪くなる */}
