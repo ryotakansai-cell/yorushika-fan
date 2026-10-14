@@ -35,6 +35,12 @@
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
       "bucket_name": "yorushika-cache",
     },
+    // ファンが投稿した聖地の写真（みんなの写真）。位置情報を消した JPEG だけを置く。
+    // 公開のバケットにはせず、サイトの /api/photos/file/ を通して返す（消した写真がすぐ見えなくなるように）
+    {
+      "binding": "PHOTOS",
+      "bucket_name": "yorushika-photos",
+    },
   ],
 
   // 実行ログをダッシュボードで見られるようにする（不具合の調査用）

@@ -1,4 +1,11 @@
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import type { NextConfig } from "next";
+
+// 開発サーバー（next dev）でも、wrangler.jsonc の R2 などを手元でまねて使えるようにする。
+// これが無いと、みんなの写真の保存先（R2）が開発中に存在せず、投稿を試せない
+if (process.env.NODE_ENV === "development") {
+  void initOpenNextCloudflareForDev();
+}
 
 const nextConfig: NextConfig = {
   images: {
