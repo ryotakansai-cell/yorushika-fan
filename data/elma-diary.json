@@ -2,71 +2,113 @@
   {
     "date": "3/14",
     "town": "コペンハーゲン → スウェーデン",
-    "summary": "コペンハーゲンから東へ向かう列車で、国境を越えてスウェーデンに入る",
+    "summary": "コペンハーゲンから東へ向かう列車の中で、車掌にパスポートを見せて国境を越えたことに気付く。車内には聞き慣れない言葉が飛び交い、窓の外には海風に揺れる若葉が見える",
     "songs": ["車窓"],
     "slide": 4,
     "pt": [55.60917, 12.99984],
-    "precision": "town"
+    "precision": "town",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Malm%C3%B6_central_station.jpg/500px-Malm%C3%B6_central_station.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Malm%C3%B6_central_station.jpg",
+      "license": "CC BY-SA 4.0",
+      "artist": "Jiří Komárek"
+    }
   },
   {
     "date": "3/21",
     "town": "ルンド",
-    "summary": "マルメからルンドへ。手紙に「学生の街」と書かれていた街の、端の小さなホステルに泊まる",
+    "summary": "マルメからルンドへ。エイミーの手紙に「学生の街」と書かれていた街で、街の端の小さなホステルに泊まる。ベランダで手紙を読み返すのが日課になり、この日から日記をつけ始める",
     "songs": [],
     "slide": 6,
     "pt": [55.70673, 13.18638],
-    "precision": "town"
+    "precision": "town",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Stortorget_lund_080508.jpg/500px-Stortorget_lund_080508.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Stortorget_lund_080508.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "Anton Holmquist"
+    }
   },
   {
     "date": "3/22",
     "town": "ルンド",
-    "summary": "エイミーが写真に残した場所を見つける。中央駅の南側の広場と、大学近くの家の外壁",
+    "summary": "エイミーが写真に残した場所をすぐに見つける。中央駅を出て南側の広場と、ルンド大学の近くの家の外壁。古い屋根の間から大聖堂が見え隠れする。この日「夕凪、某、花惑い」を書く",
     "songs": ["夕凪、某、花惑い"],
     "slide": 6,
     "pt": [55.70673, 13.18638],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cf/Lunds_centralstation2007.jpg/500px-Lunds_centralstation2007.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Lunds_centralstation2007.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "Anton Holmquist & Pauline Gyllengam"
+    }
   },
   {
     "date": "3/23",
     "town": "ルンド",
-    "summary": "ルンド大聖堂。手紙に書かれていた天文時計を眺め、聖堂の端の椅子で詩を書く",
+    "summary": "ルンド大聖堂へ。12世紀のロマネスク様式の教会で、高い天井、祭壇画、パイプオルガン、地下聖堂、柱にしがみつく伝説の巨人の像がある。エイミーが手紙に書いていた天文時計を眺め、聖堂の端の木の椅子で詩を書く",
     "songs": [],
     "slide": 8,
     "pt": [55.70406, 13.19359],
     "verified": true,
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Lunds_astronomiska_ur-2.jpg/500px-Lunds_astronomiska_ur-2.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Lunds_astronomiska_ur-2.jpg",
+      "license": "Public domain",
+      "artist": "David Castor"
+    }
   },
   {
     "date": "4/5",
     "town": "ヨンショーピング",
-    "summary": "鉄道の不具合で、大きな湖の南岸の街に泊まる。砂浜に座って、なかなか沈まない夕陽を見る",
+    "summary": "北東へ向かう途中、鉄道の不具合でヨンショーピングに泊まることになる。国で2番目に大きい湖（ヴェッテルン湖）の南の湖畔の静かな街。砂浜に座って、なかなか沈まない夕陽を眺める。エイミーの手紙にあった松尾芭蕉の言葉から、与謝蕪村の本に行き着く",
     "songs": ["湖の街"],
     "slide": 10,
     "pt": [57.78256, 14.16572],
-    "precision": "town"
+    "precision": "town",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Kollagej%C3%B6nk%C3%B6ping.jpg/500px-Kollagej%C3%B6nk%C3%B6ping.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Kollagej%C3%B6nk%C3%B6ping.jpg",
+      "license": "CC0",
+      "artist": "Citronlemonad"
+    }
   },
   {
     "date": "5/1",
     "town": "リンショーピン",
-    "summary": "野外博物館ガムラ・リンショーピンへ。古い家の隣の森のベンチで、詩の続きを書く",
+    "summary": "リンショーピンに着く。中世の街の暮らしを残した野外博物館、ガムラ・リンショーピンへ。昔の暮らしを再現した展示が散らばっていて、古い家の隣の森のベンチに座り、エイミーならこう書くと想像しながら詩の続きを書く",
     "songs": [],
     "slide": 13,
     "pt": [58.4059, 15.58945],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/53/Link%C3%B6ping_Gamla_Strasse.jpg/500px-Link%C3%B6ping_Gamla_Strasse.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Link%C3%B6ping_Gamla_Strasse.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "Clemensfranz"
+    }
   },
   {
     "date": "5/15",
     "town": "ストックホルム",
-    "summary": "ストックホルムに着く",
+    "summary": "ストックホルムに着く。ドロットニングホルム宮殿の近くのカフェで食事をする",
     "songs": [],
     "slide": 13,
     "pt": [59.33015, 18.05821],
-    "precision": "town"
+    "precision": "town",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/7b/Stockholm_gamlastan_etc.jpg/500px-Stockholm_gamlastan_etc.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Stockholm_gamlastan_etc.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "JZ"
+    }
   },
   {
     "date": "5/28",
     "town": "ストックホルム",
-    "summary": "「神様のダンス」を書く",
+    "summary": "ストックホルムで「神様のダンス」を書く",
     "songs": ["神様のダンス"],
     "slide": 14,
     "pt": [59.33015, 18.05821],
@@ -75,16 +117,22 @@
   {
     "date": "6/15",
     "town": "ストックホルム（ガムラスタン）",
-    "summary": "旧市街ガムラスタンの石畳を歩く",
+    "summary": "旧市街ガムラスタンの石畳の路地を歩く。エイミーは5月末の詩で「雨上がりのガムラスタン」を書くと予告していたが、結局それを書かなかった",
     "songs": [],
     "slide": 16,
     "pt": [59.32495, 18.07064],
-    "precision": "town"
+    "precision": "town",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Gamla_stan_February_2013_01.jpg/500px-Gamla_stan_February_2013_01.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Gamla_stan_February_2013_01.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "Arild Vågen"
+    }
   },
   {
     "date": "6/25",
     "town": "ストックホルム（ガムラスタン）",
-    "summary": "裏通りで少年の後を追い、小さな門の先の静かな裏庭で、鉄の台座に座る小さな少年の像を見つける",
+    "summary": "観光客であふれる大通りを外れ、裏通りで上半身裸の少年の後を追う。通り脇の小さな門をくぐると静かな裏庭があり、木の隣の鉄の台座に、小さなベンチに座る少年の像がある（ストックホルム王宮の近く。日記は「ドロットニングホルム宮殿に近付いている」と書いている）",
     "songs": [],
     "slide": 18,
     "pt": [59.3255, 18.07206],
@@ -102,23 +150,29 @@
   {
     "date": "7/5",
     "town": "ゴットランド島へ",
-    "summary": "ゴットランド島へ向かうフェリーに乗る",
+    "summary": "ゴットランド島へ向かうフェリーで、杖をついた老婦人に手を貸す",
     "songs": [],
     "slide": 22
   },
   {
     "date": "7/6",
     "town": "ヴィスビー",
-    "summary": "薔薇と遺跡の街ヴィスビーに着く。街を囲む輪壁から、海へ向かって坂道が下っている",
+    "summary": "ゴットランド島のヴィスビーに着く。薔薇の咲く通り、街のあちこちに残る遺跡、昔の牧羊の名残の羊の像。街を囲む輪壁から、海へ向かって坂道が下っている",
     "songs": [],
     "slide": 23,
     "pt": [57.63794, 18.29798],
-    "precision": "town"
+    "precision": "town",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/49/Visby_13-.JPG/500px-Visby_13-.JPG",
+      "page": "https://commons.wikimedia.org/wiki/File:Visby_13-.JPG",
+      "license": "Public domain",
+      "artist": "Żeglarz"
+    }
   },
   {
     "date": "7/8",
     "town": "ヴィスビー",
-    "summary": "「歩く」を書く",
+    "summary": "ヴィスビーで「歩く」を書く",
     "songs": ["歩く"],
     "slide": 24,
     "pt": [57.63794, 18.29798],
@@ -127,76 +181,140 @@
   {
     "date": "7/10",
     "town": "ヴィスビー近郊",
-    "summary": "街から少し離れ、森を抜けて背の高い崖へ。岩の先に立つと、遠くにヴィスビーの街が見える",
+    "summary": "街から少し離れて森を抜け、背の高い崖へ。岩の先に立つと、遠くにヴィスビーの街が見え、港へ船が入っていく",
     "songs": [],
     "slide": 26,
     "pt": [57.59849, 18.2014],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Aerial_photograph_of_H%C3%B6gklint_in_V%C3%A4sterhejde%2C_Gotland_in_July_2016.jpg/500px-Aerial_photograph_of_H%C3%B6gklint_in_V%C3%A4sterhejde%2C_Gotland_in_July_2016.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Aerial_photograph_of_H%C3%B6gklint_in_V%C3%A4sterhejde,_Gotland_in_July_2016.jpg",
+      "license": "CC BY 2.0",
+      "artist": "CucombreLibre from New York, NY, USA"
+    }
   },
   {
     "date": "7/12",
     "town": "ヴィスビー",
-    "summary": "アルメダーレン公園から輪壁沿いを北へ。輪壁を小さく模したベンチを見つける（ジャケットの場所）",
+    "summary": "アルメダーレン公園から輪壁沿いの海岸線を北へ。輪壁の内側は緑に囲まれた自然公園で、その北側で輪壁を模して作られたベンチを見つける（ジャケットの場所）。遠くに小さな家と大きな家、その間を結ぶなだらかな坂道。夕暮れに教会の鐘が聞こえる",
     "songs": [],
     "slide": 26,
     "spot": "visby-ringmuren",
     "pt": [57.64614, 18.29511],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Almedalen_July_2019.jpg/500px-Almedalen_July_2019.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Almedalen_July_2019.jpg",
+      "license": "CC BY-SA 4.0",
+      "artist": "Arild Vågen"
+    }
+  },
+  {
+    "date": "7/20",
+    "town": "ヴィスビー",
+    "summary": "輪壁沿いのベンチで、なかなか沈まない夕日を眺める。白夜が続いている",
+    "songs": [],
+    "slide": 30,
+    "pt": [57.64614, 18.29511],
+    "precision": "spot",
+    "spot": "visby-ringmuren"
   },
   {
     "date": "7/22",
     "town": "フォーレスンドへ",
-    "summary": "フォーレスンドへ向かう途中、森に囲まれた田舎道の教会に寄る",
+    "summary": "ヴィスビーを出てフォーレスンドへ向かう途中、森に囲まれた田舎道の教会に寄る。敷地には墓地とオークの木があり、フェリーで会った老婦人と再会する",
     "songs": ["森の教会"],
     "slide": 31,
     "pt": [57.83371, 18.92353],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Rute_church%2C_2009-08-11.jpg/500px-Rute_church%2C_2009-08-11.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Rute_church,_2009-08-11.jpg",
+      "license": "CC BY-SA 3.0",
+      "artist": "Per Enström"
+    }
   },
   {
     "date": "7/24",
     "town": "フォーレ島",
-    "summary": "フォーレスンドの船着場から船でフォーレ島へ。島のあちこちに風車がある",
+    "summary": "フォーレスンドの船着場から船でフォーレ島へ。島では今も昔ながらの牧羊が行われていて、あちこちに風車がある",
     "songs": [],
     "slide": 32,
     "pt": [57.9158, 19.13336],
-    "precision": "town"
+    "precision": "town",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Rauks_%283881539849%29.jpg/500px-Rauks_%283881539849%29.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Rauks_(3881539849).jpg",
+      "license": "CC BY-SA 2.0",
+      "artist": "allen watkin from London, UK"
+    }
   },
   {
     "date": "7/27",
     "town": "フォーレ島",
-    "summary": "島の北端の奇岩群へ。エイミーが写真に撮っていたのは、群れから離れてひとつだけ立つ岩",
+    "summary": "島の北端の奇岩群（ラウク）へ。石灰岩の浜に数メートルの岩が並んでいる。エイミーが写真に撮っていたのは、群れから離れてひとつだけ立つ岩",
     "songs": [],
     "slide": 33,
     "pt": [57.98193, 19.16115],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3c/Gotland_F%C3%A5r%C3%B6-Raukar_Langhammars.jpg/500px-Gotland_F%C3%A5r%C3%B6-Raukar_Langhammars.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Gotland_F%C3%A5r%C3%B6-Raukar_Langhammars.jpg",
+      "license": "CC BY-SA 2.0 de",
+      "artist": "Jürgen Howaldt"
+    }
   },
   {
     "date": "7/28",
     "town": "フォーレ島",
-    "summary": "「声」を書く",
+    "summary": "フォーレ島で「声」を書く",
     "songs": ["声"],
     "slide": 34,
     "pt": [57.9158, 19.13336],
     "precision": "town"
   },
   {
+    "date": "8/2",
+    "town": "フォーレスンド",
+    "summary": "フォーレ島から戻り、船着場の近くのレストランで食事をする",
+    "songs": [],
+    "slide": 36,
+    "pt": [57.86524, 19.05773],
+    "precision": "town"
+  },
+  {
     "date": "8/7",
     "town": "ヴィスビー",
-    "summary": "ヴィスビーに戻ると、街は中世週間の祭りで賑わっていた",
+    "summary": "ヴィスビーに戻ると、街は中世週間の祭りの最中。民族衣装や騎士・ヴァイキングの装いの人々、民族楽器の音楽、広場では三拍子に合わせて手を取り合って踊る人々",
     "songs": [],
     "slide": 38,
     "pt": [57.63794, 18.29798],
     "precision": "town"
   },
   {
+    "date": "8/10",
+    "town": "ヴィスビー",
+    "summary": "アルメダーレン公園へ。植え込みに囲まれた椅子に座って考え込む",
+    "songs": [],
+    "slide": 38,
+    "pt": [57.64087, 18.29085],
+    "precision": "spot"
+  },
+  {
     "date": "8/15",
     "town": "ヴィスビー",
-    "summary": "雨宿りに輪壁の見張り台へ上ると、下に輪壁を模したベンチが見える",
+    "summary": "雨宿りに、輪壁に作られた見張り台へ。木の階段を何階か上ると、下に輪壁を模したベンチが見える",
     "songs": [],
     "slide": 39,
     "spot": "visby-ringmuren",
     "pt": [57.64614, 18.29511],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Sweden_2018-08-07_%2844439123494%29.jpg/500px-Sweden_2018-08-07_%2844439123494%29.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File:Sweden_2018-08-07_(44439123494).jpg",
+      "license": "CC BY-SA 2.0",
+      "artist": "Guillaume Baviere from Copenhagen, Denmark"
+    }
   },
   {
     "date": "8/27",
@@ -223,7 +341,13 @@
     "songs": ["憂一乗"],
     "slide": 51,
     "pt": [57.64187, 18.29806],
-    "precision": "spot"
+    "precision": "spot",
+    "photo": {
+      "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Visby_Dom_v_O.JPG/500px-Visby_Dom_v_O.JPG",
+      "page": "https://commons.wikimedia.org/wiki/File:Visby_Dom_v_O.JPG",
+      "license": "CC BY-SA 3.0",
+      "artist": "Beckstet"
+    }
   },
   {
     "date": "9/6",
@@ -237,7 +361,7 @@
   {
     "date": "9/8",
     "town": "ヴィスビーの北の海岸",
-    "summary": "海辺へもう一度行き、もう一つの古い桟橋で詩を見つける。題は「ノーチラス」",
+    "summary": "あの海辺へもう一度向かい、砂浜の先で、もう一つの古い桟橋を見つける。そこで見つけた詩の題は「ノーチラス」",
     "songs": ["ノーチラス"],
     "slide": 54,
     "pt": [57.68, 18.345],
