@@ -101,7 +101,7 @@ scripts/
 ├── migrate.mjs               npm run db:migrate（DBの表を作る。何度実行しても安全）
 ├── fetch-live-venues.mjs     npm run fetch:live（公式のLIVEカテゴリーから日程・会場を抜く）
 ├── geocode-venues.mjs        npm run geocode:venues（会場の座標候補を出すだけ。保存しない）
-├── make-icons.mjs            npm run make:icons（design/bot-icon/b-paper.svg から app/ のアイコン3種を作る）
+├── make-icons.mjs            npm run make:icons（design/bot-icon/b2-sleep.svg から app/ のアイコン3種を作る）
 └── lib/safe-write.mjs        取得データの保存。前回より8割未満に減ったら保存せず止まる
 .github/workflows/
 ├── collect.yml               /api/cron/collect を手動で呼ぶ（定期実行は cron-worker/ に移した）
@@ -170,9 +170,17 @@ sitemap（`app/sitemap.ts`）は動画ページも含めてJSONから自動で�
   - 聖地ごとの画像には generateStaticParams を書いてビルド時に作る。書かないと SNS が読みに来るたびに作り直しになり、
     写真やフォントを毎回取りに行く。1枚0.5〜1.4MB
   - 名前のかっこは次の行に小さく出す（「白浜海岸（伊／豆下田）」とかっこの途中で折り返したため）
-- アイコンは「紙と墨の三日月と水平線」（`design/bot-icon/b-paper.svg`。2026-10-04 オーナーが選んだ）。
-  サイト（app/icon.svg・favicon.ico・apple-icon.png）と Bluesky ボットで同じ絵を使う。絵を変えたら `npm run make:icons`。
-  それまでの favicon.ico は Next.js のひな形の Vercel の三角のままだった
+- アイコンは「三日月の閉じた目」（`design/bot-icon/b2-sleep.svg`。2026-10-17 オーナーが選んだ）。墨の地に紙色の三日月とまつげ3本。
+  サイト（app/icon.svg・favicon.ico・apple-icon.png）・OGP 画像（lib/og.tsx が app/icon.svg を読む）と Bluesky ボットで同じ絵を使う。
+  絵を変えたら `npm run make:icons`。Bluesky に上げる用の PNG は同じフォルダの b2-sleep.png
+  - 意味は公式ロゴの説明から借りた。公式ロゴは「向かい合う月」「6時を指す時計の針（6時から夜）」「目（名前の由来の
+    『夜しかもう眠れずに』の『眠れず』）」（n-buna。音楽ナタリー 2017-06-28 https://natalie.mu/music/pp/yorushika/page/2 ）。
+    形は借りず、「夜しか眠れない」を「眠っている目＝三日月」で描いた。公式ロゴの再現は、デザイナーの著作物の複製になり、
+    ボットが公式と見間違えられるのでやらない
+  - 前のアイコン（b-paper.svg。三日月と水平線）は、どこにでもある夜の絵でパチモン感があった。案は design/site-icon-v2/
+    （丸の中に目を入れた案は口に見える、という意見もあったので丸を外した。黒地にしたのは、Bluesky で丸く切り抜くと
+    「夜の黒い丸の中で閉じた目」になり、丸を描かなくても夜の意味が戻るため。白地も一度選んだが黒地に決めた）
+  - その前の favicon.ico は Next.js のひな形の Vercel の三角のままだった
 - Bluesky の背景画像は `design/bluesky-banner/D.png`（国土地理院の航空写真を丸く切り抜いて7つの町を並べたもの。
   右下に出典を入れてある）。案は同じフォルダの banners.html / banners-v2.html。MVの公式画像は看板の素材に使わない
   （サイトで YouTube の画像をそのまま見せるのとは違い、複製・加工になるため）

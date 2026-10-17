@@ -1,4 +1,4 @@
-// サイトのアイコンを、元の絵（design/bot-icon/b-paper.svg。Bluesky ボットと同じ「紙と墨の三日月」）から作る。
+// サイトのアイコンを、元の絵（design/bot-icon/b2-sleep.svg。Bluesky ボットと同じ「三日月の閉じた目」）から作る。
 // npm run make:icons
 //
 // 作るもの（Next.js はこの名前のファイルを app/ に置くと、自動で <link rel="icon"> などを出す）
@@ -10,7 +10,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import sharp from "sharp";
 
-const svg = await readFile("design/bot-icon/b-paper.svg");
+const svg = await readFile("design/bot-icon/b2-sleep.svg");
 
 const png = (size) => sharp(svg, { density: 300 }).resize(size, size).png().toBuffer();
 

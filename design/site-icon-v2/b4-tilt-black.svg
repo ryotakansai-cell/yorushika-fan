@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <rect width="1000" height="1000" fill="#262626"/><circle cx="500" cy="500" r="380" fill="#f7f5f0"/><g transform="rotate(-24 500 500) translate(0 -40)">
+  <defs><mask id="e"><rect width="1000" height="1000" fill="#000"/><circle cx="500" cy="440" r="230" fill="#fff"/><circle cx="500" cy="350" r="240" fill="#000"/></mask></defs>
+  <rect width="1000" height="1000" fill="#262626" mask="url(#e)"/>
+  <g stroke="#262626" stroke-width="30" stroke-linecap="round">
+    <line x1="500" y1="700" x2="500" y2="770"/><line x1="385" y1="672" x2="352" y2="733"/><line x1="615" y1="672" x2="648" y2="733"/>
+  </g></g>
+</svg>
