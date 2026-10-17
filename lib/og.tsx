@@ -58,7 +58,7 @@ export async function ogFonts(text: string) {
   ];
 }
 
-/** サイトのアイコン（紙と墨の三日月）。画像の中に埋め込める形にする */
+/** サイトのアイコン（三日月の閉じた目）。画像の中に埋め込める形にする */
 export async function ogMark() {
   const svg = await readFile(join(process.cwd(), "app/icon.svg"));
   return `data:image/svg+xml;base64,${svg.toString("base64")}`;

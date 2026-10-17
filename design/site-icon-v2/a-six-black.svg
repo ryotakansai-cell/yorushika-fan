@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <rect width="1000" height="1000" fill="#262626"/>
+  <circle cx="500" cy="500" r="330" fill="none" stroke="#f7f5f0" stroke-width="34"/>
+  <path d="M500,170 A330,330 0 0 0 500,830 Z" fill="#f7f5f0"/>
+  <defs><mask id="c"><rect width="1000" height="1000" fill="#000"/><circle cx="345" cy="500" r="110" fill="#fff"/><circle cx="385" cy="468" r="100" fill="#000"/></mask></defs>
+  <rect width="1000" height="1000" fill="#262626" mask="url(#c)"/>
+</svg>
