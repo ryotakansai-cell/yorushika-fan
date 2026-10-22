@@ -22,10 +22,10 @@
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
-    "@opennextjs/cloudflare": "^1.20.9",
+    "@opennextjs/cloudflare": "^1.20.13",
     "fast-xml-parser": "^5.11.2",
     "leaflet": "^1.9.4",
-    "next": "^16.3.8",
+    "next": "^16.4.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -36,7 +36,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "^16.3.8",
+    "eslint-config-next": "^16.4.1",
     "prettier": "^3.9.9",
     "tailwindcss": "^4",
     "typescript": "^5",
