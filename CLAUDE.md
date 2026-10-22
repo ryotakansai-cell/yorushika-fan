@@ -25,6 +25,10 @@ Vercel Hobby がアカウントごと30日停止した（配信トレンドと�
   Workers Builds の「Build variables」にも `TURSO_*` を入れてある
 - 画像最適化は使わない（`next.config.ts` の `images.unoptimized`）
 - 手元で確認するときは `npm run preview`（Windows は開発者モードが必要）
+- **Next.js を上げる前に、OpenNext がその版に対応しているかを先に確かめる**
+  （`npm view @opennextjs/cloudflare@<版> peerDependencies`。`next` の範囲を見る）。
+  2026-10-22 に Next.js だけ 16.4.1 に上げたら、ビルドは通るのに全ページ 500 になった
+  （preview で発見）。16.4.1 に対応したのは OpenNext 1.20.12 から。経緯は game-trends の CLAUDE.md
 
 作者のプロフィールと、やり取りの好みはユーザー全体の `~/.claude/CLAUDE.md` にある。
 
